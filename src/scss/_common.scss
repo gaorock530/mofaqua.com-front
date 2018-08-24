@@ -1,0 +1,153 @@
+html {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 12px;
+  background-color: $background;
+}
+
+a, 
+a:-webkit-any-link, 
+a:visited, 
+a:link, 
+a:hover, 
+a:active,
+a:focus {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+textarea {
+  border-color: #d9d9d9; 
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 0;
+  outline: none;
+  border: none;
+}
+
+ul, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.center {
+  text-align: center !important;
+}
+
+.frozen {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.relative {
+  position: relative;
+}
+
+.fixed {
+  position: fixed;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.nocursor { cursor:none; }
+
+/* header placeholder*/
+.header-mask {
+  position: relative;
+  height: 56px;
+  background-color: $background;
+}
+
+.app-cover {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1003;
+  transform: translateZ(0);
+  transition: opacity 0.15s ease-in;
+  opacity: 0;
+  background: $theme-black;
+  will-change: opacity;
+}
+
+.cover-open {
+  opacity: 0.5;
+  visibility: visible;
+  // animation: cover-open 0.15s ease-in;
+}
+.hide {
+  visibility: hidden;
+}
+
+.notfound {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 5rem;
+  color: #333;
+}
+.ads {
+  position: relative;
+  margin: 0 auto;
+  max-width: 800px;
+  height: 100%;
+  background: orangered;
+}
+.flat {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.none {
+  display: none;
+}
+
+// .error-text {
+//   color: $theme-red;;
+// }
+
+.b-green {
+  background: green; 
+}
+.b-greenyellow {
+  background: greenyellow;
+}
+.b-red {
+  background: red;
+}
+.b-yellow {
+  background: yellow;
+}
+.b-orange {
+  background: orange;
+}
+.b-orangered {
+  background: orangered;
+}
+
+.red {
+  color: $theme-red;
+}
+.green {
+  color: green;
+}
+.blue {
+  color: $theme-blue;
+}
+

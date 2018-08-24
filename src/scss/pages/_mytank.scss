@@ -1,0 +1,288 @@
+.tank-nav {
+  position: relative;
+  padding: 20px 0 5px 0;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  align-items: end;
+  // border-bottom: 2px solid #000;
+
+  h2, label {
+    display: inline-block;
+    margin: 0;
+  }
+  label {
+    padding-left: 10px;
+  }
+}
+.tank-nav-left, .tank-nav-right {
+  display: inline-block;
+}
+
+.tank-nav-left {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.tank-nav-right {
+  text-align: right;
+  padding-right: 10px;
+  &>a {
+    padding: 5px;
+    color: #000;
+  }
+}
+
+.tank-list {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-row-gap: 5px;
+  padding: 5px 0;
+}
+.tank-item {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  padding-bottom: 5px; 
+  border-top: 2px solid #000;
+}
+
+.tank-item-left {
+  position: relative;
+  // background-image: url('/pic/reef-3.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover; 
+  width: 280px;
+  min-height: 150px;
+  max-height: 300px;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 5px #000;
+  }
+}
+.tank-stop:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($color: #000, $alpha: 0.8);
+}
+
+.tank-item-right {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  text-align: left;
+  align-content: center;
+  height: 150px;
+
+  h5 {
+    font-weight: normal;
+    margin: 0;
+    padding: 5px 0 5px 10px;
+  }
+}
+.tank-test {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  &>div {
+    position: relative;
+    &>label {
+      position: absolute;
+      display: block;
+      width: 80%;
+      height: 5px;
+      top: 12px;
+    }
+  }
+}
+
+
+.tank-photo {
+  position: relative;
+  display: block !important;
+  width: 100%;
+  height: 350px;
+  line-height: 350px;
+  padding: 0 !important;
+}
+
+/* tank view */
+.tank-view {
+  position: relative;
+  text-align: left;
+  margin: 10px 0;
+  .tank-title {
+    position: relative;
+    background: #222;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    &>h3 {
+      display: inline-block;
+      margin: 0;
+      &>a {
+        font-weight: normal;
+        padding: 0 10px;
+      }
+      &>select {
+        appearance: none;
+        border-radius: 0;
+        background: none;
+        color: #fff; 
+        padding: 2px;
+      }
+    }
+    &>span {
+      position: absolute;
+      display: inline-block;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      a {
+        padding: 5px;
+      }
+    }
+  }
+  
+  .tank-details{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+
+    h3 {
+      font-size: 1.1rem;
+      padding: 10px;
+      margin: 0;
+      background-color: #333; 
+      color: #ddd;
+    }
+    span {
+      display: block;
+      padding: 3px;
+      font-size: 1.1rem;
+    }
+  }
+  .tank-schedule {
+    display: grid;
+    grid-template-columns: 2fr 1fr 7fr 1fr 1fr;
+    grid-column-gap: 5px;
+    align-items: center;
+    justify-items: center;
+    background-color: #333;
+    margin: 3px 0;
+
+    span {
+      color: #ddd;
+      padding: 10px;
+    }
+  }
+  .tank-note {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+    grid-column-gap: 5px;
+    align-items: center;
+    justify-items: center;
+    background-color: #333;
+    margin: 3px 0;
+
+    span {
+      color: #ddd;
+      padding: 10px;
+    }
+  }
+  .tank-chart {
+    width: 100%;
+    height: 300px;
+    // background-color: #222;
+  }
+} 
+
+.tank-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  h5 {
+    margin: 0;
+    padding: 5px;
+  }
+}
+
+.tank-cover {
+  margin: 0 auto;
+  width: 600px;
+  height: 306px;
+  line-height: 306px;
+}
+
+.para {
+  position: absolute;
+  display: inline-block;
+  top: 5px;
+  padding: 0;
+  .select {
+    appearance: none;
+    outline: none;
+    height: 25px;
+    width: 60px;
+    border-radius: 4px; 
+  }
+}
+
+.add-tank h3 {
+  text-align: left;
+}
+
+
+.cate-hover:hover {
+  background-color: rgba($color: #aaa, $alpha: 0.8);
+}
+
+@media screen and (max-width: 1100px) {
+  .tank-view {
+    width: 100%;
+  }
+  .tank-view .tank-chart {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .tank-item {
+    grid-template-columns: 1fr;
+  }
+  .tank-item-left, .tank-item-right {
+    width: 100%;
+  }
+  .tank-item-left {
+    height: calc(100vw / 2.5 - 1px);
+  }
+  .tank-info {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+}
+@media screen and (max-width: 600px) {
+  .tank-item-right {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tank-test {
+    display: none;
+  }
+  .tank-photo {
+    // width: calc(100vw - 4px);
+    height: calc((100vw - 4px) * 9 / 16);
+    line-height: calc((100vw - 4px) * 9 / 16);
+  }
+  .tank-info {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  .tank-cover {
+    width: 100%;
+    height: calc((100vw - 4px) * 9 / 16);
+    line-height: calc((100vw - 4px) * 9 / 16);
+  }
+  .tank-view .tank-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

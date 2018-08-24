@@ -1,0 +1,85 @@
+.notice {
+  position: fixed;
+  z-index: 1000;
+  bottom: 15px;
+  right: 0px;
+  color: #eee;
+  padding: 0 5px;
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+
+  .notice-item {
+    background: #111;
+    margin: 3px 0;
+    padding: 5px 0 5px 5px;
+    border-radius: 4px;
+    // box-shadow: 0 0 3px #000;
+    // box-shadow: inset 0 0 3px #000;
+    // box-shadow: inset 0px 1px rgba(255, 255, 255, 0.24), 0px 1px 5px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0px 1px rgba(255, 255, 255, 0.13), 
+                inset 0px -1px rgba(0, 0, 0, 0.23), 
+                inset 2px 0px 0px rgba(0, 0, 0, 0.3), 
+                inset 0px 0px 0px rgba(255, 255, 255, 0.07);
+    width: 300px;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr; 
+    animation: slideIn 0.2s linear;
+
+    &>* {
+      position: relative;
+      display: block;
+    }
+
+    .notice-pic {
+      width: 60px;
+      height: 60px;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      // border: 1px solid rgba($color: #333, $alpha: 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i {
+        font-size: 4rem; 
+      }
+    }
+    .notice-text {
+      width: 200px;
+      padding: 5px 8px;
+      text-align: left;
+      line-break: auto;
+      word-break: break-all;
+      display: flex;
+      align-self: center;
+    }
+    .notice-close {
+      color: #444;
+      border-left: 1px solid rgba($color: #333, $alpha: 0.7);
+      font-size: 1.4rem;
+      cursor: pointer;
+
+      i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+
+      &:hover {
+        color: #888;
+      }
+    }
+  }
+  
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(200px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

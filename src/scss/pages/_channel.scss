@@ -1,0 +1,294 @@
+.channel-banner {
+  position: relative;
+  width: 100%;
+  height: calc(100vw / 6.2 - 1px);
+  
+  &.display {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+  &.setup {
+    line-height: calc(100vw / 6.2 - 1px);
+    background-color: #111;
+    label {
+      background-image: url('/pic/reef-2.jpg');
+    }
+  }
+}
+
+
+.channel-header {
+  width: 100%;
+  background: #111;
+}
+.channel-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.channel-title {
+  position: relative;
+  padding: 20px 0;
+  height: 80px;
+  text-align: left;
+
+  .user-img {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 10px;
+    img {
+      border-radius: 50%;
+    }
+  }
+  .user-title{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 110px;
+
+    h1, h5 {
+      margin: 8px 0;
+      font-weight: 500;
+    }
+    h1 {
+      color: #fff;
+      font-size: 2rem;
+    }
+    h5 {
+      color: #555;
+      span {
+        margin-left: 3px;
+      }
+    }
+  }
+  .user-sub {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    a {
+      display: inline-block;
+      padding: 10px 30px;
+      background: $theme-red;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.channel-nav {
+  text-align: left;
+  
+  a {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    color: #555;
+    border-bottom: 3px solid #111; 
+    &:last-child {
+      border-bottom: none; 
+    }
+    &.active {
+      color: #eee;
+      border-bottom: 3px solid $theme-red;
+    }
+    input {
+      padding: 0;
+      margin: 0;
+      width: 80px;
+      border: none;
+      border-bottom: 1px solid #eee;
+      outline: none;
+      background: #111;
+      color: #eee;
+    }
+  }
+  .mini {
+    position: absolute;
+    right: 0;
+    display: none;
+  }
+}
+
+.channel-section {
+  position: relative;
+  min-height: 300px;
+  width: 100%;
+  text-align: left;
+  cursor: default;
+  h1 {
+    padding: 10px; 
+    font-size: 1.8rem;
+    span {
+      margin-left: 10px;
+      font-size: 1rem;
+      font-weight: normal;
+      color: $font-color;
+    }
+  }
+  .utility {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 5px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 1.2rem;
+    color: $font-color;
+    cursor: default;
+    a {
+      color: $font-color;
+      padding: 3px 5px;
+      font-weight: bold;
+    }
+    a:hover {
+      color: $font-color;
+    }
+  }
+  .sec-list {
+    display: block;
+    margin: 0 auto;
+    width: 1100px;
+
+    a {
+      display: inline-block;
+      width: 210px;
+      height: 200px;
+      margin: 5px 5px;
+      color: #000;
+      overflow: hidden;
+      &:hover {
+        box-shadow: 0 0 2px #000;
+      }
+
+      .cover {
+        position: relative;
+        height: 135px;
+
+        div {
+          display: block;
+          height: 100%;
+          width: 100%;
+          background-size: cover;
+          background-position: center center;
+          border: none;
+          
+        }
+        span {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          padding: 5px;
+          color: #eee;
+          border-radius: 4px;
+          background-color: rgba($color: #000000, $alpha: 0.8) 
+        }
+        i {
+          font-size: 1.5rem;
+        }
+      }
+      .description {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        height: 65px;
+        background: $background;
+        p {
+          display: block;
+          height: 44px;
+          padding: 3px;
+          margin: 0;
+          font-size: 1.2rem;
+        }
+        &>div {
+          height: 15px;
+          padding: 0 3px;
+          label {
+            padding-right: 10px;
+          }
+        }
+      }
+      
+    }
+  }
+}
+
+
+@media screen and (max-width: 1120px) {
+  .channel-section .sec-list {
+    width: 880px;
+    // grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media screen and (max-width: 900px) {
+  .channel-section .sec-list {
+    width: 660px;
+    // grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (max-width: 680px) {
+  .channel-section .sec-list {
+    width: 440px;
+    // grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .channel-nav {
+    height: 40px;
+    overflow: hidden;
+    .mini {
+      display: block;
+    }
+  }
+  .open {
+    height: auto;
+  }
+  
+  .channel-nav a {
+    display: block;
+    border: none;
+    &.active {
+      background: #333;
+      border-bottom: none;
+    }
+    input {
+      width: 100%;
+    }
+  }
+
+}
+
+@media screen and (max-width: 460px) {
+  .channel-title {
+    padding: 0;
+    // height: auto;
+  }
+  // .user-img {
+  //   // display: none !important;
+  // }
+  .channel-section .sec-list {
+    width: 100%;
+    a {
+      margin: 0;
+      width: 100%;
+      .cover {
+        height: 150px;
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+      .description {
+        height: 50px;
+        p {
+          height: 29px;
+        }
+        &>div {
+          height: 15px;
+        }
+      }
+    }
+  }
+}

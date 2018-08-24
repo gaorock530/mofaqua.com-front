@@ -1,0 +1,11 @@
+.note {
+  position: relative;
+  .tag {
+    position: absolute;
+    // display: inline-block;
+    top: 44px;
+    right: 0;
+    background: red;
+    line-height: 20px;
+  }
+}

@@ -1,0 +1,330 @@
+.forms-inputs {
+  padding: 5px 10px;
+  text-align: left;
+
+  .input-wapper {
+    display: grid;
+    grid-template-columns: 10fr 2fr;
+    width: calc(100% - 2px);
+
+    input[type='text'],
+    input[type='number'],
+    input[type='password'] {
+      border-radius: 4px 0 0 4px;
+    }
+  }
+
+  .tag-name {
+    display: block;
+    font-size: 1.2rem;
+    padding: 5px;
+    text-align: left;
+  }
+
+  input[type='text'],
+  input[type='number'],
+  input[type='password'] {
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    // min-width: 200px;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    outline: none;
+    box-shadow: none;
+    padding: 4px 8px;
+    vertical-align: middle;
+    font-size: 1.2rem;
+
+    &:focus {
+      box-shadow: inset 1px 1px 5px rgba(0,0,0,0.2);
+      border-color: #666;
+    }
+  }
+
+  .static {
+    font-size: 1.2rem;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 4px !important;
+    cursor: not-allowed;
+  }
+  .textarea {
+    border-radius: 4px !important;
+    padding: 8px;
+    width: calc(100% - 19px);
+    resize: vertical;
+    height: 100px;
+    font-size: 1.2rem;
+  }
+
+
+  .post-tag, 
+  .post-tag-select, 
+  .select,
+  .static
+  {
+    display: inline-block;
+    margin-right: -1px;
+    margin-left: -1px;
+    vertical-align: top;
+    text-align: left;
+    text-shadow: 0 1px 0 #fff;
+    border-radius: 0 4px 4px 0;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    color: #333;
+  }
+  .post-tag {
+    height: 20px;
+    line-height: 20px;
+    cursor: default;
+  }
+  .post-tag-select {
+    appearance: none;
+    height: 30px;
+    outline: none;
+    cursor: pointer;
+  }
+  /* radio button */
+  .option {
+    display: inline-block;
+    font-size: 1.2rem;
+    label {
+      padding: 0 10px;
+    }
+    input {
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+  .select {
+    font-size: 1.2rem;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    background-color: #fff;
+  }
+  .fullwidth {
+    width: calc(100% - 18px);
+  }
+
+  .time {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    color: #333;
+
+    .time-select {
+      display: inline-block;
+      vertical-align: top;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      appearance: none;
+      padding: 0 10px;
+      outline: none;
+      border-radius: 0;
+      height: 30px;
+      cursor: pointer;
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+    }
+    .time-tag {
+      display: inline-block;
+      vertical-align: top;
+      height: 28px;
+      line-height: 28px;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 0;
+      cursor: default;
+      &:last-child {
+        border-radius: 0 4px 4px 0;
+      }
+    }
+  }
+
+  .list-container {
+    border: 1px solid #d9d9d9;
+    border-bottom: none;
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: normal;
+      padding: 10px 4px;
+      border-bottom: 1px solid #d9d9d9;
+    }
+
+    .list-wrapper {
+      display: grid;
+      grid-template-columns: 2fr 10fr;
+      padding: 3px 0;
+      height: 80px;
+      border-bottom: 1px solid #d9d9d9;
+
+      .pic {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 160px;
+      }
+      .utils {
+        display: grid;
+        grid-template-columns: 8fr 3fr;
+        align-items: center;
+        .left {
+          span {
+            display: block;
+            padding: 5px;
+            word-break: break-all;
+          }
+        }
+        .right {
+          text-align: right;
+          min-width: 65px;
+          a {
+            padding: 5px 6px;
+            margin: 0 3px;
+          }
+        }
+      }
+    }
+  }
+
+  .warning-icon {
+    font-size: 1.2rem;
+    div {
+      display: inline-block;
+      padding: 0 5px;
+    }
+  }
+}
+
+.form-button {
+  text-align: center;
+  width: 50%;
+  height: 30px;
+  margin: 20px; 
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
+.normal {
+  background-image: $linear-blue;
+}
+.warning {
+  background-image: $linear-red;
+}
+
+.DayPickerInput {
+  width: calc(100% - 18px);
+  // width: 100%;
+  color: #333;
+  padding: 5px 0;
+}
+.DayPickerInput input {
+  width: calc(100% - 18px);
+  height: 20px;
+  line-height: 20px;
+  text-shadow: 0 1px 0 #fff;
+  border-radius: 2px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 80px;
+  margin: 4px 8px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  user-select: none;
+  font-size: 1rem;
+
+  .move {
+    left: -41px !important;
+  }
+
+  .wapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 80px;
+    transition: left 0.2s linear;
+    cursor: pointer;
+    color: #ffffff;
+
+    &>span {
+      position: absolute;
+      display: inline-block;
+      top: 0;
+    }
+  }
+  
+  .block {
+    width: 40px;
+    height: 31px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #f5f5f5;
+    margin-top: -1px;
+    margin-bottom: -1px;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    left: 40px;
+  }
+
+  .on, .off {
+    width: 40px;
+    height: 30px;
+    line-height: 30px;
+    // background-image: linear-gradient(to bottom, #f89406, #fbb450);
+    // background-image: linear-gradient(to bottom, #2f96b4, #5bc0de);
+    // background-image: linear-gradient(to bottom, #bd362f, #ee5f5b);
+    // background-image: linear-gradient(to bottom, #0044cc, #0088cc);
+    background-image: linear-gradient(to bottom, #6677aa, #666699);
+  }
+
+  .on{
+    left: 0;
+    border-radius: 4px 0 0 4px;
+  }
+  .off{
+    left: 80px;
+    border-radius: 0 4px 4px 0;
+  }
+}
+
+
+@media screen and (max-width: 650px) {
+  .forms-inputs {
+    .list-container {
+      .list-wrapper {
+        .pic {
+          width: 100px;
+          height: 65px;
+          align-self: center;
+        }
+        .utils {
+          .right {
+            a {
+              padding: 5px 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

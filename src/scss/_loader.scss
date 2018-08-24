@@ -1,0 +1,82 @@
+.loader-wapper {
+  // multiple
+  position: relative;
+  // single
+  // position: absolute;
+  width: 300px;
+  margin: 0 auto;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+
+  .loader-bar {
+    position: absolute;
+    width: 100%;
+    border-bottom: 5px dotted $theme-gray;
+  }
+
+  .loader-eater {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    display: flex;
+    align-self: center;
+    animation: eat 5s linear infinite;
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      border: 20px solid $theme-red;
+      border-right-color: transparent; 
+      border-radius: 50%;
+      top: 50%;
+      margin-top: -18px;
+    }
+
+    &:before {
+      border-bottom-color: transparent;
+      animation: bottom-chomp 1s ease-in-out infinite;
+    }
+
+    &:after {
+      border-top-color: transparent;
+      animation: top-chomp 1s ease-in-out infinite;
+    }
+
+  }
+}
+
+@keyframes top-chomp {
+  0% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-44deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes bottom-chomp {
+  0% {
+    transform: rotate(-5deg);
+
+  }
+  50% {
+    transform: rotate(44deg);
+  }
+  100% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes eat {
+  0% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(280px);
+  }
+}

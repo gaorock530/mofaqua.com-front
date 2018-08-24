@@ -1,0 +1,52 @@
+.editor {
+  display: block !important;
+  text-align: initial;
+  width: calc(100% - 16px);
+  padding: 8px;
+}
+
+.full-title {
+  text-align: left;
+  padding: 4px 14px;
+  font-size: 1.2rem;
+}
+
+.upload-video {
+  height: 450px;
+  // color: #000 !important;
+}
+
+.hori-display-2-10 {
+  display: grid;
+  grid-template-columns: 2fr 10fr;
+  align-items: center;
+  padding: 4px 8px;
+  label {
+    display: block;
+    min-width: 45px;
+    text-align: left;
+    padding: 4px 6px;
+    font-size: 1.2rem;
+  }
+}
+// .hori-display-1-1 {
+//   display: grid;
+//   grid-template-columns: repeat(2, 1fr);
+//   align-items: center;
+// }
+.hori-display-1-1-1 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+}
+.hori-display-1-1-1-1 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+}
+
+@media screen and (max-width: 460px) {
+  // .hori-display-2-10 {
+  //   grid-template-columns: 3fr 9fr;
+  // }
+}

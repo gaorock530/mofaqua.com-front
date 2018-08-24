@@ -1,0 +1,214 @@
+.login-page {
+  position: relative;
+  margin: 0 auto;
+  height: 100%;
+  width: 320px;
+  padding: 50px 0;
+  color: $theme-white;
+  
+  
+
+  a {
+    color: $theme-white;
+  }
+
+  form {
+    background: #111;
+    padding: 20px 20px;
+    text-align: left;
+    box-shadow: 0 0 8px #000;
+    overflow: hidden;
+
+    &>* {
+      height: 30px;
+      width: 100%;
+      margin: 5px 0;
+    }
+    &>label {
+      display: inline-block;
+      height: auto;
+      padding-top: 10px;
+      font-size: 1.1rem;
+      span {
+        padding-left: 10px; 
+        color: orangered;
+      }
+    }
+  }
+
+  input, button {
+    box-sizing: border-box;
+    outline: none;
+    border: 1px solid rgb(48, 48, 48);
+  }
+
+  input {
+    background: #eee;
+    font-size: 1.2rem;
+    border: 1px solid #aaa;
+
+    &:focus {
+      border-color: $theme-blue;
+      box-shadow: inset 0 0 3px rgba($color: $theme-blue, $alpha: 0.8);
+    }
+  }
+  button {
+    margin-top: 20px;
+    background: #222;
+    color: $theme-white;
+    font-size: 1.2rem;
+    // border-radius: 6px;
+    cursor: pointer;
+  }
+}
+.form-nav {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  align-content: center;
+  background: #222;
+  box-shadow: 0 0 8px #000;
+
+  nav {
+    padding: 15px;
+    border-bottom: 1px solid #222; 
+    cursor: pointer;
+  }
+  .formactive {
+    background: #111;
+  }
+}
+
+.checkbox {
+  width: 40px;
+  height: 40px;
+  background: #ddd;
+  margin: 20px 90px;
+
+  border-radius: 100%;
+  position: relative;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+}
+
+.form-utils {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+
+  &>*:first-child {
+    text-align: left;
+  }
+  &>*:last-child {
+    text-align: right;
+  }
+
+  label, input {
+    cursor: pointer;
+  }
+  
+  span {
+    padding-left: 5px;
+  }
+}
+
+.login-qcode {
+  width: 100%;
+  height: 320px;
+  background: #111;
+  box-shadow: 0 0 8px #000;
+
+  &>* {
+    margin-top: 10px;
+    border: 1px solid #fff;
+  }
+}
+
+.gotoLogin a{
+  font-size: 1rem;
+}
+
+.phone-verify {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: end;
+  padding: 15px 0 5px 0;
+  
+  &>div:first-child {
+    align-self: center;
+  }
+
+  &>div:last-child {
+    justify-self: end;
+  }
+  a {
+    &:hover {
+      color: #ddd;
+    }
+  }
+  input {
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #eee;
+    background: #111;
+    width: 100%;
+    height: 30px;
+    color: #fff;
+    &:focus {
+      box-shadow: none;
+      border-bottom: 1px solid #eee;
+    }
+  }
+  .sending {
+    color: #888;
+    cursor: default;
+    &:hover {
+      color: #888;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .login-page {
+    width: 100%;
+    padding: 0;
+    color: $theme-black;
+    form {
+      background: none;
+      box-shadow: none;
+      
+      button {
+        background: #222;
+        color: $theme-white;
+      }
+    }
+  }
+  .form-nav {
+    background: none;
+    color: $theme-white;
+    nav {
+      background: #222;
+    }
+    .formactive {
+      color: #000;
+      background: none;
+    }
+  }
+  .login-qcode {
+    background: none;
+    box-shadow: none;
+  }
+  .phone-verify input {
+    background: none;
+    color: #000;
+  }
+  .phone-verify a {
+    color: #000;
+  }
+  .gotoLogin a {
+    color: #000;
+  }
+  .form-utils a {color: #000;}
+}

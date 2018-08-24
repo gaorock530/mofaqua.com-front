@@ -1,0 +1,106 @@
+.twocol-container {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  // color: #fff;
+  // padding: 10px 0;
+
+  .active {
+    background: $theme-blue; 
+    color: #fff;
+    cursor: default;
+  }
+  img {
+    width: 50px;
+    height: 50px;
+    // border-radius: 50%;
+    // border: 2px solid #fff;
+    margin-right: 10px; 
+  }
+  .pt {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    padding: 0;
+  }
+}
+
+.twocol-left {
+  position: relative;
+  border-bottom: 1px solid #000;
+  font-size: 1.1rem;
+  width: 100%;
+  &>* {
+    display: inline-block;
+    padding: 10px 20px;
+  }
+}
+.twocol-right {
+  position: relative;
+  width: calc(100% - 40px);
+  padding: 20px;
+  text-align: left;
+
+  label, a {
+    color: #aaa;
+  }
+  a {
+    padding: 0 5px;
+  }
+  p {
+    color: #aaa;
+  }
+  h3 {
+    padding: 10px 0;
+    margin: 0;
+  }
+  label {
+    padding-right: 10px;
+  }
+  a {
+    display: inline-block;
+    &:hover {
+      color: #000;
+    }
+  }
+  input {
+    border-color: #eee; 
+    // margin-right: 10px;
+    cursor: pointer;
+  }
+  .result {
+    i {
+      padding: 5px 10px;
+    }
+  }
+
+}
+@media screen and (max-width: 600px) {
+  .twocol-left {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    &>* {
+      padding: 10px;
+    }
+  }
+}
+
+/*
+~~~~~~~~~~~~~~~~~~Sides~~~~~~~~~~~~~~ Bottom
+Ratio of L/H~~~~~Alpha~~~~~~Beta~~~~~~Alpha~~~~~~~Beta
+  ~~~~0.5~~~~~~~0.003~~~~~~~0.085
+  ~~~~0.666~~~~~0.0085~~~~~~0.1156
+  ~~~~1.0~~~~~~~0.022~~~~~~~0.16~~~~~~0.077~~~~~~0.453
+  ~~~~1.5~~~~~~~0.042~~~~~~~0.26~~~~~~0.0906~~~~~0.5172
+  ~~~~2.0~~~~~~~0.056~~~~~~~0.32~~~~~~0.1017~~~~~0.5688
+  ~~~~2.5~~~~~~~0.063~~~~~~~0.35~~~~~~0.111~~~~~~0.6102
+  ~~~~3.0~~~~~~~0.067~~~~~~~0.37~~~~~~0.1335~~~~~0.7134
+
+  0.5	      0.003	  0.085	
+  0.666	    0.0085	0.1156	
+  1.0	      0.022	  0.16	  0.077	  0.453
+  1.5	      0.042	  0.26	  0.0906	0.5172
+  2.0	      0.056	  0.32	  0.1017	0.5688
+  2.5	      0.063	  0.35	  0.111	  0.6102
+  3.0	      0.067	  0.37	  0.1335	0.7134
+*/

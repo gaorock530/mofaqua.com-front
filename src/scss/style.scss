@@ -1,0 +1,39 @@
+@import '../../node_modules/normalize.css/normalize.css';
+@import '_variables';
+@import '_common';
+//
+@import '_body';
+@import '_notification';
+@import '_brand';
+@import '_search';
+@import '_header';
+@import '_sidebar';
+@import '_user';
+//
+@import '_upload';
+@import '_edit';
+@import '_note';
+@import '_form';
+@import '_editor';
+@import '_video';
+@import '_input';
+//
+@import '_home';
+@import '_section';
+//
+@import '_spinners';
+@import '_loader';
+@import '_top';
+// 
+@import '_setup_user';
+@import './pages/_setup';
+@import './pages/_channel';
+@import './pages/_mytank';
+@import './pages/_addinfo';
+@import '_addcover';
+
+// pages
+@import './pages/_login-page';
+
+
+

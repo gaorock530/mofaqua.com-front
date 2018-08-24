@@ -1,0 +1,172 @@
+/*
+    Main Setup
+*/
+
+.spinnner-wapper {
+  // multiple
+  position: relative;
+  // single
+  // position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.top {
+    align-items: flex-start;
+  }
+  &.mid {
+    align-items: center;
+  }
+  &.bot {
+    align-items: flex-end;
+  }
+}
+
+.spinner {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: $font-gray;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:before, &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+  }
+}
+
+/*
+    Spinner Styles
+*/
+
+// style1
+.style1:after {
+  top: -4px;
+  left: -4px;
+  border: 4px solid transparent;
+  border-top-color: $theme-red;
+  border-bottom-color: $theme-red;
+  animation: spinny 1s linear infinite;
+}
+
+@keyframes spinny {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(45deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+// style2 
+.style2 {
+  animation: spin 2s linear infinite;
+
+  &:before, &:after {
+    width: 10px;
+    height: 10px;
+    background: $theme-red;
+  }
+
+  &:before {
+    bottom: -10px;
+    left: 50%;
+    margin-left: -5px;
+    animation: bouncy 0.5s ease-in infinite;
+  }
+  &:after {
+    top: -20px;
+    left: 50%;
+    margin-left: -5px;
+    animation: bouncy 1s ease-in infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bouncy {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+// style3
+.style3 {
+  background: none;
+  border: 4px solid $theme-light-gray;
+
+  &:before, &:after {
+    background: $theme-red;
+    top: 50%;
+    left: 50%;
+  }
+  &:before {
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    margin-top: -3px;
+  }
+
+  &:after {
+    width: 4px;
+    height: 29px;
+    border-radius: 0;
+    margin-left: -2px;
+    animation: spin 2s linear infinite;
+    transform-origin: top center;
+  }
+}
+
+// style4
+.style4 {
+  background: none;
+  &:before, &:after {
+    background: $theme-red;
+  }
+  &:before {
+    animation: pulse 2s ease-out infinite;
+  }
+  &:after {
+    animation: pulse 2s ease-out 0.5s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,99 @@
+.header-search, .small-window-search  {
+  /* use flexbox to align center vertically*/
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* grid: in childrens of a grid, 
+  you can design both directions how much space it takes 
+  by using followings */
+  // grid-column: 1/3;
+  // grid-row: 1/3;
+  .search-arrow {
+    width: 40px;
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    input, button {
+      outline: none;
+      border: 1px solid rgb(48, 48, 48);
+    }
+
+    input {
+      flex: 1;
+      height: 14px;
+      padding: 6px;
+      box-shadow: none;
+      background: $theme-gray;
+      color: $theme-black;
+      font-size: $font-size-m;
+      &:focus {
+        border-color: $theme-blue;
+        box-shadow: inset 0 0 3px rgba($color: $theme-blue, $alpha: 0.8);
+      }
+    }
+    button {
+      width: 56px;
+      height: 28px;
+      border-left: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      &:hover {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.search-box-wapper {
+  position: relative;
+  display: flex;
+  flex: 1;
+  // padding-right: 10px;
+
+}
+.search-result {
+  width: 100%;
+  background: #fff;
+  color: #000;
+  position: absolute;
+  top: 28px;
+  box-shadow: 0px 2px 3px $font-gray;
+
+  .search-result-list {
+    display: flex;
+    flex: 1;
+    padding: 5px;
+    cursor: pointer;
+    &:hover {
+      background: $hover-bg-light;
+    }
+    a{
+      display: flex;
+      flex: 1;
+      text-align: left;
+      line-break: loose;
+      font-size: $font-size-sm;
+
+    }
+    span {
+      display: inline-block;
+      min-width: 30px;
+      text-align: right;
+    }
+  }
+}
+
+.small-window-search .search-box-wapper{
+  margin-right: 10px;
+}
+
+// .small-window-search .search-box{
+//   padding-right: 10px;
+// }

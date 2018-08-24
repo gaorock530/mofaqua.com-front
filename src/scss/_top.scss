@@ -1,0 +1,23 @@
+.top {
+  position: fixed;
+  transform: translateZ(0);
+  right: 10px;
+  bottom: 100px;
+  z-index: 1000;
+  color: orangered;
+  background-color: transparent;
+  cursor: pointer;
+  a {
+    padding: 8px 12px;
+    background: rgba($color: #000000, $alpha: 0.8);
+    color: orangered;
+    border: 1px solid orangered;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .top {
+    left: 10px;
+    right: auto;
+  }
+}
