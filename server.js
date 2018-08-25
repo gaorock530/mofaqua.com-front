@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-// const openBrowser = require('react-dev-utils/openBrowser');
+const openBrowser = require('react-dev-utils/openBrowser');
 
 // const QcloudSms = require("qcloudsms_js");
 // const Mail = require('nodemailer');

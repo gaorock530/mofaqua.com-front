@@ -6,8 +6,7 @@ class Logout extends PureComponent {
   onClick = (e) => {
     e.preventDefault();
     this.props.user_logout();
-    window.location = 'http://localhost:3000/';
-    
+    window.location = process.env.NODE_ENV === 'development'?'http://localhost:3000/':'https://mofaqua.com';
   }
   
   render () {

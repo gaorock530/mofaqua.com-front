@@ -1,6 +1,8 @@
 import api from './api';
 
-const ws = new api('wss://localhost:5002/pulse', {
+const path = process.env.NODE_ENV === 'development'? 'wss://localhost:5000/pulse': 'wss://websocket.mofaqua.com/pulse';
+
+const ws = new api(path, {
   attempt: 10,
   autoreconnect: true, 
   arraybuffer: true, 

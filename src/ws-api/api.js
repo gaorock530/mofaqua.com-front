@@ -29,7 +29,7 @@ const HC = navigator.hardwareConcurrency || window.navigator.hardwareConcurrency
 // hash for finger print
 const FingerPrint = md5(UA + SS + SD + HC);
 
-const AllowedPath = ['/', '/pulse', 'tunnel'];
+const AllowedPath = ['/', '/pulse', 'tunnel', '/test/pulse'];
 const AllowedEvent = ['open', 'message', 'close', 'error', 
                       'int',      // initial handshake
                       'rgt',      // registration
