@@ -27,7 +27,7 @@ class Qrcode extends Component {
           fgColor="#000000"
           level="L"
           style={{ width: 300 }}
-          value={this.id}
+          value={'https://mofaqua.com'}
         />
       </div>
     )

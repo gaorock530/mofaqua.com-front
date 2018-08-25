@@ -74,7 +74,7 @@ class App extends Component {
     this.refresh = setTimeout(() => {
       this.loading = false;
       return this.props.ws.connection || this.forceUpdate();
-    }, 2000);
+    }, 10000);
   }
   componentWillMount () {
     // start timer
