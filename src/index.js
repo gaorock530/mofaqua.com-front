@@ -13,7 +13,7 @@ import style from './consoleStyle';
 
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'), (e) => {
-  console.log('%cWelcome to Schedule App, I\'m Magic, contact me:', style.basic);
+  console.log('%cWelcome to Magic Aquarium, It\'s Magic, contact me:', style.basic);
   console.log('%cgaorock530@hotmail.com', style.email);
 });
 registerServiceWorker();

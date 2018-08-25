@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './routers/PrivateRoute';
-// import PublicRoute from './routers/PublicRoute';
 import * as actions from './redux/actions';
 
 import 'font-awesome/css/font-awesome.min.css'; // font-awesome.min.css
@@ -69,6 +68,8 @@ import EditSecond from './routers/icon/channelS/edit-second';
 class App extends Component {
   constructor (props) {
     super(props);
+    // start timer
+    this.t0 = window.performance.now();
     this.props.user_verify(); 
     this.loading = true;
     this.refresh = setTimeout(() => {
@@ -77,8 +78,6 @@ class App extends Component {
     }, 10000);
   }
   componentWillMount () {
-    // start timer
-    this.t0 = window.performance.now();
     if (window.localStorage) {
       const lang_option = ['zh', 'en'];
       const lang = window.localStorage.getItem('lang');
@@ -113,7 +112,7 @@ class App extends Component {
 
   componentDidMount () {
     this.t1 = window.performance.now();
-    console.log('Page loaded in: ' + (this.t1 - this.t0) + 'ms');
+    console.log('Site loaded in: ' + (this.t1 - this.t0) + 'ms');
   }
 
   render() {
