@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import Expend from './expend';
@@ -6,15 +6,10 @@ import Expend from './expend';
 
 import * as actions from '../../redux/actions';
 
-class UserUtils extends Component {
-  
-  onClick = () => {
-    this.props.set_expend_active('Tools');
-  }
-  
+class UserUtils extends PureComponent {
   render () {
     return (
-      <div className="user-tools" onClick={this.onClick}>
+      <div ref="icon" className="user-tools" onClick={this.props.set_expend_active.bind(this, 'Tools')}>
         <i className="fa fa-th-large"></i>
         {this.props.page.expendActive !== 'Tools' ? '' : (
           <Expend>

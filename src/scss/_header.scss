@@ -99,17 +99,6 @@
       width:100%;
       border-radius: 50%; 
     }
-      
-
-    // &:before {
-    //   content: '';
-    //   width: 35px;
-    //   height: 35px;
-    //   border-radius: 50%; 
-    //   background-position: center center;
-    //   background-size: cover;
-    //   background-repeat: no-repeat;
-    // }
   }
 
   .user-login {
@@ -124,7 +113,7 @@
   position: absolute;
   display: block;
   right: 0;
-  top: 50px;
+  top: 40px;
   background: $theme-gray;
   box-shadow: 0px 0px 5px $font-gray;
   color: $theme-black;

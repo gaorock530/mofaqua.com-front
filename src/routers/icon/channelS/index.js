@@ -4,7 +4,7 @@ import cuid from 'cuid';
 import * as actions from '../../../redux/actions';
 import Upload from '../../../components/upload';
 import formatNumber from '../../../helper/formatNumber';
-
+import prefix from '../../../helper/prefix';
 import Page from '../../../components/page';
 import Tank from './tank';
 import Post from './post';
@@ -88,11 +88,11 @@ class Channel extends PureComponent {
     const cover = this.props.user.channel && this.props.user.channel.cover? this.props.user.channel.cover : '';
     return (
       <Page className="flat">
-        <Upload className="channel-banner setup" color="#666699" id="cover" width={1920} height={500} crop={true} opt={true} type="ch-cover" image={cover}>更换封面</Upload>
+        <Upload className="channel-banner setup" color="#666699" id="cover" width={1920} height={500} crop={true} opt={true} type="ch-cover" image={prefix(cover)}>更换封面</Upload>
         <section className="channel-header">
           <div className="channel-wrapper">
             <div className="channel-title">
-              <div className="user-img"><img alt="" src={this.props.user.user.pic}/></div>
+              <div className="user-img"><img alt="" src={prefix(this.props.user.user.pic)}/></div>
               <div className="user-title">
                 <h1>{this.props.user.user.username}</h1>
                 <h5>{this.props.user.channel? formatNumber(this.props.user.channel.subscriber):''}<span>位订阅者</span></h5>

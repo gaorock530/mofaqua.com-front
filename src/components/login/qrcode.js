@@ -10,7 +10,7 @@ class Qrcode extends Component {
     this.id = cuid();
     this.props.qrcode(true);
     this.timer = setTimeout(() => {
-      console.log('过期了');
+      // console.log('过期了');
       this.props.qrcode(false);
     }, 1000*3);
   }

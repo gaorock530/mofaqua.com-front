@@ -232,9 +232,6 @@
     width: 440px;
     // grid-template-columns: repeat(2, 1fr);
   }
-}
-
-@media screen and (max-width: 640px) {
   .channel-nav {
     height: 40px;
     overflow: hidden;
@@ -257,17 +254,17 @@
       width: 100%;
     }
   }
+}
+
+@media screen and (max-width: 640px) {
+  
 
 }
 
 @media screen and (max-width: 460px) {
   .channel-title {
     padding: 0;
-    // height: auto;
   }
-  // .user-img {
-  //   // display: none !important;
-  // }
   .channel-section .sec-list {
     width: 100%;
     a {

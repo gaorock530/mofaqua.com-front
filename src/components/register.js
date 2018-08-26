@@ -40,6 +40,9 @@ class Register extends Component {
   
 
   handleName = async () => {
+    clearInterval(this.counter);
+    this.props.phone_resendin(0);
+    this.props.email_resendin(0);
     if (validator.isMobilePhone(this.refs.name.value, ['zh-CN']) && this.props.page.registerForm) {
       this.user.name.type = 'phone';
       this.user.name.value = this.refs.name.value;
@@ -96,6 +99,7 @@ class Register extends Component {
       if (this.props.user.phoneResendin !== 0) return;
       // set re-send time
       let time = 120;
+      this.props.notification_in(cuid(), '正在发送验证码...');
       this.props.send_text_code(this.user.name.value);
       // send notification
       this.props.phone_resendin(time);
@@ -128,6 +132,7 @@ class Register extends Component {
       // set re-send time
       let time = 120;
       // send notification
+      this.props.notification_in(cuid(), '正在发送验证码...');
       this.props.send_email_code(this.user.name.value);
       this.props.email_resendin(time);
       this.counter = setInterval(() => {

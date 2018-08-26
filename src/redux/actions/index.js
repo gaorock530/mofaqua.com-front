@@ -503,7 +503,6 @@ export const set_username = (username, uid) => dispatch => {
 }
 
 export const get_channel = (uid) => dispatch => {
-  console.log('get_channel');
   let timer;
   return new Promise((resolve, reject) => {
     dispatch({ type: SET_LOADING_STATE, value: true});
@@ -513,6 +512,31 @@ export const get_channel = (uid) => dispatch => {
       clearTimeout(timer);
       if (!e.err) {
         dispatch({ type: SET_CHANNEL, channel: e.v});
+        dispatch({ type: SET_LOADING_STATE, value: false});
+        resolve(e.v);
+      } else {
+        dispatch({ type: SET_LOADING_STATE, value: false});
+        reject(e.err);
+      }
+    }, true);
+    timer = setTimeout(() => {
+      dispatch({ type: SET_LOADING_STATE, value: false});
+      reject('网络错误，请稍后重试。');
+    },3000);
+  })
+}
+
+export const get_user_info = (uid) => dispatch => {
+  console.log('get_user_info');
+  let timer;
+  return new Promise((resolve, reject) => {
+    dispatch({ type: SET_LOADING_STATE, value: true});
+    API.ws.send({t:'u-get', id: uid});
+    API.ws.on('u-get', (e) => {
+      console.log(e);
+      clearTimeout(timer);
+      if (!e.err) {
+        dispatch({ type: SET_USER, user: e.v});
         dispatch({ type: SET_LOADING_STATE, value: false});
         resolve(e.v);
       } else {

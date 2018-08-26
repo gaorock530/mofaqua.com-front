@@ -7,14 +7,9 @@ import Expend from './expend';
 import * as actions from '../../redux/actions';
 
 class UserUtils extends Component {
-  
-  onClick = () => {
-    this.props.set_expend_active('Notification');
-  }
-
   render () {
     return (
-      <div className="user-notification" onClick={this.onClick}>
+      <div className="user-notification" onClick={this.props.set_expend_active.bind(this,'Notification')}>
         <i className="fa fa-bell">{!this.props.user.notice?<div className="number">1</div>:""}</i>
         {this.props.page.expendActive !== 'Notification' ? '' : (
           <Expend>

@@ -7,6 +7,7 @@ import Page from '../../../components/page';
 // import Spinner from '../../../components/animates/spinner';
 import * as actions from '../../../redux/actions';
 import formatNumber from '../../../helper/formatNumber';
+import prefix from '../../../helper/prefix';
 // import Upload from '../../../components/upload';
 
 import Home from './home';
@@ -55,7 +56,7 @@ class Channel extends PureComponent {
         if (!res){
           this.notFound = true;
         } else {
-          this.cover = style.add(".channel-banner.display", "background-image: url('" + this.channel.cover + "')");
+          this.cover = style.add(".channel-banner.display", "background-image: url('" + prefix(this.channel.cover) + "')");
         }
       }catch(e) {
         this.notFound = true;
@@ -102,7 +103,7 @@ class Channel extends PureComponent {
         <section className="channel-header">
           <div className="channel-wrapper">
             <div className="channel-title">
-              <div className="user-img">{this.channel?<img alt="" src={this.channel.pic}/>:''}</div>
+              <div className="user-img">{this.channel?<img alt="" src={prefix(this.channel.pic)}/>:''}</div>
               <div className="user-title">
                 <h1>{this.channel?this.channel.name:''}</h1>
                 <h5>{this.channel? formatNumber(this.channel.subscriber):''}<span>位订阅者</span></h5>

@@ -175,5 +175,5 @@ class App extends Component {
   }
 }
 
-export default connect(state => state, actions)(App);
+export default connect(state => ({ws:state.ws, page: state.page}), actions)(App);
 

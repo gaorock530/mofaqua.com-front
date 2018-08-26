@@ -5,6 +5,7 @@ import * as actions from '../../../redux/actions';
 import style from '../../../helper/style';
 import Upload from '../../../components/upload';
 import word from '../../../helper/wordcounter';
+import prefix from '../../../helper/prefix';
 import cuid from 'cuid';
 
 
@@ -29,15 +30,17 @@ class Person extends Component {
   }
 
   confirmName = () => {
-    const name = this.refs.newName.value;
+    const name = this.refs.newName.value.trim();
     const len = word(name, true, true);
-    if (name !== '' && name !== this.props.user.username && !name.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g) && len<=20) {
+    console.log('\''+name+'\'', '\''+this.props.user.user.username+'\'');
+    if (name === this.props.user.user.username) {
+      this.props.change_setup_option(null);
+    } else if (name !== '' && !name.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g) && len<=20) {
       this.props.change_setup_option(null);
       this.props.set_username(this.refs.newName.value, this.props.user.user.UID);
-      this.props.notification_in(cuid(), '昵称修改成功');
     } else {
       this.refs.newName.select();
-      this.props.notification_in(cuid(), '不符合规则: 20个字母或10个中文');
+      this.props.notification_in(cuid(), '不符合规则(20个字母或10个中文');
     }
   }
 
@@ -51,11 +54,12 @@ class Person extends Component {
   }
 
   render () {
+    const buyer = this.props.user.user.buyer;
     return (
       <div>
         <div>
           <h3>头像</h3>
-          <Upload className="pt" id="icon" round={true} color="#666699" onChange={this.change} width={80} height={80} crop={true} image={this.props.user.user.pic}>+</Upload>
+          <Upload className="pt" id="icon" round={true} color="#666699" onChange={this.change} width={80} height={80} crop={true} image={prefix(this.props.user.user.pic)}>+</Upload>
         </div>
         <div>
           <h3>用户名</h3>
@@ -74,10 +78,22 @@ class Person extends Component {
         <div>
           <h3>等级和经验值</h3>
           <p>
-            <label>等级</label><span>Lv.{this.props.user.user.buyerLevel}</span>
+            <label>等级</label><span>Lv.{this.props.user.user.person.level}</span>
           </p>
           <p>
-            <label>经验</label><span>{this.props.user.user.buyerPoints+'/1000'}</span>
+            <label>经验</label><span>{this.props.user.user.person.exp+'/1000'}</span>
+          </p>
+        </div>
+        <div>
+          <h3>交易评估和等级</h3>
+          <p>
+            <label>等级</label><span>Lv.{buyer?buyer.level:''}</span>
+          </p>
+          <p>
+            <label>经验</label><span>{buyer?buyer.exp+'/1000':''}</span>
+          </p>
+          <p>
+            <label>信用值</label><span>{buyer?buyer.credit: ''}</span>
           </p>
         </div>
       </div>

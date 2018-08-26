@@ -30,20 +30,20 @@ const HC = navigator.hardwareConcurrency || window.navigator.hardwareConcurrency
 const FingerPrint = md5(UA + SS + SD + HC);
 
 const AllowedPath = ['/', '/pulse', 'tunnel', '/test/pulse'];
-const AllowedEvent = ['open', 'message', 'close', 'error', 
-                      'int',      // initial handshake
-                      'rgt',      // registration
-                      'login',    
-                      'logout',
-                      // 'act',      // activity
-                      'chk',      // check [username/email/phone]
-                      'code',     // get verify code
-                      'upd',
-                      'up-pic',
-                      'up-vod',
-                      'ch-get',
-                      'ch-up-cover'
-                    ];
+// const AllowedEvent = ['open', 'message', 'close', 'error', 
+//                       'int',      // initial handshake
+//                       'rgt',      // registration
+//                       'login',    
+//                       'logout',
+//                       // 'act',      // activity
+//                       'chk',      // check [username/email/phone]
+//                       'code',     // get verify code
+//                       'upd',
+//                       'up-pic',
+//                       'up-vod',
+//                       'ch-get',
+//                       'ch-up-cover'
+//                     ];
 
 const defaultOptions = {
   autoreconnect: false,
@@ -236,13 +236,11 @@ export default class WS {
   }
 
   on (event, fn, once = false) {
-    if (!~AllowedEvent.indexOf(event)) return console.warn('invalid event: ', event);
-    // if (!WS.connected) return console.warn('no connection.');
     return this.eventContorl.add(event, fn, once); 
   }
 
   off (event, n) {
-    if(!~AllowedEvent.indexOf(event)) return console.warn('invalid event: ', event);
+    // if(!~AllowedEvent.indexOf(event)) return console.warn('invalid event: ', event);
     return this.eventContorl.del(event, n);
   }
   

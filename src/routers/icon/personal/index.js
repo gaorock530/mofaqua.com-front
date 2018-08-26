@@ -9,19 +9,8 @@ import Seller from './seller';
 import Page from '../../../components/page';
 
 class Personal extends Component {
-  componentWillMount () {
-    this.props.current_setup_page(null);
-  }
-  componentDidMount () {
-    // document.addEventListener('touchstart', ()=>{
-    //   console.log('touch start');
-    // });
-    // document.addEventListener('touchmove', ()=>{
-    //   console.log('touch move');
-    // });
-    // document.addEventListener('touchend', ()=>{
-    //   console.log('touch end');
-    // });
+  async componentWillMount () {
+    await this.props.get_user_info(this.props.user.user.UID);
   }
 
   componentWillUnmount () {
