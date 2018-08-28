@@ -88,7 +88,8 @@ class User extends Component {
             </div>
             <div>
               <a className="expend-list"><i className="fa fa-tachometer"></i><span>切换主题: 夜间</span></a>
-              <a className="expend-list" onClick={this.enterLang}><i className="fa fa-language"></i><span>语言: 简体中文</span></a>
+              {/* <a className="expend-list" onClick={this.enterLang}><i className="fa fa-language"></i><span>语言: 简体中文</span></a> */}
+              <a className="expend-list"><i className="fa fa-language"></i><span>语言: 简体中文</span></a>
               <Link onClick={this.props.set_expend_active} to="/setup" className="expend-list"><i className="fa fa-cog"></i><span>设置</span></Link>
             </div>
             <Logout />

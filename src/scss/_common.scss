@@ -4,6 +4,12 @@ html {
   background-color: $background;
 }
 
+/* standard way */
+body {
+  min-height: 100vh;
+  position: relative;
+}
+
 a, 
 a:-webkit-any-link, 
 a:visited, 

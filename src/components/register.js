@@ -184,8 +184,8 @@ class Register extends Component {
       <form onSubmit={this.onSubmit}>
         <label>{this.props.page.registerForm?'手机号码':'电子邮箱'}<span ref="name_warning"></span></label>
         {this.props.page.registerForm?
-          <input type="number" ref="name" autoComplete="off" placeholder="Phone number" onChange={this.checkName} />:
-          <input type="email" ref="name" autoComplete="off" placeholder="Email Address" onChange={this.checkName} />
+          <input type="number" ref="name" autoComplete="off" placeholder="Phone number" onChange={this.checkName} required/>:
+          <input type="email" ref="name" autoComplete="off" placeholder="Email Address" onChange={this.checkName} required/>
         }
         {this.props.page.registerForm?this.phone(): this.email()}
         <label>昵称<span ref="nick_warning"></span></label>
