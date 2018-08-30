@@ -24,6 +24,7 @@ import {
   SET_CHANNEL_TAB,
   TOGGLE_MINI_NAV,
   ADD_UPLOAD_FILE,
+  FILE_UPLOADING,
   FILE_UPLOADED,
   FILE_DESTROY,
   SET_REDIRECT_PATH,
@@ -46,6 +47,7 @@ import {
   SET_USER,
   SET_CHANNEL,
   SET_LOADING_STATE,
+  SET_SUBMITTING_STATE,
   SET_LANGUAGE,
   // notification
   NOTIFICATION_IN,
@@ -166,13 +168,15 @@ export const uploading_pic = (id, file, type) => async dispatch => {
   const limit = 1024*1024;
   return new Promise((resolve, reject)=> {
     // data:*/*;base64,
-    // const name = cuid() + '.' + res.match(/(?<=image\/)\w+(?=;)/g)[0];
+    const mime = res.match(/(?<=data:image\/)\w+/)[0];
     const name = cuid();
     res = res.replace(/data:\w+\/\w+;base64,/ig, '');
     const size = res.length;
-    const chunk = 1024 * 256;
+    const chunk = 1024* 128;
     let index = 0;
     let bitcounter = 0;
+    console.log('pic size: ', size);
+    console.log('mime type: ',mime);
 
     const sendChunk = () => {
       console.log('[before]buffer size: ', API.ws.buffer);
@@ -180,10 +184,10 @@ export const uploading_pic = (id, file, type) => async dispatch => {
         const bit = res.slice(bitcounter, bitcounter + chunk);
         if (bitcounter < size) {
           console.log('sending segment:', index);
-          API.ws.send({t: 'up-pic', v: bit, i: index++, n: name, c: type});
+          API.ws.send({t: 'up-pic', v: bit, i: index++, n: name, c: type, m: mime});
         }else {
           console.log('sending finished.');
-          API.ws.send({t: 'up-pic', i: -1, n: name, c: type});
+          API.ws.send({t: 'up-pic', i: -1, n: name, c: type, m: mime});
         }
       } else {
         console.log('buffer is full.');
@@ -194,13 +198,15 @@ export const uploading_pic = (id, file, type) => async dispatch => {
 
       API.ws.on('up-pic', (e) => {
         clearTimeout(tiemr);
-        // API.ws.off('up-pic', num); // manual remove excuted event
         if (!e.err && !e.l) {
+          dispatch({ type: FILE_UPLOADING, id, percent: Math.floor((bitcounter/size)*100)});
           sendChunk();
         }else if (e.err) {
+          console.log(e.err);
           reject(false)
         }else{
-          dispatch({ type: FILE_UPLOADED, id })
+          dispatch({ type: FILE_UPLOADED, id });
+          dispatch({ type: FILE_UPLOADING, id, percent: 100});
           if (type === 'tn') {
             dispatch({ type: SET_USER, user: {pic: e.l} });
           } else if (type === 'ch-cover') {
@@ -551,6 +557,28 @@ export const get_user_info = (uid) => dispatch => {
   })
 }
 
+export const send_identity = (obj) => dispatch => {
+  let timmer;
+  dispatch({ type: SET_SUBMITTING_STATE, value: true});
+  API.ws.send({t: 'put-id', v: obj});
+  return new Promise((resolve, reject) => {
+    API.ws.on('put-id', (e) => {
+      clearTimeout(timmer);
+      dispatch({ type: SET_SUBMITTING_STATE, value: false});
+      if (e.err) {
+        console.log(e.err);
+        reject(false);
+      }
+      resolve(true);
+    }, true);
+    timmer = setTimeout(() => {
+      dispatch({ type: SET_SUBMITTING_STATE, value: false});
+      reject(false);
+    }, 10000);
+  })
+ 
+}
+
 //
 export const set_language = (language = "zh") => dispatch => {
   dispatch({ type: SET_LANGUAGE, language});
@@ -593,137 +621,3 @@ export const change_form_data = (prop, value) => dispatch => {
   }
 }
 
-
-
-// export const saveTodos = (id, title, todos) => async dispatch => {
-//   try {
-//     const token = localStorage.getItem('token');
-//     if (!token || token === '') {
-//       console.log('no token');
-//       return false;
-//     };
-//     dispatch({type: TOGGLE_SYNCING, value: true});
-//     await axios({
-//       url: `${ADDR}/todo/updateTodo`,
-//       method: 'put',
-//       headers: {
-//         'token': token
-//       },
-//       data: {
-//         id,     // list ID
-//         title,  // list title
-//         todos: JSON.stringify(todos)   // list todos
-//       }
-//     });
-//     dispatch({type: TOGGLE_SYNCING, value: false});
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     console.log(e);
-//     return false;
-//   }
-// }
-
-// export const loadingWholeList = (token) => async dispatch => {
-//   try {
-//     dispatch({type: TOGGLE_SYNCING, value: true});
-//     const res = await axios({
-//       url: `${ADDR}/todoList`,
-//       method: 'get',
-//       headers: {
-//         'token': token
-//       }
-//     });
-//     dispatch({ type: LOAD_WHOLE_TODOS_TO_STATE, todoList: res.data});
-//     dispatch({type: TOGGLE_SYNCING, value: false});
-//     return true;
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     console.log(e);
-//     return false;
-//   }
-// }
-
-
-
-// // Login / Logout
-// export const login = (loginString, password) => async dispatch => {
-//   try {
-//     dispatch({type: TOGGLE_LOGGING, value: true});
-//     const res = await axios.post(`${ADDR}/todo/login`, {loginString, password});
-//     dispatch({type: TOGGLE_LOGGING, value: false});
-//     if (window.localStorage) {
-//       localStorage.setItem("token", res.data.token);
-//     }
-//     dispatch({type: LOGIN, username: res.data.username});
-//     return true;
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     console.log(e);
-//     return false;
-//   }
-// }
-
-// export const logout = (token) => async dispatch => {
-//   try{
-//     dispatch({type: TOGGLE_LOGGING, value: true});
-//     await axios({
-//       url: `${ADDR}/todo/logout`,
-//       method: 'post',
-//       headers: {
-//         'token': token
-//       }
-//     }); 
-//     dispatch({type: TOGGLE_LOGGING, value: false});
-//     if (window.localStorage) {
-//       localStorage.removeItem('token');
-//     }
-//     dispatch({type: LOGOUT});
-//     dispatch({type: CLEAR_TODOS});
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     console.log(e);
-//     return false;
-//   }
-// }
-
-// export const register = (username, password, email) => async dispatch => {
-//   try {
-//     dispatch({type: TOGGLE_LOGGING, value: true});
-//     const res = await axios.post(`${ADDR}/todo/register`, {username, password, email});
-//     dispatch({type: TOGGLE_LOGGING, value: false});
-//     if (window.localStorage) {
-//       localStorage.setItem('token', res.data.token);
-//     }
-//     dispatch({ type: LOGIN, username: res.data.username });
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     console.log(e);
-//     return false;
-//   }
-// }
-
-// export const verifyAuth = () => async dispatch => {
-//   let token = null;
-//   try {
-//     if (window.localStorage) {
-//       token = localStorage.getItem('token');
-//     }
-//     if (!token) return false;
-//     dispatch({type: TOGGLE_INITIALISING, value: true});
-//     const res = await axios({
-//       url: `${ADDR}/todo/isLogin`,
-//       method: 'post',
-//       headers: {
-//         'token': token
-//       }
-//     }); 
-//     dispatch({type: TOGGLE_INITIALISING, value: false});
-//     if (res.status !== 200) return false;
-//     dispatch({ type: LOGIN, username: res.data.username});
-//   }catch(e) {
-//     dispatch({type: TOGGLE_ERROR, value: true});
-//     // if (window.localStorage) localStorage.removeItem('token');
-//     console.log(e);
-//     return false;
-//   }
-// }

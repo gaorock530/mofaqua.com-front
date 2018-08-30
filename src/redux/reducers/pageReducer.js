@@ -128,10 +128,16 @@ export default function (state = {
       } else {
         state.uploadFiles[action.id] = {};
         state.uploadFiles[action.id].url = action.url;
-        // state.uploadFiles[action.id].file = [];
+        state.uploadFiles[action.id].percentage = 0;
         // state.uploadFiles[action.id].file.push(action.file);
       }
       state.uploadFiles[action.id].isUploading = true;
+      return {
+        ...state,
+        uploadFiles: state.uploadFiles
+      }
+    case 'FILE_UPLOADING':
+      state.uploadFiles[action.id].percentage = action.percent;
       return {
         ...state,
         uploadFiles: state.uploadFiles

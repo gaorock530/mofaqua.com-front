@@ -27,3 +27,16 @@ class Seller extends Component {
 }
 
 export default Seller;
+
+/*
+              <div>
+                <p><input type="text" placeholder="企业全称" /></p>
+                <p><input type="text" placeholder="企业法人姓名" /></p>
+                <p><input type="text" placeholder="企业法人手机" /></p>
+                <p><input type="text" placeholder="企业法人身份证号码" /></p>
+                <p><input type="text" placeholder="营业执照编号" /></p>
+                <Upload className="idSide" id="idup" onChange={this.change} color="#666699" opt={false} crop={false} type='id-a'>身份证正面</Upload>
+                <Upload className="idSide" id="iddown" onChange={this.change} color="#666699" opt={false} crop={false} type='id-b'>身份证反面</Upload>
+                <button>提交</button>
+              </div>
+*/

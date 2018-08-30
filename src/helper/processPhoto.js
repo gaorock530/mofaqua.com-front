@@ -9,7 +9,7 @@
 
 export default (file, crop = true, opt = true, width, height) => {
   if (crop) {
-    if (!width) throw Error('height must be given');
+    if (!width) throw Error('width must be given');
     if (!height) height = width / 1.7777777; // 16:9
   }
 
@@ -18,24 +18,27 @@ export default (file, crop = true, opt = true, width, height) => {
     return new Promise ((resolve, reject) => {
       // use Jimp module
       window.Jimp.read(file).then((photo) => {
+        console.log(photo._originalMime)
         console.log(photo.bitmap.height, photo.bitmap.width);
         // processing
-        photo
-          .cover(crop?width:photo.bitmap.width, crop?height:photo.bitmap.height)// resize
-          //.resize(256, 256)            // resize
-          .quality(opt?80:100)                 // set JPEG quality
-          //.greyscale()                 // set greyscale
-          .getBuffer(window.Jimp.MIME_JPEG, (e, a) => { //save change
+        width = width > photo.bitmap.width? photo.bitmap.width: width;
+        height = height > photo.bitmap.height? photo.bitmap.height: height;
+        // step.1 - resize
+        crop && photo.cover(width, height);
+        // step.2 - optical
+        opt && photo.quality(80);
+        // step.3 - output
+        photo.getBuffer(window.Jimp.MIME_JPEG, (e, a) => { //save change
           // get processed file buffer, a -> Uint8Array
-              if(e) reject(e); 
-              console.log(a);
-              // generate Blob(file) object from buffer
-              const blob = new Blob([a], {type: "image/jpeg"});
-              // generate ObjectURL from Blob
-              const url = window.URL.createObjectURL(blob);
-              // return url
-              resolve({url, blob});
-          }); 
+          if(e) reject(e); 
+          // generate Blob(file) object from buffer
+          const blob = new Blob([a], {type: window.Jimp.MIME_JPEG});
+          console.log(blob.size);
+          // generate ObjectURL from Blob
+          const url = window.URL.createObjectURL(blob);
+          // return url
+          resolve({url, blob});
+        });
       });
     });
   }
@@ -45,30 +48,31 @@ export default (file, crop = true, opt = true, width, height) => {
   // start read file As ArrayBuffer
   container.readAsArrayBuffer(file);
   // covert to Promise based
-  // const height = width / ratio;
   return new Promise ((resolve, reject) => {
     // fire when file converted to arrayBuffer
     container.addEventListener('load', (e) => {
       // use Jimp module
       window.Jimp.read(e.target.result).then((photo) => {
         console.log(photo.bitmap.height, photo.bitmap.width);
-        // processing
-        photo
-          .cover(crop?width:photo.bitmap.width, crop?height:photo.bitmap.height)// resize
-          //.resize(256, 256)            // resize
-          .quality(opt?80:100)                 // set JPEG quality
-          //.greyscale()                 // set greyscale
-          .getBuffer(window.Jimp.MIME_JPEG, (e, a) => { //save change
+        console.log(photo._originalMime)
+        width = width > photo.bitmap.width? photo.bitmap.width: width;
+        height = height > photo.bitmap.height? photo.bitmap.height: height;
+        // step.1 - resize
+        crop && photo.cover(width, height);
+        // step.2 - optical
+        opt && photo.quality(80);
+        // step.3 - output
+        photo.getBuffer(window.Jimp.MIME_JPEG, (e, a) => { //save change
           // get processed file buffer, a -> Uint8Array
-              if(e) reject(e); 
-              // generate Blob(file) object from buffer
-              const blob = new Blob([a], {type: "image/jpeg"});
-              console.log(blob.size);
-              // generate ObjectURL from Blob
-              const url = window.URL.createObjectURL(blob);
-              // return url
-              resolve({url, blob});
-          }); 
+          if(e) reject(e); 
+          // generate Blob(file) object from buffer
+          const blob = new Blob([a], {type: window.Jimp.MIME_JPEG});
+          console.log(blob.size);
+          // generate ObjectURL from Blob
+          const url = window.URL.createObjectURL(blob);
+          // return url
+          resolve({url, blob});
+        });
       });
       
     });

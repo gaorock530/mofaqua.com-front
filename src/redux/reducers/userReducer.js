@@ -9,8 +9,7 @@ export default function (state = {
   user: null,
   channel: null,
   loading: false,
-  // address: [],
-  // defaultAddress: null,
+  submitting: false,
   language: 'zh'                // set language
 }, action) { 
   switch (action.type) {
@@ -84,6 +83,11 @@ export default function (state = {
       return {
         ...state,
         loading: action.value
+      }
+    case 'SET_SUBMITTING_STATE':
+      return {
+        ...state,
+        submitting: action.value || false
       }
 
     case 'SET_LANGUAGE':

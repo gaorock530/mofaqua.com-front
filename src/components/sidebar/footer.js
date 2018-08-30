@@ -36,7 +36,6 @@ class Footer extends Component {
         </div>
         <div className="links">
           <a href="http://www.baidu.com" target="_blank" rel="noopener noreferrer">报错</a>
-          <a href="http://www.baidu.com" target="_blank" rel="noopener noreferrer">举报</a>
           <a href="http://www.baidu.com" target="_blank" rel="noopener noreferrer">沪ICP备15043293号</a>
           <a href="http://www.baidu.com" target="_blank" rel="noopener noreferrer">沪网文[2015]0826-226号</a>
           <a href="http://www.baidu.com" target="_blank" rel="noopener noreferrer">沪公网安备 31010802001046号</a>

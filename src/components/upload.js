@@ -23,7 +23,7 @@ require('jimp/browser/lib/jimp');
 class Upload extends PureComponent {
   componentWillMount () {
     this.id = cuid();
-    this.type = this.props.type || 'tn' // default thumbnails
+    this.type = this.props.type;
   }
 
   componentWillUnmount () {
@@ -34,6 +34,7 @@ class Upload extends PureComponent {
 
   onUpload = async (e) => {
     if (e.target.files[0] === this.image || !e.target.files[0]) return;
+    if (!this.type) return console.log('missing upload type');
     // actual file
     this.image = e.target.files[0];
     // check type
@@ -52,6 +53,7 @@ class Upload extends PureComponent {
       this.refs.upload.style.backgroundImage = `url('${newPhoto.url}')`;
       this.props.notification_in(cuid(), '图片上传成功', newPhoto.url);
     } catch (e) {
+      console.log(e);
       return this.props.notification_in(cuid(), '网络错误，稍后请重试');
     }
     // excute custom event
@@ -59,6 +61,7 @@ class Upload extends PureComponent {
       this.props.onChange(this.image);
     };
   }
+
   render () {
     const {
       className = '',
@@ -69,10 +72,11 @@ class Upload extends PureComponent {
       image = null
     } = this.props;
     const uploading = this.props.page.uploadFiles[this.id] && this.props.page.uploadFiles[this.id].isUploading;
+    const percent = this.props.page.uploadFiles[this.id]?this.props.page.uploadFiles[this.id].percentage+'%':0;
     return (
       <div className={"uploadWapper " + className}>
         <input type="file" id={id} accept="image/gif, image/jpeg, image/png" onChange={this.onUpload} className="fileInput" />
-        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#CC0000', color: color?color:'#CC0000', backgroundImage: image?`url(${image})`:'none'}}>{uploading?'上传中': children}</label>
+        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', color: color?color:'#fff', backgroundImage: image?`url(${image})`:'none'}}>{uploading?percent: children}</label>
         {uploading? <Spinner position="mid" single={true} size="32px"/>:''}
       </div>
     )

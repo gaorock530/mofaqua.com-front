@@ -21,6 +21,7 @@ export const SET_CHANNEL_TAB = 'SET_CHANNEL_TAB';
 export const TOGGLE_MINI_NAV = 'TOGGLE_MINI_NAV';
 //
 export const ADD_UPLOAD_FILE = 'ADD_UPLOAD_FILE';
+export const FILE_UPLOADING = 'FILE_UPLOADING';
 export const FILE_UPLOADED = 'FILE_UPLOADED';
 export const FILE_DESTROY = 'FILE_DESTROY';
 //
@@ -46,7 +47,7 @@ export const EMAIL_RESEND_IN = 'EMAIL_RESEND_IN';
 export const SET_USER = 'SET_USER';
 export const SET_CHANNEL = 'SET_CHANNEL';
 export const SET_LOADING_STATE = 'SET_LOADING_STATE';
-// export const ADD_ADDRESS = 'ADD_ADDRESS';
+export const SET_SUBMITTING_STATE = 'SET_SUBMITTING_STATE';
 //
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 

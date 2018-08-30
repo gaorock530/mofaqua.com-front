@@ -15,16 +15,13 @@ import Playlist from './playlist';
 
 class Channel extends PureComponent {
   async componentWillMount () {
+    // console.log(this.props.location.search.slice(1).split('&'));
     this.search = this.props.location.search.slice(1).split('&');
     if (this.search.length !== 0 && this.search[0] !== '') {
       this.search.map((search) => {
         const tab = search.split('=');
-        if (tab[0] === 't' && tab[1] === 'second') {
-          this.tab = 'second';
-        } else if (tab[0] === 't' && tab[1] === 'playlist') {
-          this.tab = 'playlist';
-        } else if (tab[0] === 't' && tab[1] === 'post') {
-          this.tab = 'post';
+        if (tab[0] === 't') {
+          this.tab = tab[1];
         }
         return true;
       });
@@ -88,7 +85,7 @@ class Channel extends PureComponent {
     const cover = this.props.user.channel && this.props.user.channel.cover? this.props.user.channel.cover : '';
     return (
       <Page className="flat">
-        <Upload className="channel-banner setup" color="#666699" id="cover" width={1920} height={500} crop={true} opt={true} type="ch-cover" image={prefix(cover)}>更换封面</Upload>
+        <Upload className="channel-banner setup" color="#666699" id="cover" width={1920} height={350} crop={true} opt={true} type="ch-cover" image={prefix(cover)}>更换封面</Upload>
         <section className="channel-header">
           <div className="channel-wrapper">
             <div className="channel-title">

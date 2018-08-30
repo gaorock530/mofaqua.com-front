@@ -148,12 +148,15 @@ ul, li {
 }
 
 .red {
-  color: $theme-red;
+  color: $theme-red !important;
 }
 .green {
-  color: green;
+  color: green !important;
 }
 .blue {
-  color: $theme-blue;
+  color: $theme-blue !important;
+}
+.yellow {
+  color: yellowgreen !important;
 }
 

@@ -3,14 +3,17 @@ import cuid from 'cuid';
 
 /**
  * @param {String} tag tag name of the label
- * @param {Array} options radio options
+ * @param {Array} options radio options {lable: '', value: ''}
+ * @param {String/Number} default default value for check
+ * @param {Function} onChange
  */
 
 export default (props) => {
   const tag = props.tag || '';
   const options = props.options || [];
-  const def = props.default || 1;
+  const def = props.default === 'undefined' ? 1 : props.default;
   const name = cuid();
+  console.log(def);
 
   const onChange = (e) => {
     if (props.onChange) {

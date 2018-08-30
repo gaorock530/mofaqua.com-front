@@ -136,7 +136,7 @@ class Upload extends PureComponent {
     return (
       <div className={"uploadWapper " + className}>
         <input type="file" id={id} accept="video/*" onChange={this.onUpload} className="fileInput" />
-        <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>上传文件</label>
+        <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>{children}</label>
         {uploading? <Spinner position="mid" single={true} size="12px"/>:''}
         {uploaded? <div className="addon-video-info">
           <li><span>文件名：</span><span>{this.video.name}</span></li>

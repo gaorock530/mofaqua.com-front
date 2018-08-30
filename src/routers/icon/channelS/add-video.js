@@ -80,7 +80,7 @@ class AddVideo extends PureComponent {
         <Select options={this.renderList()} onChange={this.onList} default={this.data.list}/>
         <Textarea tag="关键字：" onBlur={this.onKeywords} placeholder="输入关键字： 例如#小丑鱼，多个关键字用逗号隔开"></Textarea>
         <Textarea tag="介绍：" onBlur={this.onNote} placeholder="输入视频简介：最多200个字"></Textarea>
-        <Save tag="上传视频" />
+        <Save tag="发布视频" />
       </Page>
     )
   }

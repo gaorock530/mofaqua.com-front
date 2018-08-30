@@ -59,7 +59,7 @@ class Person extends Component {
       <div>
         <div>
           <h3>头像</h3>
-          <Upload className="pt" id="icon" round={true} color="#666699" onChange={this.change} width={80} height={80} crop={true} image={prefix(this.props.user.user.pic)}>+</Upload>
+          <Upload className="pt" id="icon" round={true} color="#666699" onChange={this.change} width={80} height={80} crop={true} image={prefix(this.props.user.user.pic)} type='tn'>+</Upload>
         </div>
         <div>
           <h3>用户名</h3>
