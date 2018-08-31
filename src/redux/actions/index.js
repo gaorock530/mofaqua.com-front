@@ -168,7 +168,7 @@ export const uploading_pic = (id, file, type) => async dispatch => {
   const limit = 1024*1024;
   return new Promise((resolve, reject)=> {
     // data:*/*;base64,
-    const mime = res.match(/(?<=data:image\/)\w+/)[0];
+    // const mime = res.match(/(?<=data:image\/)\w+/)[0];
     const name = cuid();
     res = res.replace(/data:\w+\/\w+;base64,/ig, '');
     const size = res.length;
@@ -176,7 +176,7 @@ export const uploading_pic = (id, file, type) => async dispatch => {
     let index = 0;
     let bitcounter = 0;
     console.log('pic size: ', size);
-    console.log('mime type: ',mime);
+    // console.log('mime type: ',mime);
 
     const sendChunk = () => {
       console.log('[before]buffer size: ', API.ws.buffer);
@@ -184,10 +184,10 @@ export const uploading_pic = (id, file, type) => async dispatch => {
         const bit = res.slice(bitcounter, bitcounter + chunk);
         if (bitcounter < size) {
           console.log('sending segment:', index);
-          API.ws.send({t: 'up-pic', v: bit, i: index++, n: name, c: type, m: mime});
+          API.ws.send({t: 'up-pic', v: bit, i: index++, n: name, c: type});
         }else {
           console.log('sending finished.');
-          API.ws.send({t: 'up-pic', i: -1, n: name, c: type, m: mime});
+          API.ws.send({t: 'up-pic', i: -1, n: name, c: type});
         }
       } else {
         console.log('buffer is full.');
