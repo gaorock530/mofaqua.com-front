@@ -23,6 +23,11 @@ a:focus {
 
 textarea {
   border-color: #d9d9d9; 
+  &:focus {
+    box-shadow: inset 1px 1px 5px rgba(0,0,0,0.2);
+    border-color: #666; 
+    outline: none;
+  }
 }
 
 button {

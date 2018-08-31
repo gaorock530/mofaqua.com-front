@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import Person from './person';
 // import Account from './account';
-import Identity from './identity';
+import Message from './message';
 import Address from './address';
 import Seller from './seller';
 import Page from '../../../components/page';
@@ -21,10 +21,8 @@ class Personal extends Component {
     switch (this.props.page.setupPage) {
       case 'person':
         return <Person />;
-      // case 'account':
-      //   return <Account />;
-      case 'identity':
-        return <Identity />;
+      case 'message':
+        return <Message />;
       case 'address':
         return <Address />;
       case 'seller':
@@ -49,8 +47,7 @@ class Personal extends Component {
         <div className="twocol-container">
           <div className="twocol-left noselect">
             <a onClick={this.onClick.bind(this, 'person')} className="active">个人资料</a>
-            {/* <a onClick={this.onClick.bind(this, 'account')}>资产管理</a> */}
-            <a onClick={this.onClick.bind(this, 'identity')}>实名认证</a>
+            <a onClick={this.onClick.bind(this, 'message')}>消息管理</a>
             <a onClick={this.onClick.bind(this, 'address')}>收货信息</a>
             <a onClick={this.onClick.bind(this, 'seller')}>店铺管理</a>
           </div>

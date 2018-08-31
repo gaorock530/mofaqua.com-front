@@ -53,13 +53,8 @@ class Address extends Component {
     )
   }
   addADD = () => {
-    this.props.set_temp('add');
-    axios({
-      url: `http://apis.map.qq.com/ws/district/v1/getchildren?key=BBYBZ-2A66F-UDJJ2-NSWRG-VD3TZ-VSFE2`,
-      method: 'get',
-    }).then((data) => {
-      console.log(data);
-    })
+    this.add = true;
+    this.forceUpdate()
   }
   render () {
     return (
@@ -67,9 +62,35 @@ class Address extends Component {
         <div>
           <h3>地址管理</h3>
           {this.renderAddress()}
-          {this.props.page.temp !== 'add'?<a onClick={this.addADD}>添加地址</a>:''}
+          <a onClick={this.addADD}>添加地址</a>
         </div>
-        {this.renderOption()}
+        {!this.add?'':
+        (
+          <div>
+            <h3>地址详情</h3>
+            <p>
+              <select>
+                <option>北京</option>
+                <option>上海</option>
+                <option>广州</option>
+              </select>
+              <select>
+                <option>北京</option>
+                <option>上海</option>
+                <option>广州</option>
+              </select>
+              <select>
+                <option>北京</option>
+                <option>上海</option>
+                <option>广州</option>
+              </select>
+            </p>
+            <p><input type="text" ref="street" placeholder="详细地址"/></p>
+            <p><input type="number" ref="zip" placeholder="邮编"/></p>
+            <a>保存</a>
+          </div>
+        )
+      }
       </div>
     )
   }

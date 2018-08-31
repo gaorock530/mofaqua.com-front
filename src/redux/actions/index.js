@@ -202,7 +202,8 @@ export const uploading_pic = (id, file, type) => async dispatch => {
           dispatch({ type: FILE_UPLOADING, id, percent: Math.floor((bitcounter/size)*100)});
           sendChunk();
         }else if (e.err) {
-          console.log(e.err);
+          dispatch({ type: FILE_UPLOADED, id });
+          dispatch({ type: FILE_DESTROY, id});
           reject(false)
         }else{
           dispatch({ type: FILE_UPLOADED, id });
@@ -533,7 +534,6 @@ export const get_channel = (uid) => dispatch => {
 }
 
 export const get_user_info = (uid) => dispatch => {
-  console.log('get_user_info');
   let timer;
   return new Promise((resolve, reject) => {
     dispatch({ type: SET_LOADING_STATE, value: true});
@@ -569,6 +569,8 @@ export const send_identity = (obj) => dispatch => {
         console.log(e.err);
         reject(false);
       }
+      dispatch({ type: PHONE_RESEND_IN, value: 0 });
+      dispatch({ type: SET_USER, user: {verification: {verified: 1}}});
       resolve(true);
     }, true);
     timmer = setTimeout(() => {
