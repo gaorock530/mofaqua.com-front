@@ -9,11 +9,12 @@ app.disable('etag').disable('x-powered-by');
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.use((req, res, next) => {
-  console.log(req);
-  res.setHeader('Server', 'MagicBox');
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(req);
+//   res.setHeader('Server', 'MagicBox');
+//   next();
+// });
+
 
 app.listen(PORT, (err) => {
   console.log( err || `React Static Server is running on Port: ${PORT}`);
