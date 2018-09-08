@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
-import axios from 'axios';
 
 class Address extends Component {
   fakeAddress = [
@@ -57,8 +56,21 @@ class Address extends Component {
     this.forceUpdate()
   }
   render () {
+    const buyer = this.props.user.user.buyer;
     return (
       <div>
+        <div>
+          <h3>交易评估和等级</h3>
+          <p>
+            <label>等级</label><span>Lv.{buyer?buyer.level:''}</span>
+          </p>
+          <p>
+            <label>经验</label><span>{buyer?buyer.exp+'/1000':''}</span>
+          </p>
+          <p>
+            <label>信用值</label><span>{buyer?buyer.credit: ''}</span>
+          </p>
+        </div>
         <div>
           <h3>地址管理</h3>
           {this.renderAddress()}

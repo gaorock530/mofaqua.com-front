@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../../redux/actions';
 
 class Seller extends Component {
   fakeShop = {
 
   }
   render () {
+    const balance = this.props.user.user?this.props.user.user.balance:0;
+    const magic = this.props.user.user?this.props.user.user.magicCoin:0;
     return (
       <div>
         <div>
-          <h3>店铺信息</h3>
-          <p><label>店名:</label><span>海南尚可鱼坊</span></p>
-          <p><label>等级:</label><span>Lv.10</span></p>
-          <p><label>信誉:</label><span>❤️❤️❤️❤️❤️</span></p>
+          <h3>魔法币</h3>
+          <p><label>总数:</label><span>{balance.total}</span></p>
+          <p><label>可用:</label><span>Lv.10</span></p>
+          <p><label>监管:</label><span></span></p>
         </div>
         <div>
           <h3>保证金</h3>
@@ -26,7 +30,11 @@ class Seller extends Component {
   }
 }
 
-export default Seller;
+const state = (state) => {
+  return {user: state.user}
+}
+
+export default connect(state, actions)(Seller);
 
 /*
               <div>

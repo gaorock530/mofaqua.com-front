@@ -131,7 +131,6 @@ class Person extends Component {
   }
 
   render () {
-    const buyer = this.props.user.user.buyer;
     return (
       <div>
         <div>
@@ -159,18 +158,6 @@ class Person extends Component {
           </p>
           <p>
             <label>经验</label><span>{this.props.user.user.person.exp+'/1000'}</span>
-          </p>
-        </div>
-        <div>
-          <h3>交易评估和等级</h3>
-          <p>
-            <label>等级</label><span>Lv.{buyer?buyer.level:''}</span>
-          </p>
-          <p>
-            <label>经验</label><span>{buyer?buyer.exp+'/1000':''}</span>
-          </p>
-          <p>
-            <label>信用值</label><span>{buyer?buyer.credit: ''}</span>
           </p>
         </div>
         <div>

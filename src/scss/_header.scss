@@ -11,15 +11,21 @@
   -webkit-transform: translateZ(0);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  /* default stretch : horizontally */
   justify-items: stretch;
-  /* default stretch : vertically */
   align-items: stretch;
+  /* default stretch : horizontally */
+  
+  /* default stretch : vertically */
+  
   /* examples */
   // grid-auto-rows: minmax(100px, auto);
   // grid-column-gap: 10px;
   // grid-row-gap: 10px;
   // grid-gap: 10px;
+  // display: flex;
+  // &>* {
+  //   flex: 1;
+  // }
   i {
     font-size: 1.6rem;
   }
