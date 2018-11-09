@@ -20,8 +20,8 @@ class Category extends Component {
         <Link to="/gear"><i className="fa fa-suitcase"></i><span>器材</span></Link>
         <Link to="/food"><i className="fa fa-leaf"></i><span>鱼粮</span></Link>
         <Link to="/tanks"><i className="fa fa-tint"></i><span>美缸</span></Link>
-        <Link to="/experience"><i className="fa fa-mortar-board"></i><span>经验</span></Link>
-        <Link to="/videos"><i className="fa fa-video-camera"></i><span>视频</span></Link>
+        <Link to="/experience"><i className="fa fa-graduation-cap"></i><span>经验</span></Link>
+        <Link to="/videos"><i className="fa fa-video"></i><span>视频</span></Link>
         <Link to="/live"><i className="fa fa-heartbeat"></i><span>直播</span></Link>
       </div>
     )

@@ -18,7 +18,7 @@ class More extends Component {
         <div className="sidebar-menu-title">应用</div>
         <Link to="/ask"><i className="fa fa-question"></i><span>我要提问</span></Link>  
         <Link to="/answer"><i className="fa fa-reply-all"></i><span>我要回答</span></Link> 
-        <Link to="/calculator"><i className="fa fa-flask"></i><span>计算工具</span></Link> 
+        <Link to="/calculator"><i className="fa fa-calculator"></i><span>计算工具</span></Link> 
       </div>
     )
   }

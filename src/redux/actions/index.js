@@ -1,6 +1,7 @@
-import axios from 'axios';
+// import axios from 'axios';
 import animate from '../../helper/animate';
 import API from '../../ws-api';
+// import wsSend from '../../helper/sendOverWS';
 import UploadEncoder from '../../helper/uploadEncoder';
 import {
   //ws
@@ -65,7 +66,6 @@ import {
 // const uuid = require('uuid/v1');
 const cuid = require('cuid');
 API.init();
-
 window.api = API;
 
 /*
@@ -578,8 +578,8 @@ export const send_identity = (obj) => dispatch => {
       reject(false);
     }, 10000);
   })
- 
 }
+
 
 //
 export const set_language = (language = "zh") => dispatch => {

@@ -27,8 +27,8 @@ class AddPost extends PureComponent {
     }
     this.data = {
       category: {
-        level1: 1,
-        level2: 1,
+        level1: 0,
+        level2: 0,
         level3: 0
       }
     }
@@ -87,20 +87,20 @@ class AddPost extends PureComponent {
   }
   list = (l) => {
     return l.map((i, index) => {
-      return {label: i, value: index};
+      return i;
     })
   }
   renderCate = () => {
-    if (this.data.category.level1 === 1) {
-      if (this.data.category.level2 === 1) this.props.change_form_data('array', this.list(this.category.a));
-      if (this.data.category.level2 === 2) this.props.change_form_data('array', this.list(this.category.b));
-      if (this.data.category.level2 === 3) this.props.change_form_data('array', this.list(this.category.c));
-      if (this.data.category.level2 === 4) this.props.change_form_data('array', this.list(this.category.e));
-    } else if (this.data.category.level1 === 2) {
-      if (this.data.category.level2 === 1) this.props.change_form_data('array', this.list(this.category.d));
-      if (this.data.category.level2 === 2) this.props.change_form_data('array', this.list(this.category.b));
-      if (this.data.category.level2 === 3) this.props.change_form_data('array', this.list(this.category.c));
-      if (this.data.category.level2 === 4) this.props.change_form_data('array', this.list(this.category.e));
+    if (this.data.category.level1 === 0) {
+      if (this.data.category.level2 === 0) this.props.change_form_data('array', this.list(this.category.a));
+      if (this.data.category.level2 === 1) this.props.change_form_data('array', this.list(this.category.b));
+      if (this.data.category.level2 === 2) this.props.change_form_data('array', this.list(this.category.c));
+      if (this.data.category.level2 === 3) this.props.change_form_data('array', this.list(this.category.e));
+    } else if (this.data.category.level1 === 1) {
+      if (this.data.category.level2 === 0) this.props.change_form_data('array', this.list(this.category.d));
+      if (this.data.category.level2 === 1) this.props.change_form_data('array', this.list(this.category.b));
+      if (this.data.category.level2 === 2) this.props.change_form_data('array', this.list(this.category.c));
+      if (this.data.category.level2 === 3) this.props.change_form_data('array', this.list(this.category.e));
     } 
   }
 
@@ -135,28 +135,23 @@ class AddPost extends PureComponent {
     }
     return (
       <Page wapper={true}>
-        <Input tag="文章标题：" placeholder="文章标题"/>
-        
- 
+        <Input label="文章标题：" placeholder="文章标题"/>
         <div className="full-title">分类：</div>
         <div className="hori-display-1-1-1">
+          <Select options={['海水', '淡水']}
+          onChange={this.onChangeCate1} default={this.data.category.level1}/>
           <Select options={[
-            {label: '海水', value: 1},
-            {label: '淡水', value: 2}
-          ]} onChange={this.onChangeCate1} default={this.data.category.level1}/>
-          <Select options={[
-            {label: '生物', value: 1},
-            {label: '设备', value: 2},
-            {label: '鱼粮/添加', value: 3},
-            {label: '其他', value: 4},
+            '生物',
+            '设备',
+            '鱼粮/添加',
+            '其他'
           ]} onChange={this.onChangeCate2} default={this.data.category.level2}/>
           <Select options={this.props.form.array} onChange={this.onChangeCate3} default={this.data.category.level3}/>
         </div>
 
 
-        <section className="hori-display-2-10">
-          <label>原创：</label>
-          <Switch onChange={this.onChangeOrg} on="是" off="否"/>
+        <section className="left-align">
+          <Switch label="原创：" onChange={this.onChangeOrg} on="是" off="否"/>
         </section>
         <div className="editor"><div id="editor"></div></div>
         <div className="editor"><div id="post-preview"></div></div>

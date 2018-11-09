@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 /**
  * @param {String} position ['top', 'mid', 'bot']
@@ -8,27 +8,20 @@ import React, { Component } from 'react';
  * @param {Elements} children <div>some elements</div>
 */
 
-export default class Spinner extends Component {
-  componentDidMount () {
+export default (props) => {
+  const { 
+    position = '',
+    Stype = 'style1', 
+    size = "50px" ,
+    single = true,
+    padding = false,
+  } = props;
 
-  }
-
-  render () {
-    const { 
-      position = '',
-      Stype = 'style1', 
-      size = "50px" ,
-      single = true,
-      padding = false,
-    } = this.props;
-
-    return (
-      <div className={'spinnner-wapper ' + position} style={{position: single?'absolute':'relative', padding: padding?padding:0}}>
-        <div className={"spinner " + Stype} style={{width: size, height: size}}>
-          {this.props.children}
-        </div>
+  return (
+    <div className={'spinnner-wapper ' + position} style={{position: single?'absolute':'relative', padding: padding?padding:0}}>
+      <div className={"spinner " + Stype} style={{width: size, height: size}}>
+        {props.children}
       </div>
-    )
-  }
-  
+    </div>
+  )
 }

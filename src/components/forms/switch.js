@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 
 
 /**
+ * @param {String} label label text
  * @param {Function} onChange return changed value
  * @param {String} on on state text
  * @param {String} off off state text
@@ -11,6 +12,7 @@ import React, {PureComponent} from 'react';
 export default class Swicth extends PureComponent {
   constructor (props) {
     super(props);
+    this.label = this.props.label || null;
     this.switch = typeof this.props.default === "boolean"?this.props.default: true;
   }
 
@@ -24,16 +26,20 @@ export default class Swicth extends PureComponent {
 
   render () {
     return (
-      <div className="switch" onClick={this.onclick}>
-        <div className={this.switch?'wapper':'wapper move'} ref="switch">
-          <span className="on">{this.props.on || 'on'}</span>
-          <span className="block">&nbsp;</span>
-          <span className="off">{this.props.off || 'off'}</span>
+      <div className="form-switch">
+        {this.label?<div ref="label" className="form-switch-label">
+          {this.label}
+        </div>:''}
+        <div className="form-switch-button" onClick={this.onclick}>
+          <div className={this.switch?'wapper':'wapper move'} ref="switch">
+            <span className="on">{this.props.on || 'ON'}</span>
+            <span className="block">&nbsp;</span>
+            <span className="off">{this.props.off || 'OFF'}</span>
+          </div>
         </div>
       </div>
     )
   }
-  
 }
 
 

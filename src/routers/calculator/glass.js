@@ -35,12 +35,12 @@ export default class Glass extends PureComponent {
       <div className="result">
         <p><i className="fa fa-exclamation-triangle red"></i>
         本计算结果仅供参考，计算页面提供者不承担任何责任。由于玻璃质量、结构缺陷或制作工艺引起的问题更不属于讨论的范围。</p>
-        <Static tag="玻璃面积：" text={this.reslut.area}/>
-        <Static tag="水体容积：" text={this.reslut.volume}/>
-        <Static tag="侧面厚度：" text={this.reslut.glassS}/>
-        <Static tag="侧面位移：" text={this.reslut.DeflectionS}/>
-        <Static tag="底面厚度：" text={this.reslut.glassB}/>
-        <Static tag="底面位移：" text={this.reslut.DeflectionB}/>
+        <Static label="玻璃面积：" text={this.reslut.area}/>
+        <Static label="水体容积：" text={this.reslut.volume}/>
+        <Static label="侧面厚度：" text={this.reslut.glassS}/>
+        <Static label="侧面位移：" text={this.reslut.DeflectionS}/>
+        <Static label="底面厚度：" text={this.reslut.glassB}/>
+        <Static label="底面位移：" text={this.reslut.DeflectionB}/>
       </div>
     )
   }
@@ -143,14 +143,14 @@ export default class Glass extends PureComponent {
   render () {
     return (
       <div>
-        <Input tag="安全系数(一般采用3.8)" default={this.SafetyFactor} onBlur={this.onChange5} type="number"/>
-        <Input tag="拉伸强度(一般浮法玻璃的拉伸强度为19.3~28.4MPa，钢化玻璃为~175MPa)" default={this.TensileStrength} onBlur={this.onChange6} type="number" options={['MPa']}/>
-        <Input tag="弹性系数(一般玻璃弹性系数为69GPa)" default={this.Elasticity} onBlur={this.onChange7} type="number" options={['GPa']}/>
-        <Input tag="长度" default={this.data.length} onBlur={this.onChange1} type="number" options={['mm']}/>
-        <Input tag="宽度" default={this.data.width} onBlur={this.onChange2} type="number" options={['mm']} />
-        <Input tag="高度" default={this.data.height} onBlur={this.onChange3} type="number" options={['mm']} />
-        <Input tag="水深" default={this.data.depth} onBlur={this.onChange4} type="number" options={['mm']} />
-        <Save onClick={this.onClick} tag="计算" />
+        <Input label="安全系数(一般采用3.8)" defaultValue={this.SafetyFactor} onBlur={this.onChange5} type="number"/>
+        <Input label="拉伸强度(一般浮法玻璃的拉伸强度为19.3~28.4MPa，钢化玻璃为~175MPa)" defaultValue={this.TensileStrength} onBlur={this.onChange6} type="number" tag='MPa'/>
+        <Input label="弹性系数(一般玻璃弹性系数为69GPa)" defaultValue={this.Elasticity} onBlur={this.onChange7} type="number" tag='GPa'/>
+        <Input label="长度" defaultValue={this.data.length} onBlur={this.onChange1} type="number" tag='mm'/>
+        <Input label="宽度" defaultValue={this.data.width} onBlur={this.onChange2} type="number" tag='mm' />
+        <Input label="高度" defaultValue={this.data.height} onBlur={this.onChange3} type="number" tag='mm' />
+        <Input label="水深" defaultValue={this.data.depth} onBlur={this.onChange4} type="number" tag='mm' />
+        <Save onClick={this.onClick} text="计算" />
         {this.renderResult()}
       </div>
     )

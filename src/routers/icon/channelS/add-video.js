@@ -29,9 +29,9 @@ class AddVideo extends PureComponent {
     this.props.redirect();
   }
   renderList = () => {
-    let l = [{label: '无', value:0}];
+    let l = ['无'];
     for(let i=0;i<10;i++) {
-      l.push({label: i+1, value: i+1});
+      l.push(i+1);
     }
     return l;
   }
@@ -69,17 +69,14 @@ class AddVideo extends PureComponent {
     return (
       <Page wapper={true}>
         <Upload id="video">选择视频</Upload>
-        <Input tag="视频标题:" onBlur={this.onTitle} placeholder="视频标题"/>
-        <section className="hori-display-1-1-1-1">
-          <div className="full-title">类型：</div>
-          <Switch onChange={this.onTypechange} on="海水" off="淡水"/>
-          <div className="full-title">原创：</div>
-          <Switch onChange={this.onOchange} on="是" off="否"/>
-        </section>
-        <div className="full-title">播放列表：</div>
-        <Select options={this.renderList()} onChange={this.onList} default={this.data.list}/>
+        <Input label="视频标题:" onBlur={this.onTitle} placeholder="视频标题"/>
+        <div className="left-align">
+          <Switch label="类型：" onChange={this.onTypechange} on="海水" off="淡水"/>
+          <Switch label="原创：" onChange={this.onOchange} on="是" off="否"/>
+        </div>
+        <Select label="播放列表:" options={this.renderList()} onChange={this.onList} default={this.data.list}/>
         <Textarea tag="关键字：" onBlur={this.onKeywords} placeholder="输入关键字： 例如#小丑鱼，多个关键字用逗号隔开"></Textarea>
-        <Textarea tag="介绍：" onBlur={this.onNote} placeholder="输入视频简介：最多200个字"></Textarea>
+        <Textarea tag="介绍：" label="视频介绍：" onBlur={this.onNote} max="200" placeholder="输入视频简介：最多200个字"></Textarea>
         <Save tag="发布视频" />
       </Page>
     )

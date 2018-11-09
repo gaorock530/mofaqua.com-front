@@ -44,7 +44,7 @@ class Search extends Component {
       <div className="search-box-wapper">
         <form className="search-box" onSubmit={this.handleSubmuit} onBlur={this.onBlur}>
           <input type="text" ref="searchText" placeholder="Search" onChange={this.onChange}/>
-          <button><i className="fa fa-search"></i></button>
+          <button><i className="all-center fa fa-search"></i></button>
         </form>
         <div className="search-result">
           {this.renderList()}

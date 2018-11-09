@@ -1,56 +1,71 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import Button from '../../../components/forms/button';
+import Addr from '../../../components/forms/address';
+import Input from '../../../components/forms/input';
+import Textarea from '../../../components/forms/textarea';
+import Radio from '../../../components/forms/radio';
+import ErrorText from '../../../helper/errorText';
 import * as actions from '../../../redux/actions';
+import cuid from 'cuid';
 
-class Address extends Component {
-  fakeAddress = [
-    'asdqweqpoweipoqwie',
-    '卡拉斯京看到了啊善良的空间阿斯顿流泪的 上劳动课',
-    '阿克苏 k askd kjk卡家是的'
-  ]
+class Address extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.fakeAddress = [
+      'asdqweqpoweipoqwie',
+      '卡拉斯京看到了啊善良的空间阿斯顿流泪的 上劳动课',
+      '阿克苏 k askd kjk卡家是的'
+    ]
+  }
+  
+
   renderAddress = () => {
-    let key = 0; 
-    return this.fakeAddress.map((i) => {
-      key++;
-      // console.log(this.fakeAddress.indexOf(i));
-      if (this.fakeAddress.indexOf(i) === 0) {
-        return <p key={key}><label><input type="radio" name="add" value={key} defaultChecked />{i}</label></p>
-      }
-      return <p key={key}><label><input type="radio" name="add" value={key} />{i}</label></p>
-    })
-  }
-
-  getLoc = (id = null) => {
-    this.props.set_province(id);
-  }
-
-  renderOption = () => {
-    if (this.props.page.temp === 'add') return (
+    if (this.add) return (
       <div>
         <h3>地址详情</h3>
-        <p>
-          <select>
-            <option>北京</option>
-            <option>上海</option>
-            <option>广州</option>
-          </select>
-          <select>
-            <option>北京</option>
-            <option>上海</option>
-            <option>广州</option>
-          </select>
-          <select>
-            <option>北京</option>
-            <option>上海</option>
-            <option>广州</option>
-          </select>
-        </p>
-        <p><input type="text" ref="street" placeholder="详细地址"/></p>
-        <p><input type="number" ref="zip" placeholder="邮编"/></p>
-        <a>保存</a>
+        <Addr list={this.getAddr}/>
+        <Textarea placeholder="详细地址" onBlur={this.getDetail}/>
+        <Input type="number" placeholder="邮编" onBlur={this.getZip} 
+        condition={(v) => !(parseInt(v,10) < 0 || v.length !== 6 || v.match(/\./g))} errorText={ErrorText.zip}
+        />
+        <Button text="保存" onClick={this.saveAddress}/>
+        <Button onClick={this.cancel} text="取消"/>
       </div>
     )
   }
+
+  getAddr = (data, comp) => {
+    if (!comp) this.addrCate = null;
+    else this.addrCate = data;
+  }
+  getDetail = (data) => {
+    if (data.length < 10 || data.length > 100) this.addrDetail = null;
+    else this.addrDetail = data;
+  }
+  getZip = (data) => {
+    if (data.length === 0 || data.length !==6 || data.match(/\./g)) this.zip = null;
+    else this.zip = data;
+  }
+
+  saveAddress = () => {
+    if (!this.addrCate || !this.addrDetail || !this.zip) return this.props.notification_in(cuid(), ErrorText.lackAddr);
+    this.add = false;
+    this.fakeAddress.push(this.addrDetail);
+    this.addrCate = null;
+    this.addrDetail = null;
+    this.zip = null;
+    this.forceUpdate()
+  }
+
+  cancel = () => {
+    this.addrCate = null;
+    this.addrDetail = null;
+    this.zip = null;
+    this.add = false;
+    this.forceUpdate()
+  }
+
   addADD = () => {
     this.add = true;
     this.forceUpdate()
@@ -73,36 +88,10 @@ class Address extends Component {
         </div>
         <div>
           <h3>地址管理</h3>
-          {this.renderAddress()}
-          <a onClick={this.addADD}>添加地址</a>
+          <Radio data={this.fakeAddress} onChange={(i) => console.log(i)} default={1}/>
+          <Button onClick={this.addADD} text="添加地址"/>
         </div>
-        {!this.add?'':
-        (
-          <div>
-            <h3>地址详情</h3>
-            <p>
-              <select>
-                <option>北京</option>
-                <option>上海</option>
-                <option>广州</option>
-              </select>
-              <select>
-                <option>北京</option>
-                <option>上海</option>
-                <option>广州</option>
-              </select>
-              <select>
-                <option>北京</option>
-                <option>上海</option>
-                <option>广州</option>
-              </select>
-            </p>
-            <p><input type="text" ref="street" placeholder="详细地址"/></p>
-            <p><input type="number" ref="zip" placeholder="邮编"/></p>
-            <a>保存</a>
-          </div>
-        )
-      }
+        {this.renderAddress()}
       </div>
     )
   }

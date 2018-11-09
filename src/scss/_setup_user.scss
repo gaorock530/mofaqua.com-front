@@ -41,12 +41,12 @@
   padding: 20px;
   text-align: left;
 
-  label, a {
-    color: #aaa;
-  }
-  a {
-    padding: 0 5px;
-  }
+  // label, a {
+  //   color: #aaa;
+  // }
+  // a {
+  //   padding: 0 5px;
+  // }
   p {
     color: #aaa;
   }
@@ -57,12 +57,7 @@
   label {
     padding-right: 10px;
   }
-  a {
-    display: inline-block;
-    &:hover {
-      color: #000;
-    }
-  }
+  
   input {
     border-color: #eee; 
     // margin-right: 10px;

@@ -34,10 +34,13 @@
 //   grid-template-columns: repeat(2, 1fr);
 //   align-items: center;
 // }
-.hori-display-1-1-1 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
+.hori-display {
+  display: flex;
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  &>div{
+    flex: 1;
+  }
 }
 .hori-display-1-1-1-1 {
   display: grid;

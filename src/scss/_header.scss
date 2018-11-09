@@ -43,7 +43,7 @@
   color: $theme-white;
   z-index: 999;
   /* fix header shaking [position: fixed] */
-  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   
 }
 

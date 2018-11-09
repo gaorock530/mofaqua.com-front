@@ -35,7 +35,7 @@ export default class Drug extends PureComponent {
     }
     this.choose = {
       opMain: 0,  
-      opTank: 0,
+      opTank: 2,
       opCust: 0
     };
     // all Units 
@@ -73,6 +73,7 @@ export default class Drug extends PureComponent {
     }
     this.reslut = null;
     this.forceUpdate();
+    console.log(this.choose.opTank)
   }
 
   // change main tank values
@@ -120,11 +121,9 @@ export default class Drug extends PureComponent {
   
 
   renderOptions = () => {
-    let options = [{label: '自定义尺寸', value: 0}, {label: '自定义水体', value: 1}];
-    let index = 2;
+    let options = ['自定义尺寸', '自定义水体'];
     for (let i=0;i<this.tanks.length;i++) {
-      options.push({label: this.tanks[i].name, value: index});
-      index++;
+      options.push(this.tanks[i].name);
     }
     return options;
   }
@@ -160,24 +159,24 @@ export default class Drug extends PureComponent {
   renderOpt1 = () => {
     return (
       <div>
-        <Input tag="主缸长度" default={this.data.length} onBlur={this.onValueChange.bind(this, 'main', 'length')} type="number" options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸宽度" default={this.data.width} onBlur={this.onValueChange.bind(this, 'main', 'width')} type="number" options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸高度" default={this.data.height} onBlur={this.onValueChange.bind(this, 'main', 'height')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸水深" default={this.data.depth} onBlur={this.onValueChange.bind(this, 'main', 'depth')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸长度（选填）" default={this.sump.length} onBlur={this.onValueChange.bind(this, 'sump', 'length')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸宽度（选填）" default={this.sump.width} onBlur={this.onValueChange.bind(this, 'sump', 'width')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸高度（选填）" default={this.sump.height} onBlur={this.onValueChange.bind(this, 'sump', 'height')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸水深（选填）" default={this.sump.depth} onBlur={this.onValueChange.bind(this, 'sump', 'depth')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸长度" defaultValue={this.data.length} onBlur={this.onValueChange.bind(this, 'main', 'length')} type="number" tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸宽度" defaultValue={this.data.width} onBlur={this.onValueChange.bind(this, 'main', 'width')} type="number" tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸高度" defaultValue={this.data.height} onBlur={this.onValueChange.bind(this, 'main', 'height')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸水深" defaultValue={this.data.depth} onBlur={this.onValueChange.bind(this, 'main', 'depth')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸长度（选填）" defaultValue={this.sump.length} onBlur={this.onValueChange.bind(this, 'sump', 'length')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸宽度（选填）" defaultValue={this.sump.width} onBlur={this.onValueChange.bind(this, 'sump', 'width')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸高度（选填）" defaultValue={this.sump.height} onBlur={this.onValueChange.bind(this, 'sump', 'height')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸水深（选填）" defaultValue={this.sump.depth} onBlur={this.onValueChange.bind(this, 'sump', 'depth')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
       </div>
     )
   }
   renderOpt2 = () => {
     this.unitDisplayt = this.unit['2'][this.unit.choose1];
-    return <Input tag="目标水体" default={this.volume} onBlur={this.onVolumeChange} onChangeUnit={this.unitChange.bind(this, 'custom')} type="number" options={this.unit['2']} defaultOp={this.choose.opCust}/>
+    return <Input label="目标水体" defaultValue={this.volume} onBlur={this.onVolumeChange} onChangeUnit={this.unitChange.bind(this, 'custom')} type="number" tag={this.unit['2']} defaultOp={this.choose.opCust}/>
   }
   renderOpt3 = () => {
     this.unitDisplay = ' L';
-    return <Static tag="目标水体" text={this.volume + ' L'}/>
+    return <Static label="目标水体" text={this.volume + ' L'}/>
   }
 
   renderResult = () => {
@@ -186,9 +185,9 @@ export default class Drug extends PureComponent {
       <div className="result">
         <p><i className="fa fa-exclamation-triangle red"></i>
         本计算结果仅供参考，计算页面提供者不承担任何责任。</p>
-        <Static tag="目标水体：" text={this.volume+ ' ' +this.metrics.volume}/>
-        <Static tag="单位剂量：" text={this.round(this.per, 4)+ ' ' + this.unit['1'][this.dose.amount.unit]+'/'+this.metrics.volume}/>
-        <Static tag="药剂添加：" text={this.reslut}/>
+        <Static label="目标水体：" text={this.volume+ ' ' +this.metrics.volume}/>
+        <Static label="单位剂量：" text={this.round(this.per, 4)+ ' ' + this.unit['1'][this.dose.amount.unit]+'/'+this.metrics.volume}/>
+        <Static label="药剂添加：" text={this.reslut}/>
       </div>
     )
   }
@@ -198,9 +197,9 @@ export default class Drug extends PureComponent {
       <div>
         <Select onChange={this.onChange} default={this.choose.opMain} options={this.renderOptions()} /> 
         {this.renderDiff()}
-        <Input tag="单位剂量" onBlur={this.onValueChange.bind(this, 'dose', 'amount')} onChangeUnit={this.unitChange.bind(this, 'amount')} type="number" options={this.unit['1']} defaultOp={this.dose.amount.unit} placeholder="例：推荐剂量5ml / 76L, 此处填5"/>
-        <Input tag="单位容积" onBlur={this.onValueChange.bind(this, 'dose', 'quantity')} onChangeUnit={this.unitChange.bind(this, 'quantity')} type="number" options={this.unit['2']} defaultOp={this.dose.quantity.unit} placeholder="例：推荐剂量5ml / 76L, 此处填76" />
-        <Save onClick={this.onClick} tag="计算" />
+        <Input label="单位剂量" onBlur={this.onValueChange.bind(this, 'dose', 'amount')} onChangeUnit={this.unitChange.bind(this, 'amount')} type="number" tag={this.unit['1']} defaultOp={this.dose.amount.unit} placeholder="例：推荐剂量5ml / 76L, 此处填5"/>
+        <Input label="单位容积" onBlur={this.onValueChange.bind(this, 'dose', 'quantity')} onChangeUnit={this.unitChange.bind(this, 'quantity')} type="number" tag={this.unit['2']} defaultOp={this.dose.quantity.unit} placeholder="例：推荐剂量5ml / 76L, 此处填76" />
+        <Save onClick={this.onClick} label="计算" />
         {this.renderResult()}
       </div>  
     )

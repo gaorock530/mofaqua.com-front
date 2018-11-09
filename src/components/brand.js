@@ -12,7 +12,7 @@ class Brand extends Component {
   render () {
     return (
       <div className="app-brand noselect">
-        <div className="app-menu-icon" onClick={this.onClick}><i className="fa fa-navicon fa-lg"></i></div>
+        <div className="app-menu-icon" onClick={this.onClick}><i className="fa fa-bars fa-lg"></i></div>
         <div className="app-title">Reef Magic</div>
         {/* <div>
           <div className="app-logo"><img src={logo} alt="logo"/></div>

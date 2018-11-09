@@ -1,5 +1,4 @@
-import React from 'react';
-import cuid from 'cuid';
+import React, {PureComponent} from 'react';
 
 /**
  * @param {String} tag tag name of the label
@@ -8,38 +7,60 @@ import cuid from 'cuid';
  * @param {Function} onChange
  */
 
-export default (props) => {
-  const tag = props.tag || '';
-  const options = props.options || [];
-  const def = props.default === 'undefined' ? 1 : props.default;
-  const name = cuid();
-  console.log(def);
-
-  const onChange = (e) => {
-    if (props.onChange) {
-      props.onChange(parseInt(e.currentTarget.value, 10));
-    }
+export default class Radio extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.tag = this.props.tag || null;
+    this.options = this.props.data || [];
+    this.def = this.props.default || 0;
   }
 
-  const renderOps = () => {
-    if (options instanceof Array && options.length > 1) {
-      return options.map(op => {
+  renderOps = () => {
+    if (this.options instanceof Array && this.options.length > 0) {
+      return this.options.map((op, index) => {
+        let deft = this.def === index;
+        let css = "fa " + (deft? "fa-dot-circle": "fa-circle");
         return (
-          <span className="option" key={cuid()}> 
-            <input type="radio" name={name} value={op.value} onChange={onChange} defaultChecked={def === op.value}/>
-            <label>{op.label}</label>
-          </span>
+          <div key={index}> 
+            <a className="form-radio-option" onClick={this.onClick.bind(this, index)}>
+              <i className={css}></i>
+              <span>{op}</span>
+              {deft? (<span><i className="fa fa-caret-right"></i>默认地址</span>):''}
+            </a>
+            <i className="fa fa-times" onClick={this.onDel.bind(this, index)}></i>
+          </div>
         )
       })
     } else {
-      return '';
+      return '没有地址';
     }
   }
 
-  return (
-    <div className="forms-inputs">
-      {tag?<label className="tag-name">{tag}</label>:''}
-      {renderOps()}
-    </div>
-  )
+  onDel = (index) => {
+    this.options.splice(index, 1);
+    this.def = 0;
+    if (this.props.onChange) {
+      this.props.onChange(this.def);
+    }
+    this.forceUpdate();
+  }
+
+  onClick = (index) => {
+    if (this.stop) return;
+    this.def = index;
+    if (this.props.onChange) {
+      this.props.onChange(this.def);
+    }
+    this.forceUpdate();
+  }
+
+  render () {
+    return (
+      <div className="form-radio">
+        {this.tag?<label className="tag-name">{this.tag}</label>:''}
+        {this.renderOps()}
+      </div>
+    )
+  }
+  
 }

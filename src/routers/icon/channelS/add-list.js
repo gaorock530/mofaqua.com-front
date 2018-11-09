@@ -45,10 +45,10 @@ class AddList extends PureComponent {
     }
     return (
       <Page wapper={true}>
-        <Input tag="列表名称：" placeholder="列表名称" onBlur={this.onNameChange}/>
-        <Textarea tag="关键字：" placeholder="关键字"/>
-        <Textarea tag="介绍：" placeholder="视频介绍" />
-        <Save tag="创建列表" />
+        <Input label="列表名称：" placeholder="列表名称" onBlur={this.onNameChange}/>
+        <Textarea label="关键字：" placeholder="关键字"/>
+        <Textarea label="介绍：" placeholder="视频介绍" max="200"/>
+        <Save text="创建列表" />
       </Page>
     )
   }

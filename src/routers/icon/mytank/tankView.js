@@ -153,9 +153,7 @@ class TankView extends PureComponent {
 
   renderPara = () => {
     const l = ['Temp', 'PH', 'KH', 'NH3', 'NO2', 'NO3', 'PO4', 'Ca', 'Mg', 'Cu'];
-    return l.map((op, index) => {
-      return {label: op, value: index};
-    })
+    return l;
   }
 
   /* livestock */ 

@@ -3,14 +3,24 @@ import React from 'react';
 
 /**
  * @param {String} text default text
- * @param {String} tag 
+ * @param {String} label 
  */
 
 export default (props) => {
   return (
-    <div className="forms-inputs">
-      {props.tag?<label className="tag-name">{props.tag}</label>:''}
-      <div className="static fullwidth">{props.text || ''}</div>
+    <div className="form-element">
+      {props.label? 
+      <div className="form-input-label">
+        <h5>{props.label}</h5>
+      </div>:''}
+      <div
+          className="form-input" 
+          style={this.bgColor?{'backgroundColor': this.bgColor}:{}}
+        >
+        <div className={this.tag?"form-input-main-withtag":"form-input-main"}>
+          <div className="form-input-area"><span className="v-center">{props.text || ''}</span></div>
+        </div>
+      </div>
     </div>
   )
-}
+} 

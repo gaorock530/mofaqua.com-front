@@ -1,22 +1,21 @@
 import React from 'react';
 
+
 /**
- * @param {String} tag tag name of the label
- * @param {Boolean} red color of the button
+ * @param {Function} onClick return changed value
+ * @param {String} text button text
  */
 
 export default (props) => {
-  const tag = props.tag || '';
+  const text = props.text || '确定';
 
-  const onClick = () => {
-    if (props.onClick) {
-      props.onClick();
-    }
+  const onClick = (e) => {
+    if (props.onClick) props.onClick(e);
   }
-  return (
-    <div className="center forms-inputs">
-      <button onClick={onClick} className={`form-button ${props.red?'warning':'normal'}`}>{tag}</button>
-    </div>
-  )
 
+  return (
+    <button 
+    className="from-button"
+    onClick={onClick}>{text}</button>
+  )
 }

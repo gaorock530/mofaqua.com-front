@@ -115,10 +115,10 @@ export default class Flow extends PureComponent {
   
   // render page options includes personal tank preset
   renderOptions = () => {
-    let options = [{label: '自定义尺寸', value: 0}, {label: '自定义水体', value: 1}];
+    let options = ['自定义尺寸', '自定义水体'];
     let index = 2;
     for (let i=0;i<this.tanks.length;i++) {
-      options.push({label: this.tanks[i].name, value: index});
+      options.push(this.tanks[i].name);
       index++;
     }
     return options;
@@ -126,6 +126,7 @@ export default class Flow extends PureComponent {
   
 
   onClick = () => {
+    console.log(this.choose.opMain);
     if (this.choose.opMain === 0) {
       if (this.data.length <=0 || this.data.width <=0 || this.data.height <=0 || this.data.depth<=0) return;
       if (this.data.depth > this.data.height || this.sump.depth > this.sump.height) return;
@@ -156,22 +157,22 @@ export default class Flow extends PureComponent {
   renderOpt1 = () => {
     return (
       <div>
-        <Input tag="主缸长度" default={this.data.length} onBlur={this.onValueChange.bind(this, 'main', 'length')} type="number" options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸宽度" default={this.data.width} onBlur={this.onValueChange.bind(this, 'main', 'width')} type="number" options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸高度" default={this.data.height} onBlur={this.onValueChange.bind(this, 'main', 'height')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="主缸水深" default={this.data.depth} onBlur={this.onValueChange.bind(this, 'main', 'depth')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸长度（选填）" default={this.sump.length} onBlur={this.onValueChange.bind(this, 'sump', 'length')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸宽度（选填）" default={this.sump.width} onBlur={this.onValueChange.bind(this, 'sump', 'width')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸高度（选填）" default={this.sump.height} onBlur={this.onValueChange.bind(this, 'sump', 'height')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
-        <Input tag="底缸水深（选填）" default={this.sump.depth} onBlur={this.onValueChange.bind(this, 'sump', 'depth')} type="number"  options={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸长度" defaultValue={this.data.length} onBlur={this.onValueChange.bind(this, 'main', 'length')} type="number" tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸宽度" defaultValue={this.data.width} onBlur={this.onValueChange.bind(this, 'main', 'width')} type="number" tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸高度" defaultValue={this.data.height} onBlur={this.onValueChange.bind(this, 'main', 'height')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="主缸水深" defaultValue={this.data.depth} onBlur={this.onValueChange.bind(this, 'main', 'depth')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸长度（选填）" defaultValue={this.sump.length} onBlur={this.onValueChange.bind(this, 'sump', 'length')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸宽度（选填）" defaultValue={this.sump.width} onBlur={this.onValueChange.bind(this, 'sump', 'width')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸高度（选填）" defaultValue={this.sump.height} onBlur={this.onValueChange.bind(this, 'sump', 'height')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
+        <Input label="底缸水深（选填）" defaultValue={this.sump.depth} onBlur={this.onValueChange.bind(this, 'sump', 'depth')} type="number"  tag={this.unit['3']} defaultOp={this.choose.opTank} onChangeUnit={this.unitChange.bind(this, 'tank')}/>
       </div>
     )
   }
   renderOpt2 = () => {
-    return <Input tag="目标水体" default={this.volume} onBlur={this.onVolumeChange} onChangeUnit={this.unitChange.bind(this, 'custom')} type="number" options={this.unit['2']} defaultOp={this.choose.opCust}/>
+    return <Input label="目标水体" defaultValue={this.volume} onBlur={this.onVolumeChange} onChangeUnit={this.unitChange.bind(this, 'custom')} type="number" tag={this.unit['2']} defaultOp={this.choose.opCust}/>
   }
   renderOpt3 = () => {
-    return <Static tag="目标水体" text={this.volume + ' L'}/>
+    return <Static label="目标水体" text={this.volume + ' L'}/>
   }
 
   renderResult = () => {
@@ -180,9 +181,9 @@ export default class Flow extends PureComponent {
       <div className="result">
         <p><i className="fa fa-exclamation-triangle red"></i>
         本计算结果仅供参考，计算页面提供者不承担任何责任。H - 每小时。</p>
-        <Static tag="目标水体：" text={this.round(this.volume, 2)+ ' ' +this.metrics}/>
-        <Static tag="循环流量(Turnover)：" text={this.reslut1}/>
-        <Static tag="造浪流量(In-tank Flow)：" text={this.reslut2}/>
+        <Static label="目标水体：" text={this.round(this.volume, 2)+ ' ' +this.metrics}/>
+        <Static label="循环流量(Turnover)：" text={this.reslut1}/>
+        <Static label="造浪流量(In-tank Flow)：" text={this.reslut2}/>
       </div>
     )
   }
@@ -192,7 +193,7 @@ export default class Flow extends PureComponent {
       <div>
         <Select onChange={this.onChange} default={this.choose.opMain} options={this.renderOptions()} /> 
         {this.renderDiff()}
-        <Save onClick={this.onClick} tag="计算" />
+        <Save onClick={this.onClick} text="计算" />
         {this.renderResult()}
       </div>  
     )

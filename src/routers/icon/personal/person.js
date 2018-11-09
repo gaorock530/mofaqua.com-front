@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
-// import Error from '../../../components/error';
-import style from '../../../helper/style';
+import Button from '../../../components/forms/button';
+import Input from '../../../components/forms/input';
+// import style from '../../../helper/style';
 import Upload from '../../../components/upload';
+import errorText from '../../../helper/errorText';
 import Security from '../../../components/security';
 import word from '../../../helper/wordcounter';
 import prefix from '../../../helper/prefix';
@@ -22,25 +24,19 @@ class Person extends Component {
       no: null,
       uploaded: 0
     }
+    this.nick = this.props.user.user.username;
   }
  
   componentWillUnmount () {
     this.props.change_setup_option(null);
-    // remove styles
-    this.index.map((index) => style.del(index));
-  }
-  componentDidMount () {
-    //only delete after added!
-    this.add = false;
-    // store new styles indexes in styleSheet
-    this.index = [];
-  }
-  componentWillReceiveProps () {
-    this.percent = Math.floor(Math.random()*10)*100;
   }
 
   expend = () => {
     this.show = true;
+    this.forceUpdate();
+  }
+  close = () => {
+    this.show = false;
     this.forceUpdate();
   }
 
@@ -52,33 +48,35 @@ class Person extends Component {
       case 2:
         return <p><span className="green">已认证</span></p>;
       default:
-        return <p><a onClick={this.expend}>我要认证</a></p>;
+        return <Button onClick={this.expend} text="我要认证" />;
     }
   }
 
-  setName = () => {
-    this.info.name = this.refs.name.value.trim() || null;
+  setName = (v) => {
+    if (v.length < 1 || v.length > 10) {
+      this.info.name = null;
+    } else {
+      this.info.name = v;
+    }
   }
 
-  verifyPhone = () => {
-    clearTimeout(this.timer);
-    this.verify = false;
+  verifyPhone = (v) => {
+    if (validator.isMobilePhone(v, ['zh-CN'])) {
+      this.verify = true;
+      this.info.phone = v;
+    } else {
+      this.verify = false;
+      this.info.phone = null;
+    }
     this.forceUpdate();
-    this.timer = setTimeout(() => {
-      if (validator.isMobilePhone(this.refs.phone.value.toString(), ['zh-CN'])) {
-        this.verify = true;
-        this.info.phone = this.refs.phone.value;
-      } else {
-        this.verify = false;
-        this.info.phone = null;
-        this.props.notification_in(cuid(), '手机号码格式不正确，请重新输入');
-      }
-      this.forceUpdate();
-    }, 1000);
   }
 
-  setId = () => {
-    this.info.no = this.refs.id.value || null;
+  setId = (v) => {
+    if (v.length !== 18) {
+      this.info.no = null;
+    } else {
+      this.info.no = v;
+    }
   }
 
   change = () => {
@@ -87,16 +85,16 @@ class Person extends Component {
 
   submit = async () => {
     if (this.info.name === null || this.info.phone === null || this.info.no === null || this.info.code === null) {
-      return this.props.notification_in(cuid(), '请完整填写所有信息');
+      return this.props.notification_in(cuid(), errorText.fullInfo);
     }
-    if (this.info.uploaded < 2) return this.props.notification_in(cuid(), '请上传身份证正反两面');
+    if (this.info.uploaded < 2) return this.props.notification_in(cuid(), errorText.idPhoto);
     try {
       const res = await this.props.send_identity(this.info);
-      if (!res) return this.props.notification_in(cuid(), '服务器出错，请稍后重试');
-      this.props.notification_in(cuid(), '提交成功，系统将在48小时内完成认证');
+      if (!res) return this.props.notification_in(cuid(), errorText.server400);
+      this.props.notification_in(cuid(), errorText.submit2);
     }catch(e) {
       console.log(e);
-      return this.props.notification_in(cuid(), '服务器出错，请稍后重试');
+      return this.props.notification_in(cuid(), errorText.server400);
     }
     this.show = false;
     this.forceUpdate();
@@ -110,23 +108,15 @@ class Person extends Component {
     this.props.change_setup_option('name');
   }
 
-  confirmName = () => {
-    const name = this.refs.newName.value.trim();
-    const len = word(name, true, true);
-    if (name === this.props.user.user.username) {
+  confirmName = (v) => {
+    const len = word(this.nick, true, true);
+    if (this.nick === this.props.user.user.username) {
       this.props.change_setup_option(null);
-    } else if (name !== '' && !name.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g) && len<=20) {
+    } else if (this.nick !== '' && !this.nick.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g) && len<=20) {
       this.props.change_setup_option(null);
-      this.props.set_username(this.refs.newName.value, this.props.user.user.UID);
+      this.props.set_username(this.nick, this.props.user.user.UID);
     } else {
-      this.refs.newName.select();
-      this.props.notification_in(cuid(), '不符合规则(20个字母或10个中文');
-    }
-  }
-
-  onKeyDown = (e) => {
-    if (e.keyCode === 13) {
-      this.confirmName();
+      this.props.notification_in(cuid(), errorText.text1);
     }
   }
 
@@ -140,15 +130,15 @@ class Person extends Component {
         <div>
           <h3>用户名</h3>
           {this.props.page.changeSetup !== 'name'?
-            <p>
+            <div>
               <label ref="name">{this.props.user.user.username}</label>
-              <a onClick={this.changeName}>修改</a>
-            </p>:
-            <p>
-              <input type="text" ref="newName" defaultValue={this.props.user.user.username} onKeyDown={this.onKeyDown}/>
-              <a onClick={this.props.change_setup_option}>取消</a>
-              <a onClick={this.confirmName}>确定</a>
-            </p>
+              <Button text="修改" onClick={this.changeName}/>
+            </div>:
+            <div>
+              <Input type="text" defaultValue={this.props.user.user.username} onBlur={(v) => this.nick = v} width="260"/>
+              <Button onClick={this.confirmName} width="128"/>
+              <Button onClick={this.props.change_setup_option} text="取消" width="128"/>
+            </div>
           }
         </div>
         <div>
@@ -168,13 +158,26 @@ class Person extends Component {
           <div>
             <h3>提交资料</h3>
             <div>
-              <p><input type="text" ref="name" placeholder="姓名" onBlur={this.setName} /></p>
-              <p><input type="number" ref="phone" placeholder="手机号码" onChange={this.verifyPhone}/></p>
+              <Input type="text" ref="name" placeholder="姓名" onBlur={this.setName} width="300"
+              condition={(v) => v.length > 1 && v.length <= 10}
+              errorText={errorText.name}/>
+              <Input type="number" ref="phone" placeholder="手机号码" onBlur={this.verifyPhone} width="300"
+              condition={(v) => validator.isMobilePhone(v, ['zh-CN'])}
+              errorText={errorText.phone}/>
               {this.verify? <Security value={this.info.phone} onBlur={this.getCode} /> : ''}
-              <p><input type="text" ref="id" placeholder="身份证号码" onBlur={this.setId}/></p>
+              <Input type="text" ref="id" placeholder="身份证号码" onBlur={this.setId} width="300"
+              condition={(v) => v.length === 18}
+              errorText={errorText.idno}/>
               <Upload className="idSide" id="idup" onChange={this.change} color="#666699" opt={false} crop={false} type='id-a'>身份证正面</Upload>
               <Upload className="idSide" id="iddown" onChange={this.change} color="#666699" opt={false} crop={false} type='id-b'>身份证反面</Upload>
-              {this.props.user.submitting? '正在提交...':<button onClick={this.submit}>提交</button>}
+              {this.props.user.submitting? '正在提交...':
+              (
+                <div>
+                  <Button onClick={this.submit} text="提交" width="148"/>
+                  <Button onClick={this.close} text="取消" width="148"/>
+                </div>
+              )
+            }
             </div>
           </div>
         }  
@@ -182,7 +185,5 @@ class Person extends Component {
     )
   }
 }
-const state = (state) => {
-  return {page: state.page, user: state.user}
-}
-export default connect(state, actions)(Person);
+
+export default connect(({page, user}) => ({page, user}), actions)(Person);

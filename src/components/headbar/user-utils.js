@@ -17,14 +17,14 @@ class UserUtils extends PureComponent {
               <a className="expend-list"><i className="fa fa-shopping-bag"></i><span>购物车</span></a>
             </div>
             <div>
-              <a className="expend-list"><i className="fa fa-video-camera"></i><span>视频日记</span></a>
+              <a className="expend-list"><i className="fa fa-video"></i><span>视频日记</span></a>
               <a className="expend-list"><i className="fa fa-graduation-cap"></i><span>经验分享</span></a>
-              <a className="expend-list"><i className="fa fa-photo"></i><span>美缸照片</span></a>
-              <a className="expend-list"><i className="fa fa-eyedropper"></i><span>水质数据</span></a>
+              <a className="expend-list"><i className="fa fa-image"></i><span>美缸照片</span></a>
+              <a className="expend-list"><i className="fa fa-eye-dropper"></i><span>水质数据</span></a>
             </div>
             <div>
               <a className="expend-list"><i className="fa fa-comments"></i><span>聊天记录</span></a>
-              <a className="expend-list"><i className="fa fa-money"></i><span>交易记录</span></a>
+              <a className="expend-list"><i className="fa fa-money-bill-alt"></i><span>交易记录</span></a>
               <a className="expend-list"><i className="fa fa-heartbeat"></i><span>我要直播</span></a>
             </div>
           </Expend>

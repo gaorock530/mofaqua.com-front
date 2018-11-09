@@ -35,11 +35,13 @@
       }
     }
     button {
+      position: relative;
       width: 56px;
       height: 28px;
       border-left: none;
       background: rgba(255, 255, 255, 0.08);
       color: rgba(255, 255, 255, 0.5);
+      text-align: center;
       cursor: pointer;
       &:hover {
         color: rgba(255, 255, 255, 0.7);
