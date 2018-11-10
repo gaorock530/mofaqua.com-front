@@ -61,6 +61,8 @@ export default function (state = {
         ...state,
         emailResendin: action.value
       }
+    // User object
+    /* -------------------------------- */
     case 'SET_USER':
       return {
         ...state,
@@ -77,7 +79,15 @@ export default function (state = {
           ...action.channel
         }
       }
-
+    case 'UPDATE_ADDRESS':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          address: action.addr
+        }
+      }
+    /* -------------------------------- */
     case 'SET_LOADING_STATE':
       if (typeof action.value !== 'boolean') throw Error('missing {value} in SET_LOADING_STATE');
       return {

@@ -1,7 +1,8 @@
 // import axios from 'axios';
 import animate from '../../helper/animate';
 import API from '../../ws-api';
-// import wsSend from '../../helper/sendOverWS';
+
+import wsSend from '../../helper/sendOverWS';
 import UploadEncoder from '../../helper/uploadEncoder';
 import {
   //ws
@@ -50,6 +51,7 @@ import {
   SET_LOADING_STATE,
   SET_SUBMITTING_STATE,
   SET_LANGUAGE,
+  UPDATE_ADDRESS,
   // notification
   NOTIFICATION_IN,
   NOTIFICATION_OUT,
@@ -141,15 +143,15 @@ export const set_pageLoading = (value = false) => dispatch => {
 }
 
 /* for testing */
-export const set_location_array = (type, value) => async dispatch => {
-  // const value = await axios.get(`http://apis.map.qq.com/ws/district/v1/getchildren?key=BBYBZ-2A66F-UDJJ2-NSWRG-VD3TZ-VSFE2`);
-  // console.log(value);
-  if (type === 'city') {
-    dispatch({ type: SET_CITY, value });
-  } else if (type === 'area') {
-    dispatch({ type: SET_AREA, value });
-  }
-}
+// export const set_location_array = (type, value) => async dispatch => {
+//   // const value = await axios.get(`http://apis.map.qq.com/ws/district/v1/getchildren?key=BBYBZ-2A66F-UDJJ2-NSWRG-VD3TZ-VSFE2`);
+//   // console.log(value);
+//   if (type === 'city') {
+//     dispatch({ type: SET_CITY, value });
+//   } else if (type === 'area') {
+//     dispatch({ type: SET_AREA, value });
+//   }
+// }
 
 export const toggle_channel_search = () => dispatch => {
   dispatch({ type: TOGGLE_CHANNEL_SEARCH });
@@ -330,153 +332,116 @@ export const user_verify = () => dispatch => {
 }
 
 
-export const user_login = (username, password) => dispatch => {
+export const user_login = (username, password) => async dispatch => {
   dispatch({ type: USER_LOGGING_START });
-  API.ws.send({t: 'login', user: username, pass: password});
-  API.ws.on('login', (e) => {
-    if (!e.err) {
-      localStorage.setItem('token', e.token);
-      dispatch({type: SET_USER, user: e.u});
-      dispatch({ type: USER_LOGIN });
-    } else console.log(e.err);
-    dispatch({ type: USER_LOGGING_END});
-  }, true);
+  try {
+    const data = await wsSend('login', {user: username, pass: password});
+    localStorage.setItem('token', data.token);
+    dispatch({ type: SET_USER, user: data.u });
+    dispatch({ type: USER_LOGIN });
+  }catch(e) {
+    console.log(e);
+  }
+  dispatch({ type: USER_LOGGING_END});
 }
 
 
-export const register = (user) => dispatch => {
-  let timer;
+export const register = (user) => async dispatch => {
   if (user.name.type !== 'phone' && user.name.type !== 'email') return;
   dispatch({ type: USER_LOGGING_START });
-  return new Promise((resolve, reject) => {
-    API.ws.send({t: 'rgt', v: user.name.value, s: user.pass, c: user.code, n: user.nick});
-    API.ws.on('rgt', (e) => {
-      clearTimeout(timer);
-      if (e.err) {
-        dispatch({ type: USER_LOGGING_END});
-        console.log(e.err);
-        reject(e.err);
-      } else {
-        window.localStorage.setItem('token', e.token);
-        dispatch({type: SET_USER, user: e.u});
-        dispatch({ type: USER_LOGIN });
-        dispatch({ type: USER_LOGGING_END});
-        resolve(undefined);
-      }
-    }, true)
-    timer = setTimeout(() => {
-      dispatch({type: USER_LOGGING_END});
-      reject('网络错误，请稍后重试');
-    }, 3000);
-  })
+  try {
+    const data = await wsSend('rgt', {v: user.name.value, s: user.pass, c: user.code, n: user.nick});
+    console.log(data);
+    window.localStorage.setItem('token', data.token);
+    dispatch({type: SET_USER, user: data.u});
+    dispatch({ type: USER_LOGIN });
+  }catch(e) {
+    console.log(e);
+  }
+  dispatch({ type: USER_LOGGING_END});
 }
 
-export const user_logout = () => dispatch => {
+export const user_logout = () => async dispatch => {
   dispatch({ type: USER_LOGGING_START });
   const token = window.localStorage.getItem('token');
   if (!token) {
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_LOGGING_END});
-  } else{
-    API.ws.send({t: 'logout', token});
-    API.ws.on('logout', (e) => {
-      if (!e.err) {
-        localStorage.removeItem('token');
-        console.log('logout... ', e);
-        dispatch({type: SET_USER, user: null});
-        dispatch({ type: USER_LOGOUT });
-        dispatch({ type: USER_LOGGING_END});
-      } else console.log(e.err);
-    }, true);
+    return;
+  } 
+  try {
+    await wsSend('logout', {token});
+    localStorage.removeItem('token');
+    dispatch({type: SET_USER, user: null});
+    dispatch({ type: USER_LOGOUT });
+  }catch(e) {
+    console.log(e);
   }
-  
+  dispatch({ type: USER_LOGGING_END});
 }
 
 export const qrcode = (value) => dispatch => {
   dispatch({ type: QR_ACTIVITY, value })
 }
 
-const check = (dispatch, e) => {
-  if (!e.err) {
-    dispatch({ type: PHONE_VERIFY, value: true });
-    dispatch({ type: EMAIL_VERIFY, value: true });
-  } else {
-    dispatch({ type: PHONE_VERIFY, value: false });
-    dispatch({ type: EMAIL_VERIFY, value: false });
-    const id = cuid();
-    dispatch({ type: NOTIFICATION_IN, id, text: e.err});
-    setTimeout(() => {
-      dispatch({ type: NOTIFICATION_OUT, id });
-    }, 3000);
-  }
-}
-
 // check phone is taken
-export const phone_verify = (value) => dispatch => {
-  console.log(value);
+export const phone_verify = (value) => async dispatch => {
   if (!value) return dispatch({ type: PHONE_VERIFY, value });
-  API.ws.send({t:'chk-p', v: value});
-  API.ws.on('chk', check.bind(this, dispatch), true);
+  try {
+    await wsSend('chk-p', {v: value}, {backType: 'chk'});
+    dispatch({ type: PHONE_VERIFY, value: true });
+    return undefined;
+  }catch(e) {
+    dispatch({ type: PHONE_VERIFY, value: false });
+    return e;
+  }
 }
 
 export const phone_resendin = (value) => dispatch => {
   dispatch({ type: PHONE_RESEND_IN, value });
 }
+
 // check email is taken
-export const email_verify = (value) => dispatch => {
+export const email_verify = (value) => async dispatch => {
   if (!value) return dispatch({ type: EMAIL_VERIFY, value });
-  API.ws.send({t:'chk-e', v: value});
-  API.ws.on('chk', check.bind(this, dispatch), true);
-  
+  try {
+    await wsSend('chk-e', {v: value}, {backType: 'chk'});
+    dispatch({ type: EMAIL_VERIFY, value: true });
+    return undefined;
+  }catch(e) {
+    dispatch({ type: EMAIL_VERIFY, value: false });
+    return e;
+  }
 }
 export const email_resendin = (value) => dispatch => {
   dispatch({ type: EMAIL_RESEND_IN, value });
 }
 
 export const name_verify = (value) => async dispatch => {
-  API.ws.send({t:'chk-n', v: value});
-  return new Promise((resolve, reject) => {
-    API.ws.on('chk', (e) => {
-      if (e.err) {
-        reject(e.err);
-      } else resolve(true);
-    }, true);
-  });
+  try {
+    await wsSend('chk-n', {v: value}, {backType: 'chk'});
+    return undefined;
+  }catch(e) {
+    return e;
+  }
 }
 // 
-export const send_email_code = (email) => dispatch => {
-  API.ws.send({t: 'get-code', e: email});
-  API.ws.on('code', (e) => {
-    const id = cuid();
-    if (!e.err) {
-      dispatch({ type: NOTIFICATION_IN, id, text: '验证码已发送，请进入邮箱查收'});
-      setTimeout(() => {
-        dispatch({ type: NOTIFICATION_OUT, id });
-      }, 5000);
-    }else {
-      dispatch({ type: NOTIFICATION_IN, id, text: e.err});
-      setTimeout(() => {
-        dispatch({ type: NOTIFICATION_OUT, id });
-      }, 5000);
-    }
-  }, true);
+export const send_email_code = (email) => async dispatch => {
+  try {
+    await wsSend('get-code', {e: email}, {backType: 'code'});
+    return '验证码已发送，请进入邮箱查收';
+  }catch(e) {
+    return e;
+  }
 }
-export const send_text_code = (phone) => dispatch => {
-  API.ws.send({t: 'get-code', p: phone});
-  API.ws.on('code', (e) => {
-    const id = cuid();
-    if (!e.err) {
-      dispatch({ type: NOTIFICATION_IN, id, text: '验证码已发送，请留意手机短信'});
-      setTimeout(() => {
-        dispatch({ type: NOTIFICATION_OUT, id });
-      }, 5000);
-    }else {
-      dispatch({ type: NOTIFICATION_IN, id, text: e.err});
-      setTimeout(() => {
-        dispatch({ type: NOTIFICATION_OUT, id });
-      }, 5000);
-    }
-  }, true);
+
+export const send_text_code = (phone) => async dispatch => {
+  try {
+    await wsSend('get-code', {p: phone}, {backType: 'code'});
+    return '验证码已发送，请留意手机短信';
+  }catch(e) {
+    return e;
+  }
 }
 
 export const abort_verify = (type) => dispatch => {
@@ -494,90 +459,56 @@ export const abort_verify = (type) => dispatch => {
   }
 }
 
-export const set_username = (username, uid) => dispatch => {
-  API.ws.send({t:'upd', uid, o: {username}});
-  API.ws.on('upd', (e) => {
-    if (!e.err) {
-      dispatch({ type: SET_USER, user: e.u });
-    } else {
-      const id = cuid();
-      dispatch({ type: NOTIFICATION_IN, id, text: e.err});
-      setTimeout(() => {
-        dispatch({ type: NOTIFICATION_OUT, id });
-      }, 5000);
-    }
-  }, true);
+export const set_username = (username, uid) => async dispatch => {
+  try {
+    const res = await wsSend('upd', {uid, o: {username}});
+    dispatch({ type: SET_USER, user: res.u });
+  }catch(e) {
+    throw e;
+  }
 }
 
-export const get_channel = (uid) => dispatch => {
-  let timer;
-  return new Promise((resolve, reject) => {
-    dispatch({ type: SET_LOADING_STATE, value: true});
-    API.ws.send({t:'ch-get', id: uid});
-    API.ws.on('ch-get', (e) => {
-      console.log(e);
-      clearTimeout(timer);
-      if (!e.err) {
-        dispatch({ type: SET_CHANNEL, channel: e.v});
-        dispatch({ type: SET_LOADING_STATE, value: false});
-        resolve(e.v);
-      } else {
-        dispatch({ type: SET_LOADING_STATE, value: false});
-        reject(e.err);
-      }
-    }, true);
-    timer = setTimeout(() => {
-      dispatch({ type: SET_LOADING_STATE, value: false});
-      reject('网络错误，请稍后重试。');
-    },3000);
-  })
+export const get_channel = (uid) => async dispatch => {
+  dispatch({ type: SET_LOADING_STATE, value: true});
+  try {
+    const res = await wsSend('ch-get', {id: uid});
+    dispatch({ type: SET_CHANNEL, channel: res});
+    dispatch({ type: SET_LOADING_STATE, value: false});
+  }catch(e) {
+    dispatch({ type: SET_LOADING_STATE, value: false});
+    throw e;
+  }
 }
 
-export const get_user_info = (uid) => dispatch => {
-  let timer;
-  return new Promise((resolve, reject) => {
-    dispatch({ type: SET_LOADING_STATE, value: true});
-    API.ws.send({t:'u-get', id: uid});
-    API.ws.on('u-get', (e) => {
-      console.log(e);
-      clearTimeout(timer);
-      if (!e.err) {
-        dispatch({ type: SET_USER, user: e.v});
-        dispatch({ type: SET_LOADING_STATE, value: false});
-        resolve(e.v);
-      } else {
-        dispatch({ type: SET_LOADING_STATE, value: false});
-        reject(e.err);
-      }
-    }, true);
-    timer = setTimeout(() => {
-      dispatch({ type: SET_LOADING_STATE, value: false});
-      reject('网络错误，请稍后重试。');
-    },3000);
-  })
+export const get_user_info = (uid) => async dispatch => {
+  dispatch({ type: SET_LOADING_STATE, value: true});
+  try {
+    const res = await wsSend('u-get', {id: uid});
+    dispatch({ type: SET_USER, user: res});
+    dispatch({ type: SET_LOADING_STATE, value: false});
+  }catch(e) {
+    dispatch({ type: SET_LOADING_STATE, value: false});
+    throw e;
+  }
+  
 }
 
-export const send_identity = (obj) => dispatch => {
-  let timmer;
+export const send_identity = (obj) => async dispatch => {
   dispatch({ type: SET_SUBMITTING_STATE, value: true});
-  API.ws.send({t: 'put-id', v: obj});
-  return new Promise((resolve, reject) => {
-    API.ws.on('put-id', (e) => {
-      clearTimeout(timmer);
-      dispatch({ type: SET_SUBMITTING_STATE, value: false});
-      if (e.err) {
-        console.log(e.err);
-        reject(false);
-      }
-      dispatch({ type: PHONE_RESEND_IN, value: 0 });
-      dispatch({ type: SET_USER, user: {verification: {verified: 1}}});
-      resolve(true);
-    }, true);
-    timmer = setTimeout(() => {
-      dispatch({ type: SET_SUBMITTING_STATE, value: false});
-      reject(false);
-    }, 10000);
-  })
+  try {
+    await wsSend('put-id', {v: obj});
+    dispatch({ type: PHONE_RESEND_IN, value: 0 });
+    dispatch({ type: SET_USER, user: {verification: {verified: 1}}});
+    dispatch({ type: SET_SUBMITTING_STATE, value: false});
+  }catch(e) {
+    dispatch({ type: SET_SUBMITTING_STATE, value: false});
+    throw e;
+  }
+}
+
+// used to updata user addresses in 'address' page
+export const update_address = (addr) => dispatch => {
+  dispatch({ type: UPDATE_ADDRESS, addr: addr });
 }
 
 

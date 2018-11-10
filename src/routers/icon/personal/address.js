@@ -4,7 +4,7 @@ import Button from '../../../components/forms/button';
 import Addr from '../../../components/forms/address';
 import Input from '../../../components/forms/input';
 import Textarea from '../../../components/forms/textarea';
-import Radio from '../../../components/forms/radio';
+import List from '../../../components/forms/addressList';
 import ErrorText from '../../../helper/errorText';
 import * as actions from '../../../redux/actions';
 import cuid from 'cuid';
@@ -12,13 +12,36 @@ import cuid from 'cuid';
 class Address extends PureComponent {
   constructor (props) {
     super(props);
-    this.fakeAddress = [
-      'asdqweqpoweipoqwie',
-      '卡拉斯京看到了啊善良的空间阿斯顿流泪的 上劳动课',
-      '阿克苏 k askd kjk卡家是的'
-    ]
+    const address = localStorage.getItem('address') || localStorage.getItem('copy');
+    this.saved = true;
+    if (address) this.address = JSON.parse(address);
+    else this.address = this.props.user.user.address || [];
+    this.props.update_address(this.address);
+  }
+
+  componentWillMount () {
+    window.addEventListener('beforeunload', this.saveData, {once: true});
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('beforeunload', this.saveData);
+    if (!this.saved) {
+      localStorage.setItem('copy', JSON.stringify(this.address));
+      this.save = true;
+    }
+  }
+
+  saveData = () => {
+    if (!this.saved) {
+      localStorage.setItem('address', JSON.stringify(this.address));
+      this.save = true;
+    }
   }
   
+  flatAddr = (data) => {
+    if (!data instanceof Array || data.length === 0) return [];
+    return data.map((ad) => ad.cate.state + ad.cate.city + ad.cate.area + ad.detail);
+  }
 
   renderAddress = () => {
     if (this.add) return (
@@ -51,11 +74,40 @@ class Address extends PureComponent {
   saveAddress = () => {
     if (!this.addrCate || !this.addrDetail || !this.zip) return this.props.notification_in(cuid(), ErrorText.lackAddr);
     this.add = false;
-    this.fakeAddress.push(this.addrDetail);
+    const data = {
+      id: cuid(),
+      cate: this.addrCate, 
+      detail: this.addrDetail, 
+      zip: this.zip,
+      default: this.address.length < 1,
+    }
+    this.address.push(data);
+    this.props.update_address(this.address);
     this.addrCate = null;
     this.addrDetail = null;
     this.zip = null;
-    this.forceUpdate()
+    this.saved = false;
+  }
+
+  changeDefault = (id) => {
+    this.address = this.address.map((ad) => {
+      if (id === ad.id) ad.default = true;
+      else ad.default = false;
+      return ad;
+    });
+    this.props.update_address(this.address);
+    this.saved = false;
+  }
+
+  onDelete = (id) => {
+    let pass = false;
+    this.address = this.address.filter((ad) => {
+      if (id === ad.id && ad.default) pass = true;
+      return id !== ad.id
+    });
+    if (this.address.length > 0 && pass) this.address[0].default = true;
+    this.props.update_address(this.address);
+    this.saved = false;
   }
 
   cancel = () => {
@@ -88,7 +140,9 @@ class Address extends PureComponent {
         </div>
         <div>
           <h3>地址管理</h3>
-          <Radio data={this.fakeAddress} onChange={(i) => console.log(i)} default={1}/>
+          <List data={this.props.user.user.address} 
+          onChange={this.changeDefault.bind(this)}
+          onDelete={this.onDelete.bind(this)}/>
           <Button onClick={this.addADD} text="添加地址"/>
         </div>
         {this.renderAddress()}
@@ -97,4 +151,4 @@ class Address extends PureComponent {
   }
 }
 
-export default connect(state => state, actions)(Address);
+export default connect(({user}) => ({user}), actions)(Address);

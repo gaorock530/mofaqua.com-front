@@ -89,12 +89,11 @@ class Person extends Component {
     }
     if (this.info.uploaded < 2) return this.props.notification_in(cuid(), errorText.idPhoto);
     try {
-      const res = await this.props.send_identity(this.info);
-      if (!res) return this.props.notification_in(cuid(), errorText.server400);
+      await this.props.send_identity(this.info);
       this.props.notification_in(cuid(), errorText.submit2);
     }catch(e) {
       console.log(e);
-      return this.props.notification_in(cuid(), errorText.server400);
+      this.props.notification_in(cuid(), errorText.server400);
     }
     this.show = false;
     this.forceUpdate();
@@ -108,13 +107,17 @@ class Person extends Component {
     this.props.change_setup_option('name');
   }
 
-  confirmName = (v) => {
+  confirmName = async (v) => {
     const len = word(this.nick, true, true);
     if (this.nick === this.props.user.user.username) {
       this.props.change_setup_option(null);
     } else if (this.nick !== '' && !this.nick.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g) && len<=20) {
       this.props.change_setup_option(null);
-      this.props.set_username(this.nick, this.props.user.user.UID);
+      try {
+        await this.props.set_username(this.nick, this.props.user.user.UID);
+      }catch(e) {
+        this.props.notification_in(cuid(), e);
+      }
     } else {
       this.props.notification_in(cuid(), errorText.text1);
     }

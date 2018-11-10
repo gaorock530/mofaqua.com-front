@@ -9,21 +9,38 @@ import API from '../ws-api';
  * @returns {Promise} err || data
  */
 
-export default (type, data = null, timeout = 10, backType, err, multi = true) => {
+export default (type, data = {}, config) => {
+  const defaultConfig = {
+    timeout: 10,
+    backType: type,
+    once: true,
+    errmsg: null
+  }
+
+  if (config && typeof config === 'object'){
+    for (let i in defaultConfig) {
+      if (i in config) defaultConfig[i] = config[i];
+    }
+  }
+
   if (!type || typeof type !== 'string') throw Error('[type] must be a String.');
-  backType = type;
   let timer;
   let content = {};
   content.t = type;
-  if (data) content = {content, ...data};
+  if (data) content = {...content, ...data};
   API.ws.send(content);
   return new Promise((resolve, reject) => {
-    API.ws.on(backType, (e) => {
+    API.ws.on(defaultConfig.backType, (e) => {
       clearTimeout(timer);
-      resolve(e);
-    }, multi);
+      if (!e.err) {
+        console.log(e);
+        resolve(e.v || e);
+      } else {
+        reject(e.err);
+      }
+    }, defaultConfig.once);
     timer = setTimeout(() => {
-      reject(err || 'Network fails, plase try again.');
-    }, timeout * 1000);
+      reject(defaultConfig.errmsg || 'Network fails, plase try again.');
+    }, defaultConfig.timeout * 1000);
   })
 }

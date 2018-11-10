@@ -48,6 +48,7 @@ export const SET_USER = 'SET_USER';
 export const SET_CHANNEL = 'SET_CHANNEL';
 export const SET_LOADING_STATE = 'SET_LOADING_STATE';
 export const SET_SUBMITTING_STATE = 'SET_SUBMITTING_STATE';
+export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
 //
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 

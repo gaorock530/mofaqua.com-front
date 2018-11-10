@@ -13,17 +13,17 @@ class Address extends PureComponent {
     super(props);
     this.area = [];
     this.address = {
-      province: '',
+      state: '',
       city: '',
       area: '',
     }
     this.data = {
-      province: null,
+      state: null,
       city: null,
       area: null
     }
     this.select = {
-      province: 0,
+      state: 0,
       city: 0,
       area: 0
     }
@@ -59,9 +59,9 @@ class Address extends PureComponent {
   }
 
   renderCity = () => {
-    if (this.data.province !== null) {
+    if (this.data.state !== null) {
       const list = [this.first];
-      const s = this.data.province.cidx;
+      const s = this.data.state.cidx;
       const range = this.area[1].slice(s[0], s[1]+1);
       for (let i of range) {
         list.push(i.fullname);
@@ -88,17 +88,17 @@ class Address extends PureComponent {
   }
 
   stateChange = (v) => {
-    this.select.province = v;
+    this.select.state = v;
     this.select.city = 0;
     this.select.area = 0;
     this.data.city = null;
     this.data.area = null;
     if (v === 0) {
-      this.data.province = null;
-      this.address.province = '';
+      this.data.state = null;
+      this.address.state = '';
     }else {
-      this.data.province = this.area[0][v-1];
-      this.address.province = this.data.province.fullname;
+      this.data.state = this.area[0][v-1];
+      this.address.state = this.data.state.fullname;
     }
     this.address.city = '';
     this.address.area = '';
@@ -115,7 +115,7 @@ class Address extends PureComponent {
       this.data.city = null;
       this.address.city = '';
     }else {
-      const s = this.data.province.cidx;
+      const s = this.data.state.cidx;
       const range = this.area[1].slice(s[0], s[1]+1);
       this.data.city = range[v-1];
       this.address.city = range[v-1].fullname;
@@ -153,7 +153,7 @@ class Address extends PureComponent {
   render () {
     return (
       <div className="hori-display">
-        <Select options={this.renderState()} onChange={this.stateChange} default={this.select.province}/>
+        <Select options={this.renderState()} onChange={this.stateChange} default={this.select.state}/>
         <Select options={this.renderCity()} onChange={this.cityChange} default={this.select.city}/>
         <Select options={this.renderArea()} onChange={this.areaChange} default={this.select.area}/>
       </div>

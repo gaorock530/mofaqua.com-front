@@ -20,6 +20,7 @@ class Register extends Component {
       code: null
     }
     this.timer = null;
+    this.sending = false;
   }
 
   componentWillUnmount () {
@@ -47,12 +48,14 @@ class Register extends Component {
       this.user.name.type = 'phone';
       this.user.name.value = this.refs.name.value;
       this.refs.name_warning.innerHTML = '';
-      await this.props.phone_verify(this.refs.name.value);
+      const res = await this.props.phone_verify(this.refs.name.value);
+      if (res) this.props.notification_in(cuid(), res);
     } else if (validator.isEmail(this.refs.name.value) && !this.props.page.registerForm) {
       this.user.name.type = 'email';
       this.user.name.value = this.refs.name.value;
       this.refs.name_warning.innerHTML = '';
-      await this.props.email_verify(this.refs.name.value);
+      const res = await this.props.email_verify(this.refs.name.value);
+      if (res) this.props.notification_in(cuid(), res);
     } else {
       this.refs.name_warning.innerHTML = this.props.page.registerForm? '手机号码格式错误':'电子邮箱格式错误'; 
       this.user.name.type = null;
@@ -92,7 +95,8 @@ class Register extends Component {
   }
 
   phone = () => {
-    const sendSMS = () => {
+    const sendSMS = async () => {
+      if (this.sending) return;
       // if phone number fromat is not valid, disable click
       if (!this.props.user.vaildPhoneFormat) return;
       // if count down is running, disable click
@@ -100,7 +104,14 @@ class Register extends Component {
       // set re-send time
       let time = 120;
       this.props.notification_in(cuid(), '正在发送验证码...');
-      this.props.send_text_code(this.user.name.value);
+      this.sending = true;
+      try {
+        const res = await this.props.send_text_code(this.user.name.value);
+        this.props.notification_in(cuid(), res);
+      }catch(e) {
+        this.props.notification_in(cuid(), e);
+      }
+      this.sending = false;
       // send notification
       this.props.phone_resendin(time);
       this.counter = setInterval(() => {
@@ -114,7 +125,7 @@ class Register extends Component {
       <div className="phone-verify">
         <div>
           {this.props.user.phoneResendin === 0 ? 
-          <a onClick={sendSMS}>发送验证码</a>: 
+          <a onClick={sendSMS}>发送验证码</a>:
           <a className="sending">{this.props.user.phoneResendin}s 后重新发送</a>}
         </div>
         <div>
@@ -124,7 +135,8 @@ class Register extends Component {
     ) : '';
   }
   email = () => {
-    const sendEmail = () => {
+    const sendEmail = async () => {
+      if (this.sending) return;
       // if phone number fromat is not valid, disable click
       if (!this.props.user.vaildEmailFormat) return;
       // if count down is running, disable click
@@ -133,7 +145,14 @@ class Register extends Component {
       let time = 120;
       // send notification
       this.props.notification_in(cuid(), '正在发送验证码...');
-      this.props.send_email_code(this.user.name.value);
+      this.sending = true;
+      try {
+        const res = await this.props.send_email_code(this.user.name.value);
+        this.props.notification_in(cuid(), res);
+      }catch(e) {
+        this.props.notification_in(cuid(), e);
+      }
+      this.sending = false;
       this.props.email_resendin(time);
       this.counter = setInterval(() => {
         time--;
@@ -168,12 +187,11 @@ class Register extends Component {
         console.log(this.user);
         return warn.innerHTML = `昵称不符合规范`;
       }
-      try {
-        await this.props.name_verify(nick);
-        this.user.nick = nick;
-      }catch(e) {
-        this.props.notification_in(cuid(), e);
-      }
+
+      const res = await this.props.name_verify(nick);
+      if (res) this.props.notification_in(cuid(), res);
+      else this.user.nick = nick;
+
       console.log(this.user);
       return warn.innerHTML = `len: ${len}`;
     }, 1000);
