@@ -152,4 +152,4 @@ class Upload extends PureComponent {
   }
 }
 
-export default connect(state => state, actions)(Upload);
+export default connect(({page}) => ({page}), actions)(Upload);

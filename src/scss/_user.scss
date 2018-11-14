@@ -66,13 +66,13 @@
     display: block;
     height: 100%;
     z-index: 2;
+    text-align: center;
   }
   &:before, {
     width: 100%;
     z-index: 2;
   }
   &:after {
-    // width: 30%;
     background: rgba($color: $theme-blue, $alpha: 0.6);
     z-index: 1;
   }

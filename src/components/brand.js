@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import logo from '../logo.svg';
 import { connect } from 'react-redux';
 
 import * as actions from '../redux/actions';
 
-class Brand extends Component {
+class Brand extends PureComponent {
   onClick = () => {
     this.props.toggle_sidebar(this.props.page.sidebar);
   }
@@ -23,4 +23,4 @@ class Brand extends Component {
   }
 }
 
-export default connect(state => state, actions)(Brand);
+export default connect(({page}) => ({page}), actions)(Brand);

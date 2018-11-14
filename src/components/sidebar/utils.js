@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as actions from '../../redux/actions';
 
-class More extends Component {
+class More extends PureComponent {
   componentDidMount () {
     for (let el of this.refs.top.children) {
       if (el.tagName === 'A') {
@@ -24,4 +24,4 @@ class More extends Component {
   }
 }
 
-export default connect(state => state, actions)(More);
+export default connect(null, actions)(More);

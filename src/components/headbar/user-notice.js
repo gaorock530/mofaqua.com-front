@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import Expend from './expend';
@@ -6,7 +6,7 @@ import Expend from './expend';
 
 import * as actions from '../../redux/actions';
 
-class UserUtils extends Component {
+class UserUtils extends PureComponent {
   render () {
     return (
       <div className="user-notification" onClick={this.props.set_expend_active.bind(this,'Notification')}>
@@ -25,4 +25,4 @@ class UserUtils extends Component {
   }
 }
 
-export default connect(state => state, actions)(UserUtils);
+export default connect(({user, page}) => ({user, page}), actions)(UserUtils);

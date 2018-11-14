@@ -14,6 +14,7 @@
 }
 .fileCover {
   display: block;
+  position: relative;
   width: calc(100% - 4px);
   height: calc(100% - 4px);
   border: 2px dashed $theme-blue;
@@ -25,6 +26,11 @@
   background-size: cover;
   &.round {
     border-radius: 50%;
+  }
+  &>span {
+    padding: 2px 5px;
+    color: #fff;
+    background-color: rgba(#000, 0.7);
   }
 }
 

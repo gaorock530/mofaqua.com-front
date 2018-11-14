@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import React, {PureComponent} from 'react';
+// import { connect } from 'react-redux';
 
 import Section from './section';
-import * as actions from '../redux/actions';
+// import * as actions from '../redux/actions';
 
 
 
-class Home extends Component {
-  componentWillUpdate () {
-    // console.log('update home');
-  }
-  shouldComponentUpdate () {
-    return false;
-  }
-  // ws = this.props.ws.connection;
+class Home extends PureComponent {
+  // componentWillUpdate () {
+  //   // console.log('update home');
+  // }
+  // shouldComponentUpdate () {
+  //   return false;
+  // }
+  // // ws = this.props.ws.connection;
   
 
   render () {
@@ -106,4 +106,5 @@ class Home extends Component {
   }
 }
 
-export default connect(state => state, actions)(Home);
+// export default connect(null, null)(Home);
+export default Home;

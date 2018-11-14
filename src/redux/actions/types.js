@@ -67,3 +67,10 @@ export const FORM_UPDATE_WEEK = 'FORM_UPDATE_WEEK';
 export const FORM_UPDATE_DAY = 'FORM_UPDATE_DAY';
 export const FORM_UPDATE_ARRAY = 'FORM_UPDATE_ARRAY';
 export const FORM_UPDATE_ROUND = 'FORM_UPDATE_ROUND';
+
+// Message
+export const UPDATE_MESSAGE = 'UPDATE_MESSAGE';
+export const ADD_MESSAGE = 'ADD_MESSAGE';
+export const GET_MESSAGE = 'GET_MESSAGE';
+export const DEL_MESSAGE = 'DEL_MESSAGE';
+export const GET_MORE_MESSAGE = 'GET_MORE_MESSAGE';

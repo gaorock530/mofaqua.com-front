@@ -1,17 +1,15 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class Top extends Component {
-  toTop = () => {
+export default () => {
+  const toTop = () => {
     window.scrollBy(0, -window.scrollY);
   }
 
-  render () {
-    return (
-      <div className="top noselect" onClick={this.toTop}>
-        <a><i className="fa fa-chevron-up"></i></a>
-      </div>
-    )
-  }
-}
 
-export default Top;
+  return (
+    <div className="top noselect" onClick={toTop}>
+      <a><i className="fa fa-chevron-up"></i></a>
+    </div>
+  )
+
+}

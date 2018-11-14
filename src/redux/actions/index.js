@@ -1,6 +1,7 @@
 // import axios from 'axios';
 import animate from '../../helper/animate';
-import API from '../../ws-api';
+import WS from '../../ws-api';
+import errmsg from '../../helper/errorText';
 
 import wsSend from '../../helper/sendOverWS';
 import UploadEncoder from '../../helper/uploadEncoder';
@@ -61,14 +62,20 @@ import {
   FORM_UPDATE_DAY,
   FORM_UPDATE_WEEK,
   FORM_UPDATE_ARRAY,
-  FORM_UPDATE_ROUND
+  FORM_UPDATE_ROUND,
+  // message
+  UPDATE_MESSAGE,
+  ADD_MESSAGE,
+  GET_MESSAGE,
+  DEL_MESSAGE,
+  GET_MORE_MESSAGE
 } from './types';
 // import { rejects } from 'assert';
 
 // const uuid = require('uuid/v1');
 const cuid = require('cuid');
-API.init();
-window.api = API;
+// API.init();
+window.api = WS;
 
 /*
     Page state
@@ -142,16 +149,6 @@ export const set_pageLoading = (value = false) => dispatch => {
   dispatch({ type: SET_PAGELOAD, value });
 }
 
-/* for testing */
-// export const set_location_array = (type, value) => async dispatch => {
-//   // const value = await axios.get(`http://apis.map.qq.com/ws/district/v1/getchildren?key=BBYBZ-2A66F-UDJJ2-NSWRG-VD3TZ-VSFE2`);
-//   // console.log(value);
-//   if (type === 'city') {
-//     dispatch({ type: SET_CITY, value });
-//   } else if (type === 'area') {
-//     dispatch({ type: SET_AREA, value });
-//   }
-// }
 
 export const toggle_channel_search = () => dispatch => {
   dispatch({ type: TOGGLE_CHANNEL_SEARCH });
@@ -163,7 +160,7 @@ export const toggle_mini_nav = () => dispatch => {
   dispatch({ type: TOGGLE_MINI_NAV });
 }
 export const uploading_pic = (id, file, type) => async dispatch => {
-  if (!API.ws.connected) return console.warn('no connection');
+  if (!WS.connected) return console.warn('no connection');
   dispatch({ type: ADD_UPLOAD_FILE, id, url: file.url });
   let res = await UploadEncoder(file.blob, 'readAsDataURL');
   let tiemr;
@@ -181,24 +178,24 @@ export const uploading_pic = (id, file, type) => async dispatch => {
     // console.log('mime type: ',mime);
 
     const sendChunk = () => {
-      console.log('[before]buffer size: ', API.ws.buffer);
-      if(API.ws.buffer <= limit) {
+      console.log('[before]buffer size: ', WS.buffer);
+      if(WS.buffer <= limit) {
         const bit = res.slice(bitcounter, bitcounter + chunk);
         if (bitcounter < size) {
           console.log('sending segment:', index);
-          API.ws.send({t: 'up-pic', v: bit, i: index++, n: name, c: type});
+          WS.send({t: 'up-pic', v: bit, i: index++, n: name, c: type});
         }else {
           console.log('sending finished.');
-          API.ws.send({t: 'up-pic', i: -1, n: name, c: type});
+          WS.send({t: 'up-pic', i: -1, n: name, c: type});
         }
       } else {
         console.log('buffer is full.');
         return setTimeout(sendChunk, 200);
       }
       
-      console.log('[after]buffer size: ', API.ws.buffer);
+      console.log('[after]buffer size: ', WS.buffer);
 
-      API.ws.on('up-pic', (e) => {
+      WS.on('up-pic', (e) => {
         clearTimeout(tiemr);
         if (!e.err && !e.l) {
           dispatch({ type: FILE_UPLOADING, id, percent: Math.floor((bitcounter/size)*100)});
@@ -281,6 +278,24 @@ export const set_note = (note) => dispatch => {
 }
 
 /*
+    Attaach Ws events
+*/
+
+export const attach = (event, callback) => dispatch => {
+  return WS.on(event, (e) => {
+    console.log('attach: ', event, e);
+    if (!e.err) {
+      callback(e.v || e);
+    }
+  });
+}
+
+export const detech = (event, n) => dispatch => {
+  WS.off(event, n);
+}
+
+
+/*
     User state
 */
 
@@ -289,7 +304,9 @@ export const user_verify = () => dispatch => {
   // let connection = setTimeout(() => {
   //   dispatch({ type: NOTIFICATION_IN, id: cuid(), text: '离线网络，请在接入网络后刷新'});
   // }, 1000);
-  API.ws.on('int', (e) => {
+
+  // on page load check if user is logged in
+  WS.on('int', (e) => {
     // clearTimeout(connection);
     if (e.v === 1) {
       dispatch({type: SET_USER, user: e.u});
@@ -301,25 +318,26 @@ export const user_verify = () => dispatch => {
     }
     dispatch({ type: LOAD_WEBSOCKET, ws: true});
   }, true);
-  API.ws.on('logout', (e) => {
+  WS.on('logout', (e) => {
     if (!e.err) {
       dispatch({ type: USER_LOGOUT });
       dispatch({ type: SET_USER, user: null });
     }
   });
-  API.ws.on('login', (e) => {
+  // actual login event
+  WS.on('login', (e) => {
     if (!e.err) {
       dispatch({ type: SET_USER, user: e.u })
       dispatch({ type: USER_LOGIN });
     }
   });
-  API.ws.on('rgt', (e) => {
+  WS.on('rgt', (e) => {
     if (!e.err) {
       dispatch({ type: SET_USER, user: e.u })
       dispatch({ type: USER_LOGIN });
     }
   });
-  API.ws.on('upd', (e) => {
+  WS.on('upd', (e) => {
     console.log('upd:', e);
     if (!e.err) {
       if (e.c === 'ch-cover') {
@@ -329,6 +347,7 @@ export const user_verify = () => dispatch => {
       }
     }
   });
+  
 }
 
 
@@ -429,7 +448,7 @@ export const name_verify = (value) => async dispatch => {
 export const send_email_code = (email) => async dispatch => {
   try {
     await wsSend('get-code', {e: email}, {backType: 'code'});
-    return '验证码已发送，请进入邮箱查收';
+    return errmsg.code1;
   }catch(e) {
     return e;
   }
@@ -438,9 +457,9 @@ export const send_email_code = (email) => async dispatch => {
 export const send_text_code = (phone) => async dispatch => {
   try {
     await wsSend('get-code', {p: phone}, {backType: 'code'});
-    return '验证码已发送，请留意手机短信';
+    return errmsg.code2;
   }catch(e) {
-    return e;
+    throw e;
   }
 }
 
@@ -502,13 +521,26 @@ export const send_identity = (obj) => async dispatch => {
     dispatch({ type: SET_SUBMITTING_STATE, value: false});
   }catch(e) {
     dispatch({ type: SET_SUBMITTING_STATE, value: false});
+    console.log(e);
     throw e;
   }
 }
 
 // used to updata user addresses in 'address' page
-export const update_address = (addr) => dispatch => {
-  dispatch({ type: UPDATE_ADDRESS, addr: addr });
+export const update_address = (addr) => async dispatch => {
+  dispatch({ type: UPDATE_ADDRESS, addr });
+}
+// 
+export const save_address = (uid, address) => async dispatch => {
+  try {
+    await wsSend('upd', {uid, o: {address}});
+  }catch(e) {
+    const retry = {
+      f: 'this.props.save_address(this.props.user.user.UID, this.address)',
+      d: address
+    }
+    localStorage.setItem('retry', JSON.stringify(retry));
+  }
 }
 
 
@@ -554,3 +586,49 @@ export const change_form_data = (prop, value) => dispatch => {
   }
 }
 
+/* 
+    Message // need more improvement, like cache data for the same browser
+*/
+export const get_msg = (uid, id) => async dispatch => {
+  try {
+    const res = await wsSend('msg-g', {uid, id});
+    if (id) {
+      dispatch({ type: GET_MORE_MESSAGE, id, msg: res });
+    }else {
+      dispatch({ type: GET_MESSAGE, data: res });
+    }
+  }catch(e) {
+    return e;
+  }
+}
+
+export const add_msg = (uid, msg) => async dispatch => {
+  let res;
+  try {
+    // prevent self firing
+    if (uid) res = await wsSend('msg-a', {uid, msg}); 
+    dispatch({ type: ADD_MESSAGE, data: res || msg });
+  }catch(e) {
+    return e;
+  }
+}
+
+export const del_msg = (uid, ids) => async dispatch => {
+  dispatch({ type: DEL_MESSAGE, ids});
+  if (!uid) return; // prevent self firing
+  try {
+    await wsSend('msg-d', {uid, ids});
+    return false;
+  }catch(e) {
+    return e;
+  }
+  
+}
+
+export const update_msg = (id) => dispatch => {
+  dispatch({ type: UPDATE_MESSAGE, id });
+}
+
+export const save_msg = (uid, ids) => async dispatch => {
+  await wsSend('msg-u', {uid, ids});
+}

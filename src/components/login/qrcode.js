@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
 import { QRCode } from 'react-qr-svg';
 import cuid from 'cuid';
 import * as actions from '../../redux/actions';
 
-class Qrcode extends Component {
+class Qrcode extends PureComponent {
   componentWillMount () {
     this.id = cuid();
     this.props.qrcode(true);
@@ -34,5 +34,5 @@ class Qrcode extends Component {
   }
 }
 
-export default connect(state => state, actions)(Qrcode)
+export default connect(null, actions)(Qrcode)
 

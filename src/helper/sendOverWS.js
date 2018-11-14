@@ -1,4 +1,5 @@
-import API from '../ws-api';
+import WS from '../ws-api';
+import errorMsg from './errorText';
 
 /**
  * @arg {String} type ws send type
@@ -25,12 +26,11 @@ export default (type, data = {}, config) => {
 
   if (!type || typeof type !== 'string') throw Error('[type] must be a String.');
   let timer;
-  let content = {};
-  content.t = type;
-  if (data) content = {...content, ...data};
-  API.ws.send(content);
+  const content = {t: type, ...data};
+  console.log(content);
+  WS.send(content);
   return new Promise((resolve, reject) => {
-    API.ws.on(defaultConfig.backType, (e) => {
+    WS.on(defaultConfig.backType, (e) => {
       clearTimeout(timer);
       if (!e.err) {
         console.log(e);
@@ -40,7 +40,7 @@ export default (type, data = {}, config) => {
       }
     }, defaultConfig.once);
     timer = setTimeout(() => {
-      reject(defaultConfig.errmsg || 'Network fails, plase try again.');
+      reject(defaultConfig.errmsg || errorMsg.server400);
     }, defaultConfig.timeout * 1000);
   })
 }

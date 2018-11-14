@@ -12,12 +12,8 @@ import Spinner from './animates/spinner';
  */
 
 class lazyLoad extends Component {
-  shouldComponentUpdate () {
-    if (this.shouldUpdate || this.props.fresh === true)
-    return true;
-    else return false;
-  }
-  componentWillMount () {
+  constructor (props) {
+    super(props);
     /* document.body.offsetHeight - height of the document (=0 when no scroll)
        window.innerHeight         - total window height
        window.pageYOffset         - scroll bar top position */
@@ -31,6 +27,13 @@ class lazyLoad extends Component {
     this.num = this.props.num || 10;
     // initial custom data
     this.data = this.props.data || [];
+  }
+  shouldComponentUpdate () {
+    if (this.shouldUpdate || this.props.fresh === true)
+    return true;
+    else return false;
+  }
+  componentWillMount () {
     // initial fisrt load OR bypass initial load
     if (!this.props.page.lazyLoad[this.tab]) {
       this.props.set_lazyload(this.tab, 0, this.num, this.data);
@@ -77,4 +80,4 @@ class lazyLoad extends Component {
   }
 }
 
-export default connect(state => state, actions)(lazyLoad);
+export default connect(({page}) => ({page}), actions)(lazyLoad);

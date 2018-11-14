@@ -4,11 +4,8 @@ import Button from '../../../components/forms/button';
 import * as actions from '../../../redux/actions';
 
 class Seller extends PureComponent {
-  fakeShop = {
 
-  }
   render () {
-    // const balance = this.props.user.user?this.props.user.user.balance:0;
     const magic = this.props.user.user?this.props.user.user.magicCoin:0;
     return (
       <div>
@@ -32,4 +29,4 @@ class Seller extends PureComponent {
 }
 
 
-export default connect(({user}) => ({user}), actions)(Seller);
+export default connect(({user,page}) => ({user,page}), actions)(Seller);

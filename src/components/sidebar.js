@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import Brand from './brand';
 import Menu from './sidebar/menu';
@@ -12,7 +12,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import * as actions from '../redux/actions';
 
-class Sidebar extends Component {
+class Sidebar extends PureComponent {
 
   render () {
     // const toggleClass = this.props.page.sidebar ? 'app-sidebar': 'app-sidebar sidebar-hide';
@@ -34,4 +34,4 @@ class Sidebar extends Component {
   }
 }
 
-export default connect(state => state, actions)(Sidebar);
+export default connect(({user}) => ({user}), actions)(Sidebar);

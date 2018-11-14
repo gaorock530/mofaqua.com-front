@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 import { Link } from 'react-router-dom';
 
-class Category extends Component {
+class Category extends PureComponent {
   componentDidMount () {
     for (let el of this.refs.top.children) {
       if (el.tagName === 'A') {
@@ -28,4 +28,4 @@ class Category extends Component {
   }
 }
 
-export default connect(state => state, actions)(Category);
+export default connect(null, actions)(Category);

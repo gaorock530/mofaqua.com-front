@@ -1,6 +1,6 @@
 
 html {
-  font-family: Roboto, Arial, sans-serif;
+  font-family: 'WenQuanYi Zen Hei', '微軟正黑體', '蘋果儷中黑', Helvetica, Arial, sans-serif;
   font-size: 12px;
   background-color: $background;
 }
@@ -188,5 +188,8 @@ ul, li {
 }
 .yellow {
   color: yellowgreen !important;
+}
+.purple {
+  color: $theme-purple;
 }
 

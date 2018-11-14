@@ -7,18 +7,18 @@ import { connect } from 'react-redux';
  * @param {String} url '/pic/reef-2.jpg' 
  */
 
-class Section extends Component {
+export default (props) => {
 
-  componentDidMount () {
-    // console.log(this.props)
-  }
+  // componentDidMount () {
+  //   // console.log(this.props)
+  // }
 
-  render () {
+  // render () {
     const { 
       className,
       url = false,
       cover = false
-    } = this.props;
+    } = props;
     
     const style1 = {
       'backgroundColor': cover ? 'rgba(0,0,0,'+cover+')':''
@@ -33,12 +33,12 @@ class Section extends Component {
         <div className="section-overlay" style={style1}></div>
         <div className="section-content-wapper">
           <div className={"section-content " + className}>
-            {this.props.children}
+            {props.children}
           </div>
         </div>
       </section>
     )
-  }
+  // }
 }
 
-export default connect(state => state, null)(Section);
+// export default connect(state => state, null)(Section);

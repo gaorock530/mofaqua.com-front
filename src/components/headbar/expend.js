@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../redux/actions';
 
-class Expend extends Component {
+class Expend extends PureComponent {
   componentDidMount () {
     if (this.props.open) this.props.open();
     this.refs.expend.addEventListener('mouseenter', this.on);
@@ -33,8 +33,5 @@ class Expend extends Component {
   }
 }
 
-const pageState = (state) => {
-  return {page: state.page}
-}
 
-export default connect(pageState, actions)(Expend);
+export default connect(({page}) => ({page}), actions)(Expend);

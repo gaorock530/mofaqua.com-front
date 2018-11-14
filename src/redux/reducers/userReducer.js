@@ -49,7 +49,7 @@ export default function (state = {
     case 'PHONE_RESEND_IN' :
       return {
         ...state,
-        phoneResendin: action.value
+        phoneResendin: action.value || 0
       }
     case 'EMAIL_VERIFY':
       return {

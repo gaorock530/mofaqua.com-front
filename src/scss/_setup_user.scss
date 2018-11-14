@@ -2,19 +2,15 @@
   position: relative;
   margin: 0 auto;
   width: 100%;
-  // color: #fff;
-  // padding: 10px 0;
 
   .active {
-    background: $theme-blue; 
+    background: $theme-button; 
     color: #fff;
     cursor: default;
   }
   img {
     width: 50px;
     height: 50px;
-    // border-radius: 50%;
-    // border: 2px solid #fff;
     margin-right: 10px; 
   }
   .pt {
@@ -28,8 +24,9 @@
 .twocol-left {
   position: relative;
   border-bottom: 1px solid #000;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   width: 100%;
+  text-align: center;
   &>* {
     display: inline-block;
     padding: 10px 20px;
@@ -40,17 +37,10 @@
   width: calc(100% - 40px);
   padding: 20px;
   text-align: left;
+  font-size: 1.1rem;
 
-  // label, a {
-  //   color: #aaa;
-  // }
-  // a {
-  //   padding: 0 5px;
-  // }
-  p {
-    color: #aaa;
-  }
   h3 {
+    font-size: 1.2rem;
     padding: 10px 0;
     margin: 0;
   }
@@ -58,15 +48,51 @@
     padding-right: 10px;
   }
   
-  input {
-    border-color: #eee; 
-    // margin-right: 10px;
-    cursor: pointer;
-  }
-  .result {
-    i {
-      padding: 5px 10px;
+  .message-wrapper {
+    margin: 10px 0;
+    .select {
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
     }
+  }
+
+  .message-t {
+    position: relative;
+    display: flex;
+    padding: 6px;
+    margin: 0;
+    border: 1px solid $theme-purple;
+    border-radius: 5px;
+    cursor: pointer;
+
+    .main {
+      flex: 6;
+      .check {
+        color: $theme-purple;
+        margin-right: 10px; 
+      }
+      .title {
+        word-break: break-all;
+      }
+    }
+    .side {
+      position: relative;
+      flex: 1;
+      min-width: 60px;
+      text-align: right;
+      font-size: 1.1rem;
+    }
+    .dot {
+      color: $theme-purple;
+      margin: 0 10px;
+    }
+    
+  }
+  .message-m {
+    margin: 0 auto;
+    padding: 10px;
+    width: calc(100% - 40px);
+    border: 1px solid $theme-purple;
+    border-top: none;
   }
 
 }

@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../redux/actions';
 
 
-class NotificationItem extends Component { 
+class NotificationItem extends PureComponent { 
   onClick = (id) => {
     this.props.notification_out(id)
   }
@@ -28,4 +28,4 @@ class NotificationItem extends Component {
   }
 }
 
-export default connect(state => state, actions)(NotificationItem);
+export default connect(null, actions)(NotificationItem);

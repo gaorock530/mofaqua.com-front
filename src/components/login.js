@@ -34,4 +34,4 @@ const Login = (props) => {
 
 }
 
-export default connect(state => state, actions)(Login);
+export default connect(({page, user}) => ({page, user}), actions)(Login);

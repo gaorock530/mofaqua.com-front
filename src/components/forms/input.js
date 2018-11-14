@@ -4,11 +4,14 @@ import React, {PureComponent} from 'react';
  * @param {String} label whether to display label on top of input
  * @param {Function} condition regular expression for pass conditions
  * @param {String} errorText text to display when error occurs
+ * @param {Boolean} strictError if 'strictError' is set to True, errorText must be displayed
  * @param {Color} labelColor label font color
  * @param {Color} bgColor background color
  * @param {Type} type input type
  * @param {String} placeholder
- * @param {String|Array|Object{icon: ''}} tag input tag 
+ * @param {String|Array|{icon: '', toggle: ''}} tag input tag, 
+ * if {toggle: 'className'} provide, AND only for 'password' input
+ * input box will toggle between 'password' and 'text'
  * @param {Function} onBlur reture input value to outter component
  * @param {Function} onChangeUnit
  * @param {String} defaultValue input default value
@@ -22,7 +25,7 @@ export default class Input extends PureComponent {
     // internal properties
     this.width = this.props.width || null;
     this.isEmpty = true;
-    this.status = 0;
+    this.valid = false;
     this.input = this.props.defaultValue || '';
     this.timer = null;
     this.tagOp = this.props.defaultOp || 0;
@@ -31,6 +34,8 @@ export default class Input extends PureComponent {
     this.label = this.props.label || null;
     this.condition = this.props.condition || null;
     this.errorText = this.props.errorText || null;
+    // if 'strictError' is set to True, errorText must be displayed
+    this.strictError = this.props.strictError || null;
     this.labelColor = this.props.labelColor;
     this.type = this.props.type || 'text';
     this.placeholder = this.props.placeholder || '';
@@ -44,13 +49,20 @@ export default class Input extends PureComponent {
     clearTimeout(this.timer);
   }
 
+  componentWillUpdate ({strictError}) {
+    if (this.input && typeof strictError !== 'undefined') {
+      this.normal();
+      strictError? this.error():this.pass();
+    }
+  }
+
   onFocus = () => {
     this.refs.form_input_container.classList.add('form-input-container-focus');
   }
 
   onBlur = (e) => {
     this.refs.form_input_container.classList.remove('form-input-container-focus');
-    if (this.props.onBlur) this.props.onBlur(e.target.value, this.tagOp, this.status === 2? true: false);
+    if (this.props.onBlur) this.props.onBlur(e.target.value, this.tagOp, this.valid);
   }
 
   onChange = (e) => {
@@ -67,6 +79,22 @@ export default class Input extends PureComponent {
   }
 
   check = (value) => {
+    this.normal();
+    if (!this.isEmpty) {
+      if (this.condition(value)) {
+        this.valid = true;
+        this.pass();
+      } else {
+        this.valid = false;
+        this.errorText = this.props.errorText;
+        this.error();
+      }
+    }
+    if (this.props.onBlur) this.props.onBlur(value, this.tagOp, this.valid);
+    this.forceUpdate();    
+  }
+
+  normal = () => {
     this.refs.form_input_container.classList.remove('form-input-pass');
     this.refs.form_input_container.classList.remove('form-input-status-pass');
     this.refs.input_status.classList.remove('form-input-pass');
@@ -75,23 +103,18 @@ export default class Input extends PureComponent {
     this.refs.form_input_container.classList.remove('form-input-status-error');
     this.refs.input_status.classList.remove('form-input-error');
     this.refs.input_status.classList.remove('form-input-status-error');
-    if (this.isEmpty) {
-      this.status = 0;
-    } else {
-      if (this.condition(value)) {
-        this.status = 2;
-        if (this.props.onBlur) this.props.onBlur(value, this.tagOp, true);
-        this.refs.form_input_container.classList.add('form-input-pass');
-        this.refs.input_status.classList.add('form-input-status-pass');
-      } else {
-        this.status = 1;
-        this.errorText = this.props.errorText;
-        this.refs.form_input_container.classList.add('form-input-error');
-        this.refs.input_status.classList.add('form-input-status-error');
-      }
-    }
-    this.forceUpdate();
   }
+
+  pass = () => {
+    this.refs.form_input_container.classList.add('form-input-pass');
+    this.refs.input_status.classList.add('form-input-status-pass');
+  }
+
+  error = () => {
+    this.refs.form_input_container.classList.add('form-input-error');
+    this.refs.input_status.classList.add('form-input-status-error');
+  }
+
 
   renderTag = () => {
     if (this.tag) {
@@ -121,7 +144,19 @@ export default class Input extends PureComponent {
     if (this.props.onChangeUnit) this.props.onChangeUnit(parseInt(e.target.value, 10));
   }
 
-  onTagClick = () => {
+  onTagClick = (e) => {
+    if (this.tag.toggle) {
+      if (e.target.classList.contains('fa-' + this.tag.icon)) {
+        e.target.classList.replace('fa-' + this.tag.icon, 'fa-' + this.tag.toggle);
+        this.type = 'text';
+        this.forceUpdate();
+      } else {
+        e.target.classList.replace('fa-' + this.tag.toggle, 'fa-' + this.tag.icon);
+        this.type = 'password';
+        this.forceUpdate();
+      }
+    }
+
     this.refs.input_area.focus();
   }
 
@@ -149,7 +184,7 @@ export default class Input extends PureComponent {
           </div>
           {this.renderTag()}
         </div>
-        {this.errorText && this.status === 1?<div className="form-input-error-box">{this.errorText}</div> :''}
+        {this.input && this.errorText && (!this.valid || this.strictError)?<div className="form-input-error-box">{this.errorText}</div> :''}
       </div>
     )
   }

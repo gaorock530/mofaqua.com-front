@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 import { Link } from 'react-router-dom';
 
-class Menu extends Component {
+class Menu extends PureComponent {
   componentDidMount () {
     for (let el of this.refs.top.children) {
       el.addEventListener('click', this.props.toggle_sidebar, {once: true});
@@ -24,4 +24,4 @@ class Menu extends Component {
   }
 }
 
-export default connect(state => state, actions)(Menu);
+export default connect(({user}) => ({user}), actions)(Menu);

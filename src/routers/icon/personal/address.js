@@ -12,12 +12,10 @@ import cuid from 'cuid';
 class Address extends PureComponent {
   constructor (props) {
     super(props);
-    const address = localStorage.getItem('address') || localStorage.getItem('copy');
     this.saved = true;
-    if (address) this.address = JSON.parse(address);
-    else this.address = this.props.user.user.address || [];
-    this.props.update_address(this.address);
+    this.address = this.props.user.user.address || [];
   }
+
 
   componentWillMount () {
     window.addEventListener('beforeunload', this.saveData, {once: true});
@@ -25,22 +23,17 @@ class Address extends PureComponent {
 
   componentWillUnmount () {
     window.removeEventListener('beforeunload', this.saveData);
-    if (!this.saved) {
-      localStorage.setItem('copy', JSON.stringify(this.address));
-      this.save = true;
-    }
+    if (!this.saved) this.saveData();
   }
 
+  // make sure only save data to server 
+  // when user close window OR switch page
+  // to prevent frequent saving traffic
   saveData = () => {
     if (!this.saved) {
-      localStorage.setItem('address', JSON.stringify(this.address));
-      this.save = true;
+      this.props.update_address(this.address);
+      this.props.save_address(this.props.user.user.UID, this.address);
     }
-  }
-  
-  flatAddr = (data) => {
-    if (!data instanceof Array || data.length === 0) return [];
-    return data.map((ad) => ad.cate.state + ad.cate.city + ad.cate.area + ad.detail);
   }
 
   renderAddress = () => {
@@ -71,15 +64,19 @@ class Address extends PureComponent {
     else this.zip = data;
   }
 
+  // change - case 1
   saveAddress = () => {
     if (!this.addrCate || !this.addrDetail || !this.zip) return this.props.notification_in(cuid(), ErrorText.lackAddr);
     this.add = false;
     const data = {
       id: cuid(),
-      cate: this.addrCate, 
-      detail: this.addrDetail, 
-      zip: this.zip,
-      default: this.address.length < 1,
+      recent: this.address.length < 1,
+      country: '中国',
+      state: this.addrCate.state,
+      city: this.addrCate.city,
+      district: this.addrCate.area,
+      detail: this.addrDetail,
+      zip: this.zip
     }
     this.address.push(data);
     this.props.update_address(this.address);
@@ -88,24 +85,24 @@ class Address extends PureComponent {
     this.zip = null;
     this.saved = false;
   }
-
+  // change - case 2
   changeDefault = (id) => {
     this.address = this.address.map((ad) => {
-      if (id === ad.id) ad.default = true;
-      else ad.default = false;
+      if (id === ad.id) ad.recent = true;
+      else ad.recent = false;
       return ad;
     });
     this.props.update_address(this.address);
     this.saved = false;
   }
-
+  // change - case 3
   onDelete = (id) => {
     let pass = false;
     this.address = this.address.filter((ad) => {
-      if (id === ad.id && ad.default) pass = true;
+      if (id === ad.id && ad.recent) pass = true;
       return id !== ad.id
     });
-    if (this.address.length > 0 && pass) this.address[0].default = true;
+    if (this.address.length > 0 && pass) this.address[0].recent = true;
     this.props.update_address(this.address);
     this.saved = false;
   }
@@ -151,4 +148,4 @@ class Address extends PureComponent {
   }
 }
 
-export default connect(({user}) => ({user}), actions)(Address);
+export default connect(({user, page}) => ({user, page}), actions)(Address);

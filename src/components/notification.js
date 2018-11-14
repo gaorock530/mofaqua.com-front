@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 // import * as actions from '../redux/actions';
 
 import NotificationItem from './notification-item';
 
-class Notification extends Component {
+class Notification extends PureComponent {
   render () {
     const renderNotice = () => {
       return this.props.notification.map(item => {
@@ -19,4 +19,4 @@ class Notification extends Component {
   }
 }
 
-export default connect(state => state, null)(Notification);
+export default connect(({notification}) => ({notification}), null)(Notification);

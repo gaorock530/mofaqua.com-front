@@ -13,10 +13,14 @@ export default (props) => {
     if (props.onClick) props.onClick(e);
   }
 
-  const css = props.simple? 'from-button-simple': 'from-button-small';
+  // const css = props.simple? 'from-button-simple': 'from-button-small';
+
 
   return (
-    <a className={css} style={{width: props.width?props.width+'px': 'auto'}}
+    <a className={
+      (props.disable? 'from-button-disable' : (props.simple? 'from-button-simple': 'from-button-small'))
+    } 
+    style={{width: props.width?props.width+'px': 'auto'}}
     onClick={onClick}>{text}</a>
   )
 }

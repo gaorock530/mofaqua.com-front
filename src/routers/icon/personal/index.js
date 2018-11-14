@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import Person from './person';
@@ -8,13 +8,24 @@ import Address from './address';
 import Assets from './assets';
 import Page from '../../../components/page';
 
-class Personal extends Component {
+class Personal extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.ops = [
+      { k: 'person', v: '个人资料' },
+      { k: 'message', v: '消息管理'},
+      { k: 'address', v: '交易管理'},
+      { k: 'assets', v: '资产管理'}
+    ]
+    // if (!this.props.page.setupPage) this.props.current_setup_page('person');
+  }
+
   async componentWillMount () {
     await this.props.get_user_info(this.props.user.user.UID);
   }
 
   componentWillUnmount () {
-    this.props.current_setup_page(null);
+    // this.props.current_setup_page(null);
   }
 
   renderRight = () => {
@@ -32,13 +43,17 @@ class Personal extends Component {
     }
   }
 
-  onClick = (page, e) => {
+  onClick = (page) => {
     if (page === this.props.page.setupPage) return;
-    for(let el of e.target.parentElement.children) {
-      el.classList.remove('active');
-    }
-    e.target.classList.add('active');
     this.props.current_setup_page(page);
+  }
+
+  renderOp = () => {
+    return this.ops.map((op) => 
+      <a onClick={this.onClick.bind(this, op.k)} key={op.k}
+      className={this.props.page.setupPage === op.k? 'active': null}
+      >{op.v}</a>
+    )
   }
 
   render () {
@@ -46,10 +61,7 @@ class Personal extends Component {
       <Page wapper={true}>
         <div className="twocol-container">
           <div className="twocol-left noselect">
-            <a onClick={this.onClick.bind(this, 'person')} className="active">个人资料</a>
-            <a onClick={this.onClick.bind(this, 'message')}>消息管理</a>
-            <a onClick={this.onClick.bind(this, 'address')}>交易管理</a>
-            <a onClick={this.onClick.bind(this, 'assets')}>资产管理</a>
+            {this.renderOp()}
           </div>
           <div className="twocol-right">
             {this.renderRight()}
@@ -60,4 +72,4 @@ class Personal extends Component {
   }
 }
 
-export default connect(state => state, actions)(Personal);
+export default connect(({user, page}) => ({user, page}), actions)(Personal);

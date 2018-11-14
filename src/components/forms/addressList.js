@@ -19,19 +19,19 @@ export default class Radio extends PureComponent {
   }
 
   flatAddr = (op) => {
-    return op.cate.state + op.cate.city + op.cate.area + op.detail;
+    return op.state + op.city + op.area + op.detail;
   }
 
   renderOps = () => {
     if (this.options instanceof Array && this.options.length > 0) {
       return this.options.map((op) => {
-        let css = "fa " + (op.default? "fa-dot-circle": "fa-circle");
+        let css = "fa " + (op.recent? "fa-dot-circle": "fa-circle");
         return (
           <div key={op.id}> 
             <a className="form-radio-option" onClick={this.onClick.bind(this, op.id)}>
               <i className={css}></i>
               <span>{this.flatAddr(op)}</span>
-              {op.default? (<span><i className="fa fa-caret-right"></i>默认地址</span>):''}
+              {op.recent? (<span><i className="fa fa-caret-right"></i>默认地址</span>):''}
             </a>
             <i className="fa fa-times" onClick={this.onDel.bind(this, op.id)}></i>
           </div>

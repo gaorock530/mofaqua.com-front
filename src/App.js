@@ -118,7 +118,7 @@ class App extends Component {
 
   render() {
     return !this.props.ws.connection?(this.loading?<Spinner />:'no connection'):(
-      <div className="center">
+      <div>
         <BrowserRouter>
           <div>
             <Notification/>
@@ -150,7 +150,7 @@ class App extends Component {
               <Route exact path='/login' component={Login} />
               <Route exact path='/register' component={Register} />
               <PrivateRoute exact path='/setup' component={Setup} />
-              <PrivateRoute exact path='/personal' component={Personal} />
+              <PrivateRoute exact path='/info' component={Personal} />
               <PrivateRoute exact path='/mytank' component={Mytank} />
               <PrivateRoute exact path='/mytank/:id' component={TankView} />
               <PrivateRoute exact path='/addtank' component={AddTank} />

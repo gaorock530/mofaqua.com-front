@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import style from '../../helper/style';
@@ -11,7 +11,7 @@ import Logout from './logout';
 import * as actions from '../../redux/actions';
 
 
-class User extends Component {  
+class User extends PureComponent {  
   componentDidMount () {
     // store new styles indexes in styleSheet
     this.index = [];
@@ -82,7 +82,7 @@ class User extends Component {
               </div>
             </div>
             <div>
-              <Link onClick={this.props.set_expend_active} to="/personal" className="expend-list"><i className="fa fa-user"></i><span>个人信息</span></Link>
+              <Link onClick={this.props.set_expend_active} to="/info" className="expend-list"><i className="fa fa-user"></i><span>个人信息</span></Link>
               <Link onClick={this.props.set_expend_active} to="/channel" className="expend-list"><i className="fa fa-tv"></i><span>我的频道</span></Link>
               <Link onClick={this.props.set_expend_active} to="/mytank" className="expend-list"><i className="fa fa-tint"></i><span>我的美缸</span></Link>
             </div>
@@ -100,4 +100,4 @@ class User extends Component {
   }
 }
 
-export default connect(state => state, actions)(User);
+export default connect(({user, page}) => ({user, page}), actions)(User);

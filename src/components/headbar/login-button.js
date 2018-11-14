@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import {Link} from 'react-router-dom';
@@ -8,7 +8,7 @@ import Spinner from '../animates/spinner';
 
 import * as actions from '../../redux/actions';
 
-class LoginButton extends Component {
+class LoginButton extends PureComponent {
   
   render () {
     return (
@@ -22,4 +22,4 @@ class LoginButton extends Component {
   }
 }
 
-export default connect(state => state, actions)(LoginButton);
+export default connect(({user}) => ({user}), actions)(LoginButton);

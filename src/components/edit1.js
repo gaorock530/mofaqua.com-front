@@ -73,5 +73,5 @@ class Edit extends PureComponent {
   }
 }
 
-export default connect(state => state, actions)(Edit);
+export default connect(({page}) => ({page}), actions)(Edit);
 

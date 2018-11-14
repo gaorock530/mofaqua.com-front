@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import UserUtils from './user-utils';
@@ -7,7 +7,7 @@ import User from './user';
 import LoginButton from './login-button';
 import * as actions from '../../redux/actions';
 
-class Tools extends Component {
+class Tools extends PureComponent {
   
   render () {
     return (
@@ -21,8 +21,5 @@ class Tools extends Component {
   }
 }
 
-const userState = (state) => {
-  return {user: state.user}
-}
 
-export default connect(userState, actions)(Tools);
+export default connect(({user}) => ({user}), actions)(Tools);

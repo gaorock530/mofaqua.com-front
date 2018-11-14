@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import cuid from 'cuid';
 
@@ -8,7 +8,7 @@ import Spinner from './animates/spinner';
 import Loader from './animates/loader';
 
 
-class Body extends Component {
+class Body extends PureComponent {
 
   ws = this.props.ws.connection;
   

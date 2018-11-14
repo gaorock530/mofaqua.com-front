@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 
-class Subscription extends Component {
+class Subscription extends PureComponent {
   componentDidMount () {
     for (let el of this.refs.top.children) {
       if (el.tagName === 'A') {
@@ -25,4 +25,4 @@ class Subscription extends Component {
   }
 }
 
-export default connect(state => state, actions)(Subscription);
+export default connect(null, actions)(Subscription);

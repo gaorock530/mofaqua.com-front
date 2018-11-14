@@ -182,7 +182,7 @@
 }
 
 .form-input-container-focus {
-  border-color: #4C0C82;
+  border-color: $theme-color;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
   transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
@@ -193,14 +193,14 @@
   /* color:#D93B0A; */
 }
 .form-input-pass {
-  border-color: #4C0C82;
+  border-color: $theme-color;
 }
 
 .form-input-status-error {
   background-color: #D93B0A;
 }
 .form-input-status-pass {
-  background-color: #4C0C82;
+  background-color: $theme-color;
 }
 
 /* ------------radio/checkbox------------*/
@@ -252,7 +252,7 @@
 .form-radio-option .fa-dot-circle,
 .form-radio-option .fa-check-square
 {
-  color:#4C0C82;
+  color:$theme-color;
 }
 
 /* ------------textarea------------*/
@@ -272,7 +272,7 @@
   border-radius: 3px;
 }
 .form-textarea:focus {
-  border-color: #4C0C82;
+  border-color: $theme-color;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
   transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
@@ -354,7 +354,7 @@
   width: 41px;
   height: 30px;
   line-height: 30px;
-  background: #4C0C82;
+  background: $theme-color;
   // background-image: linear-gradient(to bottom, #9418FF, #4C0C82);
 }
 
@@ -380,7 +380,7 @@
   outline: none;
   border-radius: 3px;
   font-size: 1.2rem; 
-  background: #4C0C82;
+  background-color: $theme-color;
   color: #fff;
   // background-image: linear-gradient(#9418FF,#4C0C82);
 }
@@ -398,23 +398,34 @@
 }
 
 .from-button-small,
-.from-button-simple {
-  font-size: 1.2rem;
+.from-button-simple,
+.from-button-disable {
+  font-size: 1rem;
 }
 
-.from-button-small {
+.from-button-small,
+.from-button-disable {
   position: relative;
   display: inline-block;
   border: 1px solid #aaa;
-  height: 38px;
-  line-height: 38px;
+  height: 28px;
+  line-height: 28px;
   text-align: center;
-  min-width: 100px;
+  min-width: 70px;
   margin: 5px auto;
   border-radius: 3px;
+}
+
+.from-button-small:hover {
+  color: #fff;
+  background-color: $theme-color;
+}
+
+.from-button-disable {
+  color: #666;
   &:hover {
-    color: #fff;
-    background: #4C0C82;
+    color: #666;
+    // background-color: none !important;/
   }
 }
 
@@ -422,10 +433,23 @@
   position: relative;
   display: inline-block;
   &:hover {
-    color: #4C0C82;
+    color: $theme-color;
   }
 }
 
+/* ---------------Security---------------*/
+.security-wrapper {
+  display: flex;
+  width: 300px;
+}
+.security-button {
+  flex: 1;
+  align-self: center;
+  text-align: center;
+}
+.security-input {
+  flex: 2;
+}
 
 
 /* ----------OLD------------*/

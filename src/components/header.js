@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 import Brand from './brand';
 import Tools from './headbar/tools';
@@ -7,7 +7,7 @@ import SearchBig from './headbar/search-big';
 
 import * as actions from '../redux/actions';
 
-class Header extends Component {
+class Header extends PureComponent {
   
   render () {
     return this.props.page.smallWindow ? <SearchBig /> : 
@@ -21,4 +21,4 @@ class Header extends Component {
   }
 }
 
-export default connect(state => state, actions)(Header);
+export default connect(({page}) => ({page}), actions)(Header);

@@ -34,4 +34,4 @@ class UserUtils extends PureComponent {
   }
 }
 
-export default connect(state => state, actions)(UserUtils);
+export default connect(({page}) => ({page}), actions)(UserUtils);

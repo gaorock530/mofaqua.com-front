@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import Details from './details';
@@ -8,12 +8,15 @@ import Privacy from './privacy';
 import Page from '../../../components/page';
 
 
-class Setup extends Component {
-  componentWillMount () {
-    this.props.current_setup_page(null);
-  }
-  componentWillUnmount () {
-    this.props.current_setup_page(null);
+class Setup extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.ops = [
+      { k: 'details', v: '账号' },
+      { k: 'notice', v: '通知'},
+      { k: 'channel', v: '频道'},
+      { k: 'privacy', v: '隐私'}
+    ]
   }
   renderRight = () => {
     switch (this.props.page.setupPage) {
@@ -30,13 +33,17 @@ class Setup extends Component {
     }
   }
 
-  onClick = (page, e) => {
+  onClick = (page) => {
     if (page === this.props.page.setupPage) return;
-    for(let el of e.target.parentElement.children) {
-      el.classList.remove('active');
-    }
-    e.target.classList.add('active');
     this.props.current_setup_page(page);
+  }
+
+  renderOp = () => {
+    return this.ops.map((op) => 
+      <a onClick={this.onClick.bind(this, op.k)} key={op.k}
+      className={this.props.page.setupPage === op.k? 'active': null}
+      >{op.v}</a>
+    )
   }
 
   render () {
@@ -44,10 +51,7 @@ class Setup extends Component {
       <Page wapper={true}>
         <div className="twocol-container">
           <div className="twocol-left noselect">
-            <a onClick={this.onClick.bind(this, 'details')} className="active">账号</a>
-            <a onClick={this.onClick.bind(this, 'notice')}>通知</a>
-            <a onClick={this.onClick.bind(this, 'channel')}>频道</a>
-            <a onClick={this.onClick.bind(this, 'privacy')}>隐私</a>
+            {this.renderOp()}
           </div>
           <div className="twocol-right">
             {this.renderRight()}
@@ -58,4 +62,4 @@ class Setup extends Component {
   }
 }
 
-export default connect(state => state, actions)(Setup);
+export default connect(({page, user}) => ({page, user}), actions)(Setup);

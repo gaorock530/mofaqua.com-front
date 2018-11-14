@@ -9,23 +9,25 @@ const ws = new api(path, {
   protocol: ['pulse']
 });
 
-const API = {
-  /** @function init initial authentication */
-  ws,
-  init: () => {
-    ws.on('open', (e) => {
-      console.log('socket open.');
-    }, true)
-    ws.on('error', (e) => {
-      console.log(e);
-    })
-    ws.on('close', (e, r) => {
-      console.log(e, r);
-    })
-  },
-  send: (value) => {
-    
-  }
-}
+export default ws
 
-export default API;
+// const API = {
+//   /** @function init initial authentication */
+//   ws,
+//   init: () => {
+//     ws.on('open', (e) => {
+//       console.log('socket open.');
+//     }, true)
+//     ws.on('error', (e) => {
+//       console.log(e);
+//     })
+//     ws.on('close', (e, r) => {
+//       console.log(e, r);
+//     })
+//   },
+//   send: (value) => {
+    
+//   }
+// }
+
+// export default API;

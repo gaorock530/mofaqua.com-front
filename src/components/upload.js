@@ -76,11 +76,16 @@ class Upload extends PureComponent {
     return (
       <div className={"uploadWapper " + className}>
         <input type="file" id={id} accept="image/gif, image/jpeg, image/png" onChange={this.onUpload} className="fileInput" />
-        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', color: color?color:'#fff', backgroundImage: image?`url(${image})`:'none'}}>{uploading?percent: children}</label>
+        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', backgroundImage: image?`url(${image})`:'none'}}>
+            <span>
+              {uploading?percent: children}
+            </span>
+            
+        </label>
         {uploading? <Spinner position="mid" single={true} size="32px"/>:''}
       </div>
     )
   }
 }
 
-export default connect(state => state, actions)(Upload);
+export default connect(({page}) => ({page}), actions)(Upload);

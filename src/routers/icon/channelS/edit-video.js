@@ -32,7 +32,7 @@ class EditVlog extends PureComponent {
   componentWillMount () {
   }
 
-
+ 
   onSave = () => {
     if (this.data.name === '' || this.data.num < 1) return;
     if (this.props.onSave) {
@@ -44,17 +44,14 @@ class EditVlog extends PureComponent {
   render () {
     return (
       <Page wapper={true}>
-        <Static tag="标题" text={this.props.title || ''}/>
-        <Static tag="地址" text={'http://aquamofa.com/asdasdq123123'}/>
-        <Select tag="所属播放列表" options={[
-          {label: '无', value: 0},
-          {label: '1', value: 1},
-          {label: '2', value: 2},
-          {label: '3', value: 3},
+        <Static label="标题" text={this.props.title || '123'}/>
+        <Static label="地址" text='http://aquamofa.com/asdasdq123123'/>
+        <Select label="所属播放列表" options={[
+          0,1,2,3
         ]} />
-        <Textarea tag="介绍" text="测试" onBlur={(value) => {console.log(value)}}/>
-        <Save tag="保存更改" onClick={this.onSave}/>
-        <Save tag="删除视频" red={true} onClick={this.onSave}/>
+        <Textarea label="介绍" text="测试" onBlur={(value) => {console.log(value)}}/>
+        <Save text="保存更改" onClick={this.onSave}/>
+        <Save text="删除视频" red={true} onClick={this.onSave}/>
       </Page>
     )
   }

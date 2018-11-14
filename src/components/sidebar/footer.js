@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
 
-class Footer extends Component {
+class Footer extends PureComponent {
   componentDidMount () {
     for (let el of this.refs.top.children) {
       this.addEvent(el);
@@ -46,4 +46,4 @@ class Footer extends Component {
   }
 }
 
-export default connect(state => state, actions)(Footer);
+export default connect(null, actions)(Footer);

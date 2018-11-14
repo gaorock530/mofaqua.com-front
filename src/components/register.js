@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
 import validator from 'validator';
 import * as actions from '../redux/actions';
 import Spinner from './animates/spinner';
-import word from '../helper/wordcounter';
+// import word from '../helper/wordcounter';
+import utils from '../helper/utils';
 const cuid = require('cuid');
 
-class Register extends Component {
+class Register extends PureComponent {
   componentWillMount () {
     this.user = {
       pass: null,
@@ -66,6 +67,8 @@ class Register extends Component {
   }
 
   handleRepass = () => {
+    const secure = utils.checkPass(this.refs.pass.value);
+    console.log(secure);
     if (this.refs.repass.value === this.refs.pass.value && this.refs.pass.value !== '') {
       this.user.pass = this.refs.repass.value;
       this.refs.repass_warning.innerHTML = '';
@@ -180,20 +183,14 @@ class Register extends Component {
     this.user.nick = null;
     warn.innerHTML = '';
     this.nickTimer = setTimeout(async () => {
-      const nick = this.refs.nick.value.trim();
-      if (nick.match(/[^\w^\u4e00-\u9fa5^'^\s]+/g)) return warn.innerHTML = `昵称不符合规范`;
-      const len = word(nick, true, true);
-      if (len>20) {
-        console.log(this.user);
-        return warn.innerHTML = `昵称不符合规范`;
-      }
+      const nick = utils.checkNick(this.refs.nick.value);
+      if (!nick) return warn.innerHTML = `昵称不符合规范`;
 
       const res = await this.props.name_verify(nick);
       if (res) this.props.notification_in(cuid(), res);
       else this.user.nick = nick;
 
       console.log(this.user);
-      return warn.innerHTML = `len: ${len}`;
     }, 1000);
   }
 
@@ -256,4 +253,4 @@ class Register extends Component {
   }
 }
 
-export default connect(state => state, actions)(Register);
+export default connect(({user, page})=> ({user, page}), actions)(Register);

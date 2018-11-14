@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../redux/actions';
 import Button from '../../../components/forms/button';
 import Input from '../../../components/forms/input';
-// import style from '../../../helper/style';
+import Spinner from '../../../components/animates/spinner';
 import Upload from '../../../components/upload';
 import errorText from '../../../helper/errorText';
 import Security from '../../../components/security';
@@ -13,7 +13,7 @@ import validator from 'validator';
 import cuid from 'cuid';
 
 
-class Person extends Component {
+class Person extends PureComponent {
   constructor (props) {
     super(props);
     this.show = false;
@@ -25,6 +25,7 @@ class Person extends Component {
       uploaded: 0
     }
     this.nick = this.props.user.user.username;
+    if (this.props.page.setupPage !== 'person') this.props.current_setup_page('person');
   }
  
   componentWillUnmount () {
@@ -84,22 +85,23 @@ class Person extends Component {
   }
 
   submit = async () => {
-    if (this.info.name === null || this.info.phone === null || this.info.no === null || this.info.code === null) {
+    if (this.info.name === null || this.info.phone === null || this.info.no === null || !this.info.code) {
       return this.props.notification_in(cuid(), errorText.fullInfo);
     }
     if (this.info.uploaded < 2) return this.props.notification_in(cuid(), errorText.idPhoto);
     try {
       await this.props.send_identity(this.info);
       this.props.notification_in(cuid(), errorText.submit2);
+      this.show = false;
+      this.forceUpdate();
     }catch(e) {
-      console.log(e);
-      this.props.notification_in(cuid(), errorText.server400);
+      this.props.notification_in(cuid(), e);
     }
-    this.show = false;
-    this.forceUpdate();
+    
   }
 
   getCode = (code) => {
+    console.log(code);
     this.info.code = code;
   }
 
@@ -173,7 +175,7 @@ class Person extends Component {
               errorText={errorText.idno}/>
               <Upload className="idSide" id="idup" onChange={this.change} color="#666699" opt={false} crop={false} type='id-a'>身份证正面</Upload>
               <Upload className="idSide" id="iddown" onChange={this.change} color="#666699" opt={false} crop={false} type='id-b'>身份证反面</Upload>
-              {this.props.user.submitting? '正在提交...':
+              {this.props.user.submitting? <Spinner />:
               (
                 <div>
                   <Button onClick={this.submit} text="提交" width="148"/>

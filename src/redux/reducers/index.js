@@ -5,6 +5,7 @@ import pageReducer from './pageReducer';
 import userReducer from './userReducer';
 import noticeReducer from './noticeReducer';
 import formReducer from './formReducer';
+import msgReducer from './msgReducer';
 
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
   ws: wsReducer,
   user: userReducer,
   notification: noticeReducer,
-  form: formReducer
+  form: formReducer,
+  message: msgReducer
 });

@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-redux';
 
 import cuid from 'cuid';
 
 import * as actions from '../../redux/actions';
 
-class Search extends Component {
+class Search extends PureComponent {
   list = [
     { text: 'all声卡', type: 'pic' },
     { text: 'aasdas打瞌睡打开阿拉山口的；是的看料理打瞌睡打开阿拉山口的；是的看料理', type: 'text' },
@@ -54,4 +54,4 @@ class Search extends Component {
   }
 }
 
-export default connect(state => state, actions)(Search);
+export default connect(({page}) => ({page}), actions)(Search);

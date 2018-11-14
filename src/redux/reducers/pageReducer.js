@@ -7,7 +7,7 @@ export default function (state = {
   sidebarEle: null,
   registerForm: true,
   loginMethod: true,          
-  setupPage: 'details',       // set Setup page nav tabs
+  setupPage: null,            // set Setup page nav tabs
   changeSetup: null,          // change method: pass/phone/email
   error: null,                // store any Error, process differently
   temp: null,                 // store a Temp value
@@ -74,7 +74,7 @@ export default function (state = {
     case 'SET_SETUP_PAGE':
       return {
         ...state,
-        setupPage: action.value
+        setupPage: action.value || null
       }
     case 'SET_CHANGE_SETUP':
       return {

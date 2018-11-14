@@ -30,4 +30,4 @@ class Note extends PureComponent {
 }
 
 
-export default connect(state => state, actions)(Note);
+export default connect(null, actions)(Note);

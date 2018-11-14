@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import validator from 'validator';
 import * as actions from '../../redux/actions';
 import Spinner from '../animates/spinner';
 
-class Computer extends Component {
+class Computer extends PureComponent {
   componentWillMount () {
     this.user = {
       name: {
@@ -87,4 +87,4 @@ class Computer extends Component {
   }
 }
 
-export default connect(state => state, actions)(Computer)
+export default connect(({user}) => ({user}), actions)(Computer)
