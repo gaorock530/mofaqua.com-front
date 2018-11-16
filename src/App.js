@@ -7,9 +7,9 @@ import * as actions from './redux/actions';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 // import 'font-awesome/css/font-awesome.min.css'; // font-awesome.min.css
-import 'quill/dist/quill.core.css';
+// import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.bubble.css';
+// import 'quill/dist/quill.bubble.css';
 import 'react-day-picker/lib/style.css';
 
 import Spinner from './components/animates/spinner';
