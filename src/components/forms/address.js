@@ -30,7 +30,7 @@ class Address extends PureComponent {
     this.first = '请选择';
     this.third = true;
     this.complete = false;
-    this.URL = process.env.NODE_ENV === 'development'? 'https://localhost:5000/citylist': 'https://localhost:5005/citylist';
+    this.URL = process.env.NODE_ENV === 'development'? 'https://websocket.mofaqua.com/citylist': 'https://localhost:5005/citylist';
   }
 
   async componentWillMount () {
