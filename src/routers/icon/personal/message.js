@@ -19,9 +19,11 @@ class Message extends PureComponent {
       // prevent self firing event twice
       if (this.selfFire) return this.selfFire = false;
       this.props.add_msg(null, e);
+      this.props.notification_in('新消息！');
     });
     this.d = this.props.attach('msg-d', (e) => {
       this.props.del_msg(null, e);
+      this.props.notification_in('消息已删除');
     });
     window.addEventListener('beforeunload', this.saveData, {once: true});
     await this.props.get_msg(this.props.user.user.UID);
@@ -136,4 +138,4 @@ class Message extends PureComponent {
   }
 }
 
-export default connect(({user, message, page}) => ({user, message,page}), actions)(Message);
+export default connect(({user, message, page, notification}) => ({user, message, page, notification}), actions)(Message);

@@ -19,13 +19,14 @@ class Details extends PureComponent {
   // handle password change event
   renderPass = () => {
     const submit = () => {
-      this.wrongPass = true;
+      this.wrongPass = !this.wrongPass;
       this.forceUpdate()
-      if (this.oldpass && this.pass) {
-        console.log('ok');
-        this.props.change_setup_option(null);
-        this.props.notification_in(cuid(), errmsg.updPass);
-      }
+      // if (this.oldpass && this.pass) {
+      //   console.log('ok');
+      //   this.props.change_setup_option(null);
+      //   this.props.notification_in(errmsg.updPass);
+      //   this.oldpass = this.pass = '';
+      // }
     }
 
     const cancel = () => {
@@ -36,10 +37,10 @@ class Details extends PureComponent {
     
     return  this.props.page.changeSetup === 'password' ? (
       <div>
-        <Input type="password" placeholder="原密码" width="300" onBlur={(v, op, pass) => this.oldpass = pass? v: null }
-        strictError={this.wrongPass || this.input} errorText={errmsg.pass2} />
-        <Input type="password" placeholder="新密码" width="300" onBlur={(v, op, pass) => this.pass = pass? v: null}
-        condition={(v) => utils.checkPass(v)} errorText={errmsg.pass1} tag={{icon:'eye-slash', toggle:'eye'}} toggle={this.toggle}/>
+        <Input type="password" placeholder="原密码" width="300px" onBlur={(v, op, pass) => this.oldpass = pass? v: null }
+        strictError={this.wrongPass} errorText={errmsg.pass2} />
+        <Input type="password" placeholder="新密码" width="300px" onBlur={(v, op, pass) => this.pass = pass? v: null}
+        condition={(v) => utils.checkPass(v)} errorText={errmsg.pass1} tag={{icon:'eye-slash', toggle:'eye'}} />
         <Button onClick={submit} text="提交"/>
         <Button onClick={cancel} text="取消"/>
       </div>

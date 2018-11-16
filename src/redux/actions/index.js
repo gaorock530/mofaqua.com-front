@@ -352,21 +352,27 @@ export const user_verify = () => dispatch => {
 
 
 export const user_login = (username, password) => async dispatch => {
+  let res;
   dispatch({ type: USER_LOGGING_START });
   try {
     const data = await wsSend('login', {user: username, pass: password});
     localStorage.setItem('token', data.token);
     dispatch({ type: SET_USER, user: data.u });
     dispatch({ type: USER_LOGIN });
+    res = false;
+    console.log('login success', data);
   }catch(e) {
-    console.log(e);
+    console.log('login error', e);
+    res = e;
   }
   dispatch({ type: USER_LOGGING_END});
+  return res;
 }
 
 
 export const register = (user) => async dispatch => {
   if (user.name.type !== 'phone' && user.name.type !== 'email') return;
+  console.log('register', user);
   dispatch({ type: USER_LOGGING_START });
   try {
     const data = await wsSend('rgt', {v: user.name.value, s: user.pass, c: user.code, n: user.nick});
@@ -374,10 +380,13 @@ export const register = (user) => async dispatch => {
     window.localStorage.setItem('token', data.token);
     dispatch({type: SET_USER, user: data.u});
     dispatch({ type: USER_LOGIN });
+    dispatch({ type: USER_LOGGING_END});
   }catch(e) {
     console.log(e);
+    dispatch({ type: USER_LOGGING_END});
+    throw e;
   }
-  dispatch({ type: USER_LOGGING_END});
+  
 }
 
 export const user_logout = () => async dispatch => {
@@ -412,6 +421,7 @@ export const phone_verify = (value) => async dispatch => {
     return undefined;
   }catch(e) {
     dispatch({ type: PHONE_VERIFY, value: false });
+    console.log(e)
     return e;
   }
 }
@@ -445,36 +455,12 @@ export const name_verify = (value) => async dispatch => {
   }
 }
 // 
-export const send_email_code = (email) => async dispatch => {
+export const get_code = (type, value) => async dispatch => {
   try {
-    await wsSend('get-code', {e: email}, {backType: 'code'});
-    return errmsg.code1;
+    await wsSend('get-code', {[type === 'phone'? 'p': 'e']: value}, {backType: 'code'});
+    return errmsg[type === 'phone'?'code2':'code1'];
   }catch(e) {
     return e;
-  }
-}
-
-export const send_text_code = (phone) => async dispatch => {
-  try {
-    await wsSend('get-code', {p: phone}, {backType: 'code'});
-    return errmsg.code2;
-  }catch(e) {
-    throw e;
-  }
-}
-
-export const abort_verify = (type) => dispatch => {
-  if (type === 'phone') {
-    dispatch({ type: PHONE_VERIFY, value: false });
-    dispatch({ type: PHONE_RESEND_IN, value: 0 });
-  }else if (type === 'email') {
-    dispatch({ type: EMAIL_VERIFY, value: false });
-    dispatch({ type: EMAIL_RESEND_IN, value: 0 });
-  } else {
-    dispatch({ type: PHONE_VERIFY, value: false });
-    dispatch({ type: PHONE_RESEND_IN, value: 0 });
-    dispatch({ type: EMAIL_VERIFY, value: false });
-    dispatch({ type: EMAIL_RESEND_IN, value: 0 });
   }
 }
 
@@ -555,7 +541,8 @@ export const set_language = (language = "zh") => dispatch => {
     Notification
 */
 
-export const notification_in = (id, text, pic = null) => dispatch => {
+export const notification_in = (text, pic = null) => dispatch => {
+  const id  = cuid()
   dispatch({ type: NOTIFICATION_IN, id, text, pic });
   setTimeout(() => {
     dispatch({ type: NOTIFICATION_OUT, id });

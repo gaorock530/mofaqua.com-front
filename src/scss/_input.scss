@@ -17,19 +17,11 @@
   text-align: left;
   h5 {
     font-size: 1.2rem;
-    color: #333;
     font-weight: normal;
-    padding: 5px;
+    padding: 10px 5px;
     margin: 0; 
   }
 }
-// .form-input-label h5 {
-//   font-size: 14px;
-//   color: #333;
-//   font-weight: normal;
-//   padding: 5px;
-//   margin: 0; 
-// }
 
 .form-input {
   position: relative;
@@ -178,7 +170,7 @@
   padding: 0 5px;
   color: #111;
   border-radius: 3px;
-  background-color: rgba(217, 59, 10, 0.3);
+  background-color: #D93B0A;
 }
 
 .form-input-container-focus {
@@ -217,7 +209,7 @@
 .form-radio-option {
   display: inline-block;
   cursor: pointer;
-  line-height: 20px;
+  // line-height: 20px;
   padding: 8px 5px;
 }
 
@@ -253,6 +245,13 @@
 .form-radio-option .fa-check-square
 {
   color:$theme-color;
+}
+
+.form-single-option {
+  cursor: pointer;
+  span {
+    margin: 0 5px;
+  }
 }
 
 /* ------------textarea------------*/
@@ -448,7 +447,7 @@
   text-align: center;
 }
 .security-input {
-  flex: 2;
+  flex: 1;
 }
 
 

@@ -4,9 +4,14 @@ import { Link } from 'react-router-dom';
 import validator from 'validator';
 import * as actions from '../../redux/actions';
 import Spinner from '../animates/spinner';
+import Input from '../forms/input';
+import Check from '../forms/checkbox';
+import Button from '../forms/save';
+import errmsg from '../../helper/errorText';
 
 class Computer extends PureComponent {
-  componentWillMount () {
+  constructor (props) {
+    super(props);
     this.user = {
       name: {
         type: null,
@@ -15,73 +20,70 @@ class Computer extends PureComponent {
       pass: null,
       secure: false
     }
-    this.timer = null;
+    this.error = false; // false|[1,2,3]
+    this.errText = errmsg.login;
   }
   
 
-  onSubmit = (e) => {
+  onSubmit = async (e) => {
     e.preventDefault();
-    if (this.props.user.loggingAction) return;
-    console.log(this.user);
+    if (this.props.user.loggingAction) return console.warn('login in action!');
     if (this.user.pass && this.user.name.type) {
-      console.log(this.user.pass, this.user.name.type, 'all good'); 
-      this.props.user_login(this.user.name.value, this.user.pass);
-    }
+      const res = await this.props.user_login(this.user.name.value, this.user.pass);
+      if (res) {
+        if (res === 3) this.errText = errmsg.login1;
+        console.log('password wrong type: ', res);
+        this.refresh(res);
+      }
+    } else this.refresh(true);
+  }
+
+  refresh = (v) => {
+    this.error = v;
+    this.forceUpdate()
   }
 
   toggle_secure = (e) => {
-    this.user.secure = this.refs.secure.checked;
+    this.user.secure = e[0].c;
   }
 
-  get_name = () => {
-    clearTimeout(this.timer);
-    this.refs.name_warning.innerHTML = '';
-    this.user.name.value = this.refs.name.value;
-    this.timer = setTimeout(this.check_name, 1000);
+  get_name = (v) => {
+    this.user.name.value = v;
+    this.check_name(v);
+    if (this.error) this.refresh(false);
+    
+  }
+  get_pass = (v) => {
+    this.user.pass = v;
+    if (this.error) this.refresh(false);
   }
 
-  check_name = () => {
-    if (validator.isEmail(this.refs.name.value)) {
+  check_name = (v) => {
+    if (validator.isEmail(v)) {
       this.user.name.type = 'email';
-    }else if (validator.isMobilePhone(this.refs.name.value, ['zh-CN'])) {
+    }else if (validator.isMobilePhone(v, ['zh-CN'])) {
       this.user.name.type = 'phone';
     }else {
       this.user.name.type = null;
       this.user.name.value = null;
-      this.refs.name_warning.innerHTML = '格式错误';
       return;
     }
-    this.refs.name_warning.innerHTML = '';
-    this.user.name.value = this.refs.name.value;
   }
 
-  get_pass = () => {
-    if (this.refs.pass.value === '') {
-      this.user.pass = null;
-      this.refs.pass_warning.innerHTML = '必须输入密码';
-    }else {
-      this.refs.pass_warning.innerHTML = '';
-      this.user.pass = this.refs.pass.value;
-    }
-  }
+  
+
   render () {
     return (
       <form onSubmit={this.onSubmit}>
-        <label>手机号码/电子邮箱<span ref="name_warning"></span></label>
-        <input type="text" ref="name" autoComplete="off" placeholder="Phone/Email" onChange={this.get_name} />
-        <label>密码<span ref="pass_warning"></span></label>
-        <input type="password" ref="pass" placeholder="Password" onChange={this.get_pass}/>
+        <Input type="text" label="手机/邮箱" placeholder="Phone/Email" onChange={this.get_name} />
+        <Input type="password" label="密码" placeholder="Password" onChange={this.get_pass} 
+        errorText={errmsg.login} strictError={this.error}/>
         <div className="form-utils noselect">               
-          <label><input type="checkbox" ref="secure" onChange={this.toggle_secure}/><span>信任此设备</span></label>
+          <Check options='信任此设备' onChange={this.toggle_secure} />
           <Link to="/forget">忘记密码</Link>
           <Link to="/register">没有账号？</Link>
         </div>
-        <button>
-        {this.props.user.loggingAction ? 
-          <Spinner size="12px" single={false}/> : 
-          '登陆'
-        }
-        </button>
+        <Button text={this.props.user.loggingAction? <Spinner size="12px" single={false}/> :'登录'}/>
       </form>
     )
   }

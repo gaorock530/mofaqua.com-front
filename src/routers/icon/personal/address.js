@@ -66,7 +66,7 @@ class Address extends PureComponent {
 
   // change - case 1
   saveAddress = () => {
-    if (!this.addrCate || !this.addrDetail || !this.zip) return this.props.notification_in(cuid(), ErrorText.lackAddr);
+    if (!this.addrCate || !this.addrDetail || !this.zip) return this.props.notification_in(ErrorText.lackAddr);
     this.add = false;
     const data = {
       id: cuid(),

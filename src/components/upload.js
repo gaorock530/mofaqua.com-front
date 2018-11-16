@@ -39,22 +39,22 @@ class Upload extends PureComponent {
     this.image = e.target.files[0];
     // check type
     const type = this.accept.indexOf(this.image.type) >= 0;
-    if (!type) return this.props.notification_in(cuid(), '格式不正确');
+    if (!type) return this.props.notification_in('格式不正确');
     // check size
     const size = this.image.size / 1000 / 1000 < 3; // Mb
-    if (!size) return this.props.notification_in(cuid(), '超过3Mb');
+    if (!size) return this.props.notification_in('超过3Mb');
     console.log(this.image.size);
     // uploading
     try {
       // process image
       const newPhoto = await processPhoto(this.image, this.props.crop || false, this.props.opt || false, this.props.width, this.props.height);
       const res = await this.props.uploading_pic(this.id, newPhoto, this.type); 
-      if (!res) return this.props.notification_in(cuid(), '图片上传失败,请重试');
+      if (!res) return this.props.notification_in('图片上传失败,请重试');
       this.refs.upload.style.backgroundImage = `url('${newPhoto.url}')`;
-      this.props.notification_in(cuid(), '图片上传成功', newPhoto.url);
+      this.props.notification_in('图片上传成功', newPhoto.url);
     } catch (e) {
       console.log(e);
-      return this.props.notification_in(cuid(), '网络错误，稍后请重试');
+      return this.props.notification_in('网络错误，稍后请重试');
     }
     // excute custom event
     if (this.props.onChange) {

@@ -2,10 +2,10 @@ import React, {PureComponent} from 'react';
 
 /**
  * @param {String} label whether to display label on top of input
+ * @param {Color} labelColor label font color
  * @param {Function} condition regular expression for pass conditions
  * @param {String} errorText text to display when error occurs
  * @param {Boolean} strictError if 'strictError' is set to True, errorText must be displayed
- * @param {Color} labelColor label font color
  * @param {Color} bgColor background color
  * @param {Type} type input type
  * @param {String} placeholder
@@ -14,9 +14,11 @@ import React, {PureComponent} from 'react';
  * input box will toggle between 'password' and 'text'
  * @param {Function} onBlur reture input value to outter component
  * @param {Function} onChangeUnit
+ * @param {Function} onChange
  * @param {String} defaultValue input default value
  * @param {String} defaultOp default tag option
  * @param {Number} width custom input width
+ * @param {Boolean} force !important!!!!!!! fix componentWillUpdate problem
  */
 
 export default class Input extends PureComponent {
@@ -25,7 +27,7 @@ export default class Input extends PureComponent {
     // internal properties
     this.width = this.props.width || null;
     this.isEmpty = true;
-    this.valid = false;
+    this.valid = true;
     this.input = this.props.defaultValue || '';
     this.timer = null;
     this.tagOp = this.props.defaultOp || 0;
@@ -35,8 +37,8 @@ export default class Input extends PureComponent {
     this.condition = this.props.condition || null;
     this.errorText = this.props.errorText || null;
     // if 'strictError' is set to True, errorText must be displayed
-    this.strictError = this.props.strictError || null;
-    this.labelColor = this.props.labelColor;
+    this.strictError = this.props.strictError; // true-show,false-off
+    this.labelColor = this.props.labelColor || null;
     this.type = this.props.type || 'text';
     this.placeholder = this.props.placeholder || '';
     this.tag = this.props.tag || null;
@@ -49,11 +51,19 @@ export default class Input extends PureComponent {
     clearTimeout(this.timer);
   }
 
-  componentWillUpdate ({strictError}) {
-    if (this.input && typeof strictError !== 'undefined') {
-      this.normal();
-      strictError? this.error():this.pass();
+  componentWillUpdate (props) {
+    if (this.props.force) {
+      if (props.type) this.type = props.type;
+      if (props.placeholder) this.placeholder = props.placeholder;
+      if (props.label) this.label = props.label;
     }
+    
+    if (this.input && typeof props.strictError !== 'undefined') {
+      console.log('strictError', props.strictError);
+      this.strictError = props.strictError;
+      props.strictError? this.error():this.normal();
+    }
+
   }
 
   onFocus = () => {
@@ -66,22 +76,25 @@ export default class Input extends PureComponent {
   }
 
   onChange = (e) => {
+    this.input = e.target.value;
+    if (this.props.onChange) this.props.onChange(e.target.value);
     clearTimeout(this.timer);
     if (e.target.value === '') {
       this.isEmpty = true;
     } else {
       this.isEmpty = false;
     }
-    this.input = e.target.value;
+    
     if (this.condition !== null && this.errorText !== null) {
       this.timer = setTimeout(this.check.bind(this, e.target.value), 1000);
     }
   }
 
-  check = (value) => {
+  check = async (value) => {
     this.normal();
     if (!this.isEmpty) {
-      if (this.condition(value)) {
+      const res = await this.condition(value);
+      if (res) {
         this.valid = true;
         this.pass();
       } else {
@@ -149,12 +162,11 @@ export default class Input extends PureComponent {
       if (e.target.classList.contains('fa-' + this.tag.icon)) {
         e.target.classList.replace('fa-' + this.tag.icon, 'fa-' + this.tag.toggle);
         this.type = 'text';
-        this.forceUpdate();
       } else {
         e.target.classList.replace('fa-' + this.tag.toggle, 'fa-' + this.tag.icon);
         this.type = 'password';
-        this.forceUpdate();
       }
+      this.forceUpdate();
     }
 
     this.refs.input_area.focus();
@@ -163,10 +175,10 @@ export default class Input extends PureComponent {
   render () {
     const css = this.width? 'form-element-custom': 'form-element';
     return (
-      <div className={css} style={this.width?{width: this.width+'px'}:null}>
+      <div className={css} style={this.width?{width: this.width}:null}>
         {this.label? 
         <div ref="label" className="form-input-label">
-          <h5>{this.label}</h5>
+          <h5 style={this.labelColor?{'color': this.labelColor}:null}>{this.label}</h5>
         </div>:''}
 
         <div ref="form_input_container" 
@@ -176,6 +188,7 @@ export default class Input extends PureComponent {
           <div className={this.tag?"form-input-main-withtag":"form-input-main"}>
             <div ref="input_status" className="form-input-status"></div>
             <input ref="input_area" className="form-input-area" type={this.type}
+            autoComplete="off"
             placeholder={this.placeholder}
             onFocus={this.onFocus}
             onBlur={this.onBlur}

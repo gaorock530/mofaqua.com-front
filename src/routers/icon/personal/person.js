@@ -86,16 +86,16 @@ class Person extends PureComponent {
 
   submit = async () => {
     if (this.info.name === null || this.info.phone === null || this.info.no === null || !this.info.code) {
-      return this.props.notification_in(cuid(), errorText.fullInfo);
+      return this.props.notification_in(errorText.fullInfo);
     }
-    if (this.info.uploaded < 2) return this.props.notification_in(cuid(), errorText.idPhoto);
+    if (this.info.uploaded < 2) return this.props.notification_in(errorText.idPhoto);
     try {
       await this.props.send_identity(this.info);
-      this.props.notification_in(cuid(), errorText.submit2);
+      this.props.notification_in(errorText.submit2);
       this.show = false;
       this.forceUpdate();
     }catch(e) {
-      this.props.notification_in(cuid(), e);
+      this.props.notification_in(e);
     }
     
   }
@@ -118,10 +118,10 @@ class Person extends PureComponent {
       try {
         await this.props.set_username(this.nick, this.props.user.user.UID);
       }catch(e) {
-        this.props.notification_in(cuid(), e);
+        this.props.notification_in(e);
       }
     } else {
-      this.props.notification_in(cuid(), errorText.text1);
+      this.props.notification_in(errorText.text1);
     }
   }
 

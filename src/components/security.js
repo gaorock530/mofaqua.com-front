@@ -1,20 +1,22 @@
 import React, { PureComponent } from 'react';
-import cuid from 'cuid';
 import * as actions from '../redux/actions';
 import { connect } from 'react-redux';
 import Input from './forms/input';
 import Button from './forms/button';
 
+
+
 class Security extends PureComponent {
   constructor (props) {
     super(props);
-    if (!this.props.value) this.props.notification_in(cuid(), 'missing value to be sent.');
+    if (!this.props.type) console.warn('missing type phone/email.');
+    if (!this.props.value) console.warn('missing value to be sent.');
     this.value = this.props.value;
     this.sending = false;
   }
 
   componentWillUnmount () {
-    this.props.phone_resendin();
+    clearInterval(this.counter);
   }
 
   sendSMS = async () => {
@@ -26,11 +28,11 @@ class Security extends PureComponent {
     if (this.props.user.phoneResendin !== 0) return;
     // set re-send time
     let time = 120;
-    this.props.notification_in(cuid(), '正在发送验证码...');
+    this.props.notification_in('正在发送验证码...');
     this.sending = true;
     try {
-      const res = await this.props.send_text_code(this.props.value);
-      this.props.notification_in(cuid(), res);
+      const res = await this.props.get_code(this.props.type, this.props.value);
+      this.props.notification_in(res);
       // send notification
       this.props.phone_resendin(time);
       this.counter = setInterval(() => {
@@ -39,7 +41,7 @@ class Security extends PureComponent {
         if (time === 0) clearInterval(this.counter);
       },1000);
     }catch(e) {
-      this.props.notification_in(cuid(), e);
+      this.props.notification_in(e);
     }
     this.sending = false;
     
@@ -47,6 +49,10 @@ class Security extends PureComponent {
 
   onBlur = (v) => {
     if (this.props.onBlur) this.props.onBlur(v);
+  }
+
+  onChange = (v) => {
+    if (this.props.onChange) this.props.onChange(v);
   }
 
   render () {
@@ -58,7 +64,8 @@ class Security extends PureComponent {
           <span>{this.props.user.phoneResendin}s 后重新发送</span>}
         </div>
         <div className="security-input">
-          <Input type="number" placeholder="验证码" onBlur={this.onBlur} width="100%"/>
+          <Input type="number" placeholder="验证码" onChange={this.onChange} onBlur={this.onBlur} width="100%" 
+          condition={(v) => v.length === 6} errorText="请输入6位验证码" />
         </div>
       </div>
     )

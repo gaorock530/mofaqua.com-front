@@ -1,51 +1,47 @@
-import React from 'react';
-import cuid from 'cuid';
+import React, {PureComponent} from 'react';
+// import cuid from 'cuid';
 
 /**
  * @param {String} tag tag name of the label
- * @param {Array} options checkbox options 
+ * @param {String|Array} options checkbox options or Single value
+ * @param {Function} onChange
  */
 
-export default (props) => {
-
-  const tag = props.tag || '';
-  const options = props.options || [];
-
-
-  const onChange = (e) => {
-    const ops = options.map(op => {
-      if (op.value.toString() === e.currentTarget.value){
-        op.checked = e.currentTarget.checked
-      }
-      return op;
-    })
-
-    if (props.onChange) {
-      props.onChange(ops);
-    }
+export default class CheckBox extends PureComponent {
+  constructor (props) {
+    super(props);
+    this.tag = this.props.tag || '';
+    this.options = this.props.options && typeof this.props.options === 'string'? [{c: false, v: this.props.options}]: this.props.options;
+    this.single = this.options && typeof this.props.options === 'string';
   }
 
-  const renderOps = () => {
-    if (options instanceof Array && options.length > 1) {
-      return options.map(op => {
+  toggle = (index) => {
+    this.options[index].c = !this.options[index].c;
+    if (this.props.onChange) this.props.onChange(this.options);
+    this.forceUpdate();
+  }
+
+  renderOps = () => {
+    if (this.options) {
+      return this.options.map((op, index) => {
         return (
-          <span className="option" key={cuid()}> 
-            <label>{op.label}</label>
-            <input type="checkbox" name="box" ref="box" value={op.value} onChange={onChange} defaultChecked={op.checked}/>
-          </span>
+          <label className={this.single?"form-single-option":"form-radio-option"} key={index}
+          onClick={this.toggle.bind(this, index)}> 
+            <i className={'fa fa-' + (op.c?'check-square': 'square')}></i>
+            <span>{op.v}</span>
+          </label>
         )
       })
-    } else {
-      return '';
-    }
+    } 
+    return '';
   }
 
-
-  return (
-    <div className="forms-inputs">
-      <label className="tag-name">{tag}</label>
-      {renderOps()}
-    </div>
-  )
-
+  render () {
+    return (
+      <div className="forms-inputs">
+        <label className="tag-name">{this.tag}</label>
+        {this.renderOps()}
+      </div>
+    )
+  }
 }

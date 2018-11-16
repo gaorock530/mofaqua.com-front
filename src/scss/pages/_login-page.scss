@@ -5,7 +5,7 @@
   width: 320px;
   padding: 50px 0;
   color: $theme-white;
-  
+  text-align: center;
   
 
   a {
@@ -14,63 +14,22 @@
 
   form {
     background: #111;
-    padding: 20px 20px;
+    padding: 10px 0;
     text-align: left;
     box-shadow: 0 0 8px #000;
     overflow: hidden;
-
-    &>* {
-      height: 30px;
-      width: 100%;
-      margin: 5px 0;
-    }
-    &>label {
-      display: inline-block;
-      height: auto;
-      padding-top: 10px;
-      font-size: 1.1rem;
-      span {
-        padding-left: 10px; 
-        color: orangered;
-      }
-    }
-  }
-
-  input, button {
-    box-sizing: border-box;
-    outline: none;
-    border: 1px solid rgb(48, 48, 48);
-  }
-
-  input {
-    background: #eee;
-    font-size: 1.2rem;
-    border: 1px solid #aaa;
-
-    &:focus {
-      border-color: $theme-blue;
-      box-shadow: inset 0 0 3px rgba($color: $theme-blue, $alpha: 0.8);
-    }
-  }
-  button {
-    margin-top: 20px;
-    background: #222;
-    color: $theme-white;
-    font-size: 1.2rem;
-    // border-radius: 6px;
-    cursor: pointer;
   }
 }
+
 .form-nav {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   width: 100%;
-  align-content: center;
   background: #222;
   box-shadow: 0 0 8px #000;
 
   nav {
+    flex: 1;
     padding: 15px;
     border-bottom: 1px solid #222; 
     cursor: pointer;
@@ -92,25 +51,22 @@
 }
 
 .form-utils {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-content: space-between;
-  align-items: center;
+  display: flex;
+  padding: 10px;
   text-align: center;
+
+  &>* {
+    flex: 1;
+  }
+  &>a {
+    max-width: 100px;
+  }
 
   &>*:first-child {
     text-align: left;
   }
   &>*:last-child {
     text-align: right;
-  }
-
-  label, input {
-    cursor: pointer;
-  }
-  
-  span {
-    padding-left: 5px;
   }
 }
 
@@ -124,10 +80,6 @@
     margin-top: 10px;
     border: 1px solid #fff;
   }
-}
-
-.gotoLogin a{
-  font-size: 1rem;
 }
 
 .phone-verify {
@@ -179,10 +131,10 @@
       background: none;
       box-shadow: none;
       
-      button {
-        background: #222;
-        color: $theme-white;
-      }
+      // button {
+      //   background: #222;
+      //   color: $theme-white;
+      // }
     }
   }
   .form-nav {
@@ -207,8 +159,6 @@
   .phone-verify a {
     color: #000;
   }
-  .gotoLogin a {
-    color: #000;
-  }
+
   .form-utils a {color: #000;}
 }
