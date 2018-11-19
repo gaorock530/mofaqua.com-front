@@ -85,8 +85,8 @@
       color: $theme-purple;
       margin: 0 10px;
     }
-    
   }
+
   .message-m {
     margin: 0 auto;
     padding: 10px;
@@ -94,6 +94,17 @@
     border: 1px solid $theme-purple;
     border-top: none;
   }
+
+  .list {
+    margin: 10px;
+  }
+
+  .sup, .sub {
+    display: inline-block;
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  .sub { color: #666 }
 
 }
 @media screen and (max-width: 600px) {

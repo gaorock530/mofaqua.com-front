@@ -61,7 +61,7 @@ class Second extends PureComponent {
       
       
       return (
-        <Link to={"/edit/second/" + o.id} key={o.id} title={o.title}>
+        <Link to={"/edit/second/" + o.id} key={o.id} title={o.title} className="single">
           <div className="cover">
             <div style={{'backgroundImage': 'url('+o.pic+')'}}></div>
             <span>5:30</span>
@@ -69,7 +69,7 @@ class Second extends PureComponent {
           
           <div className="description">
             <p>{newT}</p>
-            <div>
+            <div className="status">
               <label>{o.view}次观看</label>
               <span>{o.date}个月前</span>
             </div>

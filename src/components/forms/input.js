@@ -77,7 +77,7 @@ export default class Input extends PureComponent {
 
   onChange = (e) => {
     this.input = e.target.value;
-    if (this.props.onChange) this.props.onChange(e.target.value);
+    
     clearTimeout(this.timer);
     if (e.target.value === '') {
       this.isEmpty = true;
@@ -86,8 +86,10 @@ export default class Input extends PureComponent {
     }
     
     if (this.condition !== null && this.errorText !== null) {
+      this.valid = false;
       this.timer = setTimeout(this.check.bind(this, e.target.value), 1000);
     }
+    if (this.props.onChange) this.props.onChange(e.target.value, this.tagOp, this.valid);
   }
 
   check = async (value) => {
@@ -98,12 +100,11 @@ export default class Input extends PureComponent {
         this.valid = true;
         this.pass();
       } else {
-        this.valid = false;
-        this.errorText = this.props.errorText;
+        // this.errorText = this.props.errorText;
         this.error();
       }
     }
-    if (this.props.onBlur) this.props.onBlur(value, this.tagOp, this.valid);
+    if (this.props.onChange) this.props.onChange(value, this.tagOp, this.valid);
     this.forceUpdate();    
   }
 

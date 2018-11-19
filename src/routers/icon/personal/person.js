@@ -62,9 +62,9 @@ class Person extends PureComponent {
   }
 
   verifyPhone = (v) => {
+    this.info.phone = v;
     if (validator.isMobilePhone(v, ['zh-CN'])) {
       this.verify = true;
-      this.info.phone = v;
     } else {
       this.verify = false;
       this.info.phone = null;
@@ -101,7 +101,7 @@ class Person extends PureComponent {
   }
 
   getCode = (code) => {
-    console.log(code);
+    if (this.info.code === code) return; 
     this.info.code = code;
   }
 
@@ -140,7 +140,7 @@ class Person extends PureComponent {
               <Button text="修改" onClick={this.changeName}/>
             </div>:
             <div>
-              <Input type="text" defaultValue={this.props.user.user.username} onBlur={(v) => this.nick = v} width="260"/>
+              <Input type="text" defaultValue={this.props.user.user.username} onBlur={(v) => this.nick = v} width="260px"/>
               <Button onClick={this.confirmName} width="128"/>
               <Button onClick={this.props.change_setup_option} text="取消" width="128"/>
             </div>
@@ -163,14 +163,14 @@ class Person extends PureComponent {
           <div>
             <h3>提交资料</h3>
             <div>
-              <Input type="text" ref="name" placeholder="姓名" onBlur={this.setName} width="300"
+              <Input type="text" ref="name" placeholder="姓名" onBlur={this.setName} width="300px"
               condition={(v) => v.length > 1 && v.length <= 10}
               errorText={errorText.name}/>
-              <Input type="number" ref="phone" placeholder="手机号码" onBlur={this.verifyPhone} width="300"
+              <Input type="number" ref="phone" placeholder="手机号码" onBlur={this.verifyPhone} width="300px"
               condition={(v) => validator.isMobilePhone(v, ['zh-CN'])}
               errorText={errorText.phone}/>
-              {this.verify? <Security value={this.info.phone} onBlur={this.getCode} /> : ''}
-              <Input type="text" ref="id" placeholder="身份证号码" onBlur={this.setId} width="300"
+              {this.verify? <Security type='phone' value={this.info.phone} onChange={this.getCode} /> : ''}
+              <Input type="text" ref="id" placeholder="身份证号码" onBlur={this.setId} width="300px"
               condition={(v) => v.length === 18}
               errorText={errorText.idno}/>
               <Upload className="idSide" id="idup" onChange={this.change} color="#666699" opt={false} crop={false} type='id-a'>身份证正面</Upload>

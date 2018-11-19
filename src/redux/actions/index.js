@@ -375,7 +375,7 @@ export const register = (user) => async dispatch => {
   console.log('register', user);
   dispatch({ type: USER_LOGGING_START });
   try {
-    const data = await wsSend('rgt', {v: user.name.value, s: user.pass, c: user.code, n: user.nick});
+    const data = await wsSend('rgt', {o: user});
     console.log(data);
     window.localStorage.setItem('token', data.token);
     dispatch({type: SET_USER, user: data.u});
@@ -386,7 +386,6 @@ export const register = (user) => async dispatch => {
     dispatch({ type: USER_LOGGING_END});
     throw e;
   }
-  
 }
 
 export const user_logout = () => async dispatch => {
@@ -436,7 +435,6 @@ export const email_verify = (value) => async dispatch => {
   try {
     await wsSend('chk-e', {v: value}, {backType: 'chk'});
     dispatch({ type: EMAIL_VERIFY, value: true });
-    return undefined;
   }catch(e) {
     dispatch({ type: EMAIL_VERIFY, value: false });
     return e;
@@ -459,6 +457,37 @@ export const get_code = (type, value) => async dispatch => {
   try {
     await wsSend('get-code', {[type === 'phone'? 'p': 'e']: value}, {backType: 'code'});
     return errmsg[type === 'phone'?'code2':'code1'];
+  }catch(e) {
+    return e;
+  }
+}
+
+// update password;
+export const update_pass = (oldPass, newPass) => async dispatch => {
+  try {
+    const res = await wsSend('upd-p', {o: oldPass, n: newPass});
+    dispatch({ type: SET_USER, user: {secure: res} });
+  }catch(e) {
+    return e;
+  }
+}
+
+// validate phone/email identity
+export const validatePE = (value, code) => async dispatch => {
+  try {
+    const res = await wsSend('chk-c', {v: value, c: code});
+    console.log(res);
+  }catch(e) {
+    return e;
+  }
+}
+// update phone
+export const updatePE = (value, code) => async dispatch => {
+  try {
+    const res = await wsSend('upd-pe', {v: value, c: code});
+    // response [res.c - category] [res.n - newValue]
+    console.log(res);
+    dispatch({ type: SET_USER, user: {[res.c]: res.n} });
   }catch(e) {
     return e;
   }

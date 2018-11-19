@@ -7,7 +7,7 @@ import React, {PureComponent} from 'react';
  * @param {Function} onChange
  */
 
-export default class Radio extends PureComponent {
+export default class AddressList extends PureComponent {
   constructor (props) {
     super(props);
     this.tag = this.props.tag || null;
@@ -46,14 +46,12 @@ export default class Radio extends PureComponent {
     if (this.props.onDelete) {
       this.props.onDelete(id);
     }
-    this.forceUpdate();
   }
 
   onClick = (id) => {
     if (this.props.onChange) {
       this.props.onChange(id);
     }
-    this.forceUpdate();
   }
 
   render () {

@@ -69,7 +69,7 @@ class Tank extends PureComponent {
       const newT = word(o.title, true, true, 2, 51);
       
       return (
-        <a key={o.id} title={o.title}>
+        <a key={o.id} title={o.title} className="single">
           <div className="cover">
             <div style={{'backgroundImage': 'url('+o.pic+')'}}></div>
             <span onClick={this.props.update_lazyload.bind(this, 'tank', o.id, {show: !o.show})}><i className={`fa fa-toggle-${o.show?'on':'off'}`}></i></span>
@@ -77,7 +77,7 @@ class Tank extends PureComponent {
           
           <div className="description">
             <p>{newT}</p>
-            <div>
+            <div className="status">
               <label>{o.view}次观看</label>
               <span>{o.like}人喜欢</span>
             </div>
@@ -95,9 +95,9 @@ class Tank extends PureComponent {
           <div className="utility">
             <i className="fa fa-toggle-on"></i>快速展示/隐藏
           </div>
-          <div className="sec-list">
-            <LazyLoad renderList={this.renderList} data={this.fakeDate} tab="tank" fresh={true}/>
-          </div>
+
+          <LazyLoad className="sec-list" renderList={this.renderList} data={this.fakeDate} tab="tank" fresh={true}/>
+
         </section>
       </div>
     )

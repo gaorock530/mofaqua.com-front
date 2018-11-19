@@ -189,7 +189,7 @@ class Vlog extends PureComponent {
     return data.map((o) => {
       const newT = word(o.title, true, true, 2, 51);
       return (
-        <Link to={"/edit/video/" + o.id} key={o.id} title={o.title}>
+        <Link to={"/edit/video/" + o.id} key={o.id} title={o.title} className="single">
           <div className="cover">
             <div style={{'backgroundImage': 'url('+o.pic+')'}}></div>
             <span>5:30</span>
@@ -197,7 +197,7 @@ class Vlog extends PureComponent {
           
           <div className="description">
             <p>{newT}</p>
-            <div>
+            <div className="status">
               <label>{sortNum(o.view)}次观看</label>
               <span>{sortTime(o.date)}前</span>
             </div>
@@ -214,11 +214,11 @@ class Vlog extends PureComponent {
         <section className="channel-section">
           <h1>{title?title:'全部视频'}<span>{this.fakeDate.length}</span></h1>
           <div className="utility">
-            <Link to="/add/video"><i className="fa fa-cloud-upload"></i>上传视频</Link>
+            <Link to="/add/video"><i className="fa fa-upload"></i>上传视频</Link>
           </div>
-          <div className="sec-list">
-            <LazyLoad renderList={this.renderList} num={num} data={this.fakeDate} tab="vlog" />
-          </div>
+
+          <LazyLoad className="sec-list" renderList={this.renderList} num={num} data={this.fakeDate} tab="vlog" />
+
         </section>
       </div>
     )

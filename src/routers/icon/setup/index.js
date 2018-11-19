@@ -16,7 +16,7 @@ class Setup extends PureComponent {
       { k: 'notice', v: '通知'},
       { k: 'channel', v: '频道'},
       { k: 'privacy', v: '隐私'}
-    ]
+    ];
   }
   renderRight = () => {
     switch (this.props.page.setupPage) {

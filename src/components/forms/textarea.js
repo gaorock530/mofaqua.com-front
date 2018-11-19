@@ -23,7 +23,7 @@ export default class Textarea extends PureComponent {
 
   onChange = (e) => {
     if (this.max || this.min) {
-      this.length = e.target.value.length;
+      this.length = e.target.value.trim().length;
       if (this.length > this.max) {
         this.refs.word.classList.add('text-length-over');
         this.refs.textarea.classList.add('form-input-error');
@@ -38,7 +38,7 @@ export default class Textarea extends PureComponent {
 
   onBlur = (e) => {
     const exceed = this.length - this.max;
-    if (this.props.onBlur) this.props.onBlur(e.target.value, exceed <=0? undefined: exceed);
+    if (this.props.onBlur) this.props.onBlur(e.target.value.trim(), exceed <=0? undefined: exceed);
   }
   
   render () {

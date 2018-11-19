@@ -190,7 +190,7 @@ class Playlist extends PureComponent {
       const newT = word(o.title, true, true, 2, 51);
 
       return (
-        <Link to={"/edit/list/" + o.id} key={o.id} title={o.title}>
+        <Link to={"/edit/list/" + o.id} key={o.id} title={o.title} className="single">
           <div className="cover">
             <div style={{'backgroundImage': 'url('+o.pic+')'}}></div>
             <span>5:30</span>
@@ -198,7 +198,7 @@ class Playlist extends PureComponent {
           
           <div className="description">
             <p>{newT}</p>
-            <div>
+            <div className="status">
               <label>{sortNum(o.view)}次观看</label>
               <span>{sortTime(o.date)}前</span>
             </div>
@@ -217,9 +217,9 @@ class Playlist extends PureComponent {
           <div className="utility">
             <Link to="/add/list"><i className="fa fa-plus"></i>创建播放列表</Link>
           </div>
-          <div className="sec-list">
-            <LazyLoad renderList={this.renderList} num={num} data={this.fakeDate} tab="playlist" />
-          </div>
+
+          <LazyLoad className="sec-list" renderList={this.renderList} num={num} data={this.fakeDate} tab="playlist" />
+
         </section>
       </div>
     )

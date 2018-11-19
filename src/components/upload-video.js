@@ -41,6 +41,7 @@ class Upload extends PureComponent {
 
 
   onUpload = (e) => {
+    // return console.log(e.target.files[0]);
     if (e.target.files[0] === this.video || !e.target.files[0] || e.target.files[0].size < 1024) return;
     const file = e.target.files[0];
     const size = e.target.files[0].size;
@@ -64,6 +65,7 @@ class Upload extends PureComponent {
           this.video.src = this.url;
           this.video.preload = true;
           this.video.controls = true;
+          window.film = this.video
         }
         reader = undefined;
       }, {once: true});

@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import Input from './forms/input';
 import Button from './forms/button';
 
-
+/**
+ * @param {String} type phone/email
+ * @param {String} value value to be sent to
+ * @param {Function} onChange
+ * @param {Function} onBlur
+ */
 
 class Security extends PureComponent {
   constructor (props) {
@@ -16,6 +21,7 @@ class Security extends PureComponent {
   }
 
   componentWillUnmount () {
+    this.props.phone_resendin(0);
     clearInterval(this.counter);
   }
 
@@ -28,23 +34,22 @@ class Security extends PureComponent {
     if (this.props.user.phoneResendin !== 0) return;
     // set re-send time
     let time = 120;
-    this.props.notification_in('正在发送验证码...');
     this.sending = true;
+    this.props.notification_in('正在发送验证码...');
+    
     try {
       const res = await this.props.get_code(this.props.type, this.props.value);
       this.props.notification_in(res);
       // send notification
-      this.props.phone_resendin(time);
+      
       this.counter = setInterval(() => {
-        time--;
-        this.props.phone_resendin(time);
+        this.props.phone_resendin(--time);
         if (time === 0) clearInterval(this.counter);
       },1000);
     }catch(e) {
       this.props.notification_in(e);
     }
     this.sending = false;
-    
   }
 
   onBlur = (v) => {

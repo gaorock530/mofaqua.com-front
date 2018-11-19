@@ -16,34 +16,31 @@ import Playlist from './playlist';
 class Channel extends PureComponent {
   async componentWillMount () {
     // console.log(this.props.location.search.slice(1).split('&'));
-    this.search = this.props.location.search.slice(1).split('&');
-    if (this.search.length !== 0 && this.search[0] !== '') {
-      this.search.map((search) => {
-        const tab = search.split('=');
-        if (tab[0] === 't') {
-          this.tab = tab[1];
-        }
-        return true;
-      });
-    } 
-    this.tab = this.tab || 'vlog';
-    this.props.set_channel_tab(this.tab);
+    // this.search = this.props.location.search.slice(1).split('&');
+    // if (this.search.length !== 0 && this.search[0] !== '') {
+    //   this.search.map((search) => {
+    //     const tab = search.split('=');
+    //     if (tab[0] === 't') {
+    //       this.tab = tab[1];
+    //     }
+    //     return true;
+    //   });
+    // } 
+    this.nav = [
+      {k: 'vlog', v: '全部视频'},
+      {k: 'playlist', v: '视频列表'}, 
+      {k: 'post', v: '经验分享'}, 
+      {k: 'tank', v: '我的美缸'}, 
+      {k: 'second', v: '二手闲置'}
+    ];
+    // this.tab = this.tab || 'vlog';
+    this.props.set_channel_tab(this.tab || 'vlog');
     try{
       await this.props.get_channel(this.props.user.user.UID);
     }catch(e) {
       this.props.notification_in(cuid(), e);
     }
     
-  }
-  componentDidMount () {
-    for (let el of this.refs.nav.childNodes) {
-      if (el.getAttribute('data-name')) {
-        el.addEventListener('click', () => {
-          if (this.props.page.channelTab === el.getAttribute('data-name')) return;
-          this.props.set_channel_tab(el.getAttribute('data-name'));
-        })
-      }
-    }
   }
 
   componentWillUnmount () {
@@ -81,34 +78,36 @@ class Channel extends PureComponent {
     }
   }
 
+  renderNav = () => {
+    return this.nav.map(nav => {
+      return  <a key={nav.k}
+      className={this.props.page.channelTab === nav.k? 'active':null} 
+      onClick={this.props.set_channel_tab.bind(this, nav.k)}>{nav.v}</a>
+    })
+  }
+
   render () {
     const cover = this.props.user.channel && this.props.user.channel.cover? this.props.user.channel.cover : '';
     return (
       <Page className="flat">
         <Upload className="channel-banner setup" color="#666699" id="cover" width={1920} height={350} crop={true} opt={true} type="ch-cover" image={prefix(cover)}>更换封面</Upload>
         <section className="channel-header">
-          <div className="channel-wrapper">
-            <div className="channel-title">
-              <div className="user-img"><img alt="" src={prefix(this.props.user.user.pic)}/></div>
-              <div className="user-title">
-                <h1>{this.props.user.user.username}</h1>
-                <h5>{this.props.user.channel? formatNumber(this.props.user.channel.subscriber):''}<span>位订阅者</span></h5>
-              </div>
+          <div className="channel-title">
+            <div className="user-img"><img alt="" src={prefix(this.props.user.user.pic)}/></div>
+            <div className="user-title">
+              <h1>{this.props.user.user.username}</h1>
+              <h5>{this.props.user.channel? formatNumber(this.props.user.channel.subscriber):''}<span>位订阅者</span></h5>
             </div>
-            <div className={this.props.page.mininav?"channel-nav open":"channel-nav"} ref="nav">
-              <a className="mini" onClick={this.props.toggle_mini_nav}><i className={this.props.page.mininav?"fa fa-chevron-up":"fa fa-chevron-down"}></i></a>
-              <a className={this.props.page.channelTab === 'vlog'? 'active':''} data-name="vlog">全部视频</a>
-              <a className={this.props.page.channelTab === 'playlist'? 'active':''} data-name="playlist">视频列表</a>
-              <a className={this.props.page.channelTab === 'post'? 'active':''} data-name="post">经验分享</a>
-              <a className={this.props.page.channelTab === 'tank'? 'active':''} data-name="tank">我的美缸</a>
-              <a className={this.props.page.channelTab === 'second'? 'active':''} data-name="second">二手闲置</a>
-              <a>
-                {this.props.page.channelSearch? 
-                <input type="text" onBlur={this.props.toggle_channel_search} autoFocus  onKeyDown={this.onKeyDown}/>:
-                <i onClick={this.props.toggle_channel_search} className="fa fa-search"></i>
-                }
-              </a>
-            </div>
+          </div>
+          <div className={this.props.page.mininav?"channel-nav open":"channel-nav"} ref="nav">
+            <a className="mini" onClick={this.props.toggle_mini_nav}><i className={this.props.page.mininav?"fa fa-chevron-up":"fa fa-chevron-down"}></i></a>
+            {this.renderNav()}
+            <a>
+              {this.props.page.channelSearch? 
+              <input type="text" onBlur={this.props.toggle_channel_search} autoFocus onKeyDown={this.onKeyDown}/>:
+              <i onClick={this.props.toggle_channel_search} className="fa fa-search"></i>
+              }
+            </a>
           </div>
         </section>
         <section>{this.renderContent()}</section>
@@ -117,4 +116,4 @@ class Channel extends PureComponent {
   }
 }
 
-export default connect(state => state, actions)(Channel);
+export default connect(({page, user}) => ({page, user}), actions)(Channel);

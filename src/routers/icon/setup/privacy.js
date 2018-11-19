@@ -1,49 +1,55 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import * as actions from '../../../redux/actions';
+import Options from '../../../components/forms/options';
 
-class Privacy extends Component {
+class Privacy extends PureComponent {
+  constructor () {
+    super();
+    // this list should be database
+    this.list = [
+      {
+        tag: '添加好友',
+        list: ['任何人可以添加', '必须经过同意才可添加', '禁止任何人添加'],
+        default: 0,
+      },
+      {
+        tag: '聊天与对话',
+        list: ['任何人', '仅朋友', '不接收任何人的消息'],
+        default: 0,
+      }
+    ]
+  }
+
+  onChange = (i, d) => {
+    
+    if (this.list[i].default === d) return;
+    console.log(i, d);
+    this.list[i].default = d;
+    this.forceUpdate();
+  }
+
+  renderList = () => {
+    return this.list.map((list, i) => 
+      (
+        <Options key={i} tag={list.tag} data={list.list} sup={list.sup} sub={list.sub}
+        onChange={this.onChange.bind(this, i)} default={list.default}/>
+      )
+    )
+    
+    
+  }
+
   render () {
-    const friendOnChange = (e) => {
-      console.log(e.target.value);
-    }
-    const talkOnChange = (e) => {
-      console.log(e.target.value);
-    }
+    
     return (
       <div>
         <div>
-          <h3>添加好友</h3>
-          <p>
-            <input type="radio" name="friend" value='friend1' defaultChecked onChange={friendOnChange}/>
-            <span>任何人可以添加 (默认)</span>
-          </p>
-          <p>
-            <input type="radio" name="friend" value='friend2' onChange={friendOnChange}/>
-            <span>必须经过同意才可添加</span>
-          </p>
-          <p>
-            <input type="radio" name="friend" value='friend3' onChange={friendOnChange}/>
-            <span>禁止任何人添加</span>
-          </p>
-        </div>
-        <div>
-          <h3>聊天与对话</h3>
-          <p>
-            <input type="radio" name="talk" value="talk1" defaultChecked onChange={talkOnChange}/>
-            <span>任何人（默认）</span>
-          </p>
-          <p>
-            <input type="radio" name="talk" value="talk2" onChange={talkOnChange}/>
-            <span>仅朋友</span>
-          </p>
-          <p>
-            <input type="radio" name="talk" value="talk3" onChange={talkOnChange}/>
-            <span>不接收任何人的消息</span>
-          </p>
+          {this.renderList()}
         </div>
       </div>
     )
   }
 }
 
-export default connect(state => state)(Privacy);
+export default connect(({user}) => ({user}), actions)(Privacy);

@@ -32,9 +32,9 @@ export default class Swicth extends PureComponent {
         </div>:''}
         <div className="form-switch-button" onClick={this.onclick}>
           <div className={this.switch?'wapper':'wapper move'} ref="switch">
-            <span className="on">{this.props.on || 'ON'}</span>
+            <span className="on">{this.props.on || '是'}</span>
             <span className="block">&nbsp;</span>
-            <span className="off">{this.props.off || 'OFF'}</span>
+            <span className="off">{this.props.off || '否'}</span>
           </div>
         </div>
       </div>

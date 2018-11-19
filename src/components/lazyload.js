@@ -71,7 +71,7 @@ class lazyLoad extends Component {
   
   render () {
     return (
-      <div>
+      <div className={this.props.className || null}>
         {/* use custom function recieving data */}
         {this.props.renderList(this.props.page.lazyLoad[this.tab] && this.props.page.lazyLoad[this.tab].data?this.props.page.lazyLoad[this.tab].data:[])}
         {this.props.page.lazyLoad[this.tab] && this.props.page.lazyLoad[this.tab].state === true?<Spinner padding="30px" size="15px" Stype="style2" single={false}/>:''}

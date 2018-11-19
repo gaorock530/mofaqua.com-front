@@ -16,7 +16,7 @@ class Register extends Component {
   constructor (props) {
     super (props);
     this.user = {
-      pass: {value: '', secure: 0},
+      pass: '',
       name: {
         type: 'phone',
         value: ''
@@ -67,7 +67,6 @@ class Register extends Component {
     this.valid.pass = false;
     const res = utils.checkPass(v);
     if (res) {
-      this.user.pass.secure = res;
       this.valid.pass = true;
       return true;
     }
@@ -84,7 +83,8 @@ class Register extends Component {
   onSubmit = async (e) => {
     e.preventDefault();
     if (this.props.user.loggingAction) return;
-
+    console.log(this.valid);
+    console.log(this.user);
     if (this.valid.code && this.valid.nick && this.valid.pass && this.valid.name) {
       try {
         await this.props.register(this.user);
@@ -95,16 +95,25 @@ class Register extends Component {
   }  
 
   onNameChange = (v) => {
-    this.valid.name = false;
-    this.user.name.value = v.target? v.target.value : v;
+    v = v.target? v.target.value : v;
+    if (this.user.name.value !== v) {
+      this.valid.name = false;
+      this.user.name.value = v;
+    }
   }
   onNickChange = (v) => {
-    this.valid.nick = false;
-    this.user.nick = v.target? v.target.value : v;
+    v = v.target? v.target.value : v;
+    if (this.user.nick !== v) {
+      this.valid.nick = false;
+      this.user.nick = v;
+    }
   }
   onPassChange = (v) => {
-    this.valid.pass = false;
-    this.user.pass.value = v.target? v.target.value : v;
+    v = v.target? v.target.value : v;
+    if (this.user.pass !== v) {
+      this.valid.pass = false;
+      this.user.pass = v;
+    }
   }
 
   toogle_form = (v) => {
@@ -112,6 +121,7 @@ class Register extends Component {
     this.nav = !this.nav;
     this.valid.name = false;
     this.user.name.type = this.nav?'phone':'email';
+    this.user.name.value = '';
     this.forceUpdate();
   }
 
@@ -163,4 +173,4 @@ class Register extends Component {
   }
 }
 
-export default connect(({user, page})=> ({user, page}), actions)(Register);
+export default connect(({user})=> ({user}), actions)(Register);
