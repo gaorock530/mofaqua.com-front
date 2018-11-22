@@ -304,8 +304,10 @@ class Video extends PureComponent {
   _fullScreenChange = () => {
     let el = document.fullscreenElement;
     if (el && el.classList.contains('body-main-display-wrapper')) {
+      this.refs.wapper.classList.add('video-full');
       this.fullScreen = true;
     } else {
+      this.refs.wapper.classList.remove('video-full');
       this.fullScreen = false;  
     }
     this.state_fullscreen_update();

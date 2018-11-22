@@ -21,8 +21,8 @@ import {
   SET_CHANGE_SETUP,
   SET_TEMP,
   SET_PAGELOAD,
-  SET_CITY,
-  SET_AREA,
+  // SET_CITY,
+  // SET_AREA,
   TOGGLE_CHANNEL_SEARCH,
   SET_CHANNEL_TAB,
   TOGGLE_MINI_NAV,
@@ -44,9 +44,8 @@ import {
   USER_LOGGING_END,
   QR_ACTIVITY,
   PHONE_VERIFY,
-  PHONE_RESEND_IN,
   EMAIL_VERIFY,
-  EMAIL_RESEND_IN,
+  CODE_RESEND_IN,
   SET_USER,
   SET_CHANNEL,
   SET_LOADING_STATE,
@@ -425,8 +424,8 @@ export const phone_verify = (value) => async dispatch => {
   }
 }
 
-export const phone_resendin = (value) => dispatch => {
-  dispatch({ type: PHONE_RESEND_IN, value });
+export const code_resendin = (value) => dispatch => {
+  dispatch({ type: CODE_RESEND_IN, value });
 }
 
 // check email is taken
@@ -440,9 +439,9 @@ export const email_verify = (value) => async dispatch => {
     return e;
   }
 }
-export const email_resendin = (value) => dispatch => {
-  dispatch({ type: EMAIL_RESEND_IN, value });
-}
+// export const email_resendin = (value) => dispatch => {
+//   dispatch({ type: EMAIL_RESEND_IN, value });
+// }
 
 export const name_verify = (value) => async dispatch => {
   try {
@@ -502,17 +501,6 @@ export const set_username = (username, uid) => async dispatch => {
   }
 }
 
-export const get_channel = (uid) => async dispatch => {
-  dispatch({ type: SET_LOADING_STATE, value: true});
-  try {
-    const res = await wsSend('ch-get', {id: uid});
-    dispatch({ type: SET_CHANNEL, channel: res});
-    dispatch({ type: SET_LOADING_STATE, value: false});
-  }catch(e) {
-    dispatch({ type: SET_LOADING_STATE, value: false});
-    throw e;
-  }
-}
 
 export const get_user_info = (uid) => async dispatch => {
   dispatch({ type: SET_LOADING_STATE, value: true});
@@ -531,7 +519,7 @@ export const send_identity = (obj) => async dispatch => {
   dispatch({ type: SET_SUBMITTING_STATE, value: true});
   try {
     await wsSend('put-id', {v: obj});
-    dispatch({ type: PHONE_RESEND_IN, value: 0 });
+    dispatch({ type: CODE_RESEND_IN, value: 0 });
     dispatch({ type: SET_USER, user: {verification: {verified: 1}}});
     dispatch({ type: SET_SUBMITTING_STATE, value: false});
   }catch(e) {
@@ -563,6 +551,35 @@ export const save_address = (uid, address) => async dispatch => {
 export const set_language = (language = "zh") => dispatch => {
   dispatch({ type: SET_LANGUAGE, language});
 }
+
+// channel / submit / upload
+export const get_channel = (uid) => async dispatch => {
+  dispatch({ type: SET_LOADING_STATE, value: true});
+  try {
+    const res = await wsSend('ch-get', {id: uid});
+    dispatch({ type: SET_CHANNEL, channel: res});
+    dispatch({ type: SET_LOADING_STATE, value: false});
+  }catch(e) {
+    dispatch({ type: SET_LOADING_STATE, value: false});
+    throw e;
+  }
+}
+
+export const upload_video = (data, index, hash, extension) => async dispatch => {
+  try {
+    const res = await wsSend('up-vod', {d: data, i: index, h: hash, e: extension}, {
+      timeout: 0
+    });
+    // finish uploading
+    if (res.l) {
+      return res.l;
+    }
+  }catch(e) {
+    console.log(e);
+    throw e;
+  }
+}
+
 
 
 

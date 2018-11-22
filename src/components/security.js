@@ -21,7 +21,7 @@ class Security extends PureComponent {
   }
 
   componentWillUnmount () {
-    this.props.phone_resendin(0);
+    this.props.code_resendin(0);
     clearInterval(this.counter);
   }
 
@@ -31,7 +31,7 @@ class Security extends PureComponent {
     // if phone number fromat is not valid, disable click
     if (!this.props.value) throw Error('missing value to be sent.');
     // if count down is running, disable click
-    if (this.props.user.phoneResendin !== 0) return;
+    if (this.props.user.codeResendin !== 0) return;
     // set re-send time
     let time = 120;
     this.sending = true;
@@ -43,7 +43,7 @@ class Security extends PureComponent {
       // send notification
       
       this.counter = setInterval(() => {
-        this.props.phone_resendin(--time);
+        this.props.code_resendin(--time);
         if (time === 0) clearInterval(this.counter);
       },1000);
     }catch(e) {
@@ -64,9 +64,9 @@ class Security extends PureComponent {
     return (
       <div className="security-wrapper">
         <div className="security-button">
-          {this.props.user.phoneResendin === 0 ? 
+          {this.props.user.codeResendin === 0 ? 
           <Button onClick={this.sendSMS} text="发送验证码"/>: 
-          <span>{this.props.user.phoneResendin}s 后重新发送</span>}
+          <span>{this.props.user.codeResendin}s 后重新发送</span>}
         </div>
         <div className="security-input">
           <Input type="number" placeholder="验证码" onChange={this.onChange} onBlur={this.onBlur} width="100%" 

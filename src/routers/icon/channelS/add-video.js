@@ -22,7 +22,6 @@ class AddVideo extends PureComponent {
       origin: true,
       type: {cate1: "海水", cate2: "生物", cate3: "海葵"},
       list: 0,
-      keyword: [],
       note: ''
     }
   }
@@ -58,7 +57,7 @@ class AddVideo extends PureComponent {
         <div className="full-title">分类：</div>
         <Category onChange={(v) => this.data.type = v} />
         <Textarea tag="介绍：" label="视频介绍：" onBlur={(v, l) => this.data.note = l?null:v} max="500" placeholder="输入视频简介：最多200个字" />
-        <Save tag="发布视频" onClick={() => console.log(this.data)}/>
+        <Save text="发布" onClick={() => console.log(this.data)}/>
       </Page>
     )
   }

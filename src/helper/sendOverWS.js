@@ -27,18 +27,19 @@ export default (type, data = {}, config) => {
   if (!type || typeof type !== 'string') throw Error('[type] must be a String.');
   let timer;
   const content = {t: type, ...data};
-  console.log(content);
+  // console.log(content);
   WS.send(content);
   return new Promise((resolve, reject) => {
     WS.on(defaultConfig.backType, (e) => {
       clearTimeout(timer);
       if (!e.err) {
-        console.log(e);
+        // console.log(e);
         resolve(e.v || e);
       } else {
         reject(e.err);
       }
     }, defaultConfig.once);
+    if (!defaultConfig.timeout) return;
     timer = setTimeout(() => {
       reject(defaultConfig.errmsg || errorMsg.server400);
     }, defaultConfig.timeout * 1000);

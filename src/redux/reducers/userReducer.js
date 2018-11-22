@@ -4,7 +4,7 @@ export default function (state = {
   QRexpires: false,
   vaildPhoneFormat: false,
   vaildEmailFormat: false,
-  phoneResendin: 0,
+  codeResendin: 0,
   emailResendin: 0,
   user: null,
   channel: null,
@@ -46,20 +46,15 @@ export default function (state = {
         ...state,
         vaildPhoneFormat: action.value
       }
-    case 'PHONE_RESEND_IN' :
+    case 'CODE_RESEND_IN' :
       return {
         ...state,
-        phoneResendin: action.value || 0
+        codeResendin: action.value || 0
       }
     case 'EMAIL_VERIFY':
       return {
         ...state,
         vaildEmailFormat: action.value
-      }
-    case 'EMAIL_RESEND_IN' :
-      return {
-        ...state,
-        emailResendin: action.value
       }
     // User object
     /* -------------------------------- */
