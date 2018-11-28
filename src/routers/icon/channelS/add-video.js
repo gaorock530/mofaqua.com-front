@@ -48,7 +48,7 @@ class AddVideo extends PureComponent {
     }
     return (
       <Page wapper={true}>
-        <Upload id="video">选择视频</Upload>
+        <Upload id="video" uid={this.props.user.user.UID}>选择视频</Upload>
         <Input label="视频标题:" onBlur={(v) => this.data.title = v} placeholder="视频标题"/>
         <div className="left-align">
           <Switch label="原创：" onChange={(v) => this.data.origin = v}/>

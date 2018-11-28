@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -66,29 +66,37 @@ import EditPost from './routers/icon/channelS/edit-post';
 import EditSecond from './routers/icon/channelS/edit-second';
 
 
-class App extends Component {
+class App extends PureComponent {
   constructor (props) {
     super(props);
     // start timer
     this.t0 = window.performance.now();
-    this.props.user_verify(); 
     this.loading = true;
-    this.refresh = setTimeout(() => {
-      this.loading = false;
-      return this.props.ws.connection || this.forceUpdate();
-    }, 10000);
+    // this.refresh = setTimeout(() => {
+    //   this.loading = false;
+    //   return this.props.ws.connection || this.forceUpdate();
+    // }, 10000);
   }
-  componentWillMount () {
-    if (window.localStorage) {
-      const lang_option = ['zh', 'en'];
-      const lang = window.localStorage.getItem('lang');
-      if (lang_option.indexOf(lang) !== -1) {
-        this.props.set_language(lang);
-      } else {
-        this.props.set_language('zh');
-        window.localStorage.setItem('lang', 'zh');
+  async componentWillMount () {
+    try {
+      await this.props.user_verify(); 
+      this.props.addListener();
+      if (window.localStorage) {
+        const lang_option = ['zh', 'en'];
+        const lang = window.localStorage.getItem('lang');
+        if (lang_option.indexOf(lang) !== -1) {
+          this.props.set_language(lang);
+        } else {
+          this.props.set_language('zh');
+          window.localStorage.setItem('lang', 'zh');
+        }
       }
+      
+    }catch(e) {
     }
+    this.loading = false;
+    this.forceUpdate();
+    
 
     // this.props.load_websocket(ws);
     this.prev = window.scrollY;
@@ -176,5 +184,5 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({ws:state.ws, page: state.page}), actions)(App);
+export default connect(({ws, page}) => ({ws, page}), actions)(App);
 

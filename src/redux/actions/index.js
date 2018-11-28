@@ -76,6 +76,8 @@ const cuid = require('cuid');
 // API.init();
 window.api = WS;
 
+
+
 /*
     Page state
 */
@@ -299,24 +301,32 @@ export const detech = (event, n) => dispatch => {
 */
 
 /* Verify */
-export const user_verify = () => dispatch => {
+export const user_verify = () =>  dispatch => {
   // let connection = setTimeout(() => {
   //   dispatch({ type: NOTIFICATION_IN, id: cuid(), text: '离线网络，请在接入网络后刷新'});
   // }, 1000);
+  return new Promise((resolve, reject) => {
+    // on page load check if user is logged in
+    WS.on('int', (e) => {
+      dispatch({ type: LOAD_WEBSOCKET, ws: true});
+      // clearTimeout(connection);
+      if (e.v === 1) {
+        dispatch({type: SET_USER, user: e.u});
+        dispatch({type: USER_LOGIN});
+        resolve(true);
+      } else if (e.v === 0) {
+        dispatch({ type: USER_LOGOUT });
+        resolve(true);
+      } else {
+        reject(false);
+        console.warn('server response error.');
+      }
+    }, true);
+  })
 
-  // on page load check if user is logged in
-  WS.on('int', (e) => {
-    // clearTimeout(connection);
-    if (e.v === 1) {
-      dispatch({type: SET_USER, user: e.u});
-      dispatch({type: USER_LOGIN});
-    } else if (e.v === 0) {
-      dispatch({ type: USER_LOGOUT });
-    } else {
-      console.warn('server response error.');
-    }
-    dispatch({ type: LOAD_WEBSOCKET, ws: true});
-  }, true);
+}
+
+export const addListener = () => dispatch => {
   WS.on('logout', (e) => {
     if (!e.err) {
       dispatch({ type: USER_LOGOUT });
@@ -346,7 +356,6 @@ export const user_verify = () => dispatch => {
       }
     }
   });
-  
 }
 
 

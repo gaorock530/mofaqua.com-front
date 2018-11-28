@@ -441,6 +441,7 @@
 .security-wrapper {
   display: flex;
   width: 300px;
+  
 }
 .security-button {
   flex: 1;
@@ -783,3 +784,7 @@
 //     }
 //   }
 // }
+
+@media screen and (max-width: 460px) { 
+  .security-button .from-button-small {color: #000}
+}
