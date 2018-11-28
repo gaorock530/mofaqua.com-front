@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './routers/PrivateRoute';
 import * as actions from './redux/actions';
 
+
 import '@fortawesome/fontawesome-free/css/all.css';
 // import 'font-awesome/css/font-awesome.min.css'; // font-awesome.min.css
 // import 'quill/dist/quill.core.css';
@@ -64,7 +65,7 @@ import EditVideo from './routers/icon/channelS/edit-video';
 import EditList from './routers/icon/channelS/edit-list';
 import EditPost from './routers/icon/channelS/edit-post';
 import EditSecond from './routers/icon/channelS/edit-second';
-
+require('jimp/browser/lib/jimp');
 
 class App extends PureComponent {
   constructor (props) {

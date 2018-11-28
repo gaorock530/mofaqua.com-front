@@ -9,6 +9,10 @@ import Bytes from '../helper/formatBytes';
 import Video from '../components/video';
 import axios from 'axios';
 
+const reqURL = process.env.NODE_ENV === 'development'? 
+'https://localhost:5000/': 
+'https://websocket.mofaqua.com/';
+
 
  
 /**
@@ -85,7 +89,7 @@ class Upload extends PureComponent {
     form.append('file', file);
     form.append('uid', this.uid);
     try {
-      const res = await axios.post('https://localhost:5000/', form);
+      const res = await axios.post(reqURL, form);
       if (res.data.err) this.props.notification_in(res.data.err);
       this.isUploading = false;
       this.uploaded = res.data.url;

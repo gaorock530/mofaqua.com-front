@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import cuid from 'cuid';
 import * as actions from '../redux/actions';
 import processPhoto from '../helper/processPhoto';
-require('jimp/browser/lib/jimp');
+// require('jimp');
  
 /**
  * @param {String} image default image url
