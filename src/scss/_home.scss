@@ -80,6 +80,72 @@
   }
 }
 
+/*-----------------------------
+    Home Section 1
+------------------------------*/
+.chasingcoral {
+  position: relative;
+  max-height: 750px;
+  overflow: hidden;
+  video {
+    position: relative;
+    width: 100%;
+    z-index: 0;
+    vertical-align: middle;
+    border: none;
+  }
+  .cover, .content, .play {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .cover {
+    z-index: 1;
+    background-color: rgba($color: #000000, $alpha: 0.5) 
+  }
+  .content {
+    z-index: 3;
+    .logo {
+      margin: 0 20px;
+      width: 50vw;
+      height: 25%;
+      background: url('/pic/chasingcoral/logo.png') no-repeat;
+      background-size: contain;
+    }
+    .awards {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      width: 100%;
+      div {
+        flex: 1;
+        height: 80px;
+        background-size: contain;
+        background-repeat:  no-repeat;
+        background-position: center bottom;
+      }
+    }
+    .play {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      i {
+        color: orangered;
+        font-size: 100px;
+        &:hover {
+          color: red;
+        }
+      }
+    }
+    
+  }
+}
+
+
+
 @media screen and (max-width: 950px) {
   .sec-pic img {
     width: 320px !important;

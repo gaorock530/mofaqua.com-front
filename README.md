@@ -5,5 +5,5 @@ With the --production flag (or when the NODE_ENV environment variable is set to 
 The --only={prod[uction]|dev[elopment]} argument will cause either only devDependencies or only non-devDependencies to be installed regardless of the NODE_ENV."
 
 Have you tried
-
-npm install --only=dev
+- install dev-dependencies on production server
+`npm install --only=dev`

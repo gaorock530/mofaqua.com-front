@@ -21,7 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 #local test
-/public/video
+#/public/video
 
 #vs
 #.vscode

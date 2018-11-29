@@ -37,6 +37,25 @@ class Home extends PureComponent {
             <img src="/pic/phone.png" alt="app"/>
           </div>
         </Section>
+        <section className="chasingcoral">
+          <div className="content">
+            <div className="logo"></div>
+            <div className="awards">
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_01.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_02.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_03.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_04.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_05.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_06.png")'}}></div>
+              <div style={{backgroundImage: 'url("/pic/chasingcoral/laurels_07.png")'}}></div>
+            </div>
+            <div className="play">
+              <i className="fa fa-play-circle"></i>
+            </div>
+          </div>
+          <div className="cover"></div>
+          <video src="/video/chasingcoral.mp4" preload="true" autoPlay loop poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg"></video>
+        </section>
         <Section cover="0.7" url="/pic/reef-3.jpg" className="section-s1">
           
           <div className="sec-pic sec-swap">
