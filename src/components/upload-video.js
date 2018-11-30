@@ -140,7 +140,7 @@ class Upload extends PureComponent {
           {this.props.fileUpload.inProcess? <Spinner single={true}>{this.status[this.props.fileUpload.process-1]}</Spinner>:children}
         </label>
         {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} options={{autoplay: true, menu: false}} />:''}
-        {/* <Video mpdUrl="https://localhost:5000/videos/cjon0c9d20002xnfyp5de3vh8.cjp39fddf0003q6fyih43tvnu.dash/720p/out.mpd"/> */}
+        {/* <Video mpdUrl="https://websocket.mofaqua.com/videos/cjotxcdsl0016i5fjyrug0pbc.cjp3uh35n001tvjfjym3srm0u.dash/720p/out.mpd"  options={{autoplay: true, menu: false}}/> */}
       </div>
     )
   }
