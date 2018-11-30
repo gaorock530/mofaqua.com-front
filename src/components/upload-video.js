@@ -139,7 +139,7 @@ class Upload extends PureComponent {
         <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>
           {this.props.fileUpload.inProcess? <Spinner single={true}>{this.status[this.props.fileUpload.process-1]}</Spinner>:children}
         </label>
-        {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} />:''}
+        {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} options={{autoplay: true, menu: false}} />:''}
         {/* <Video mpdUrl="https://localhost:5000/videos/cjon0c9d20002xnfyp5de3vh8.cjp39fddf0003q6fyih43tvnu.dash/720p/out.mpd"/> */}
       </div>
     )

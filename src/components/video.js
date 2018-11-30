@@ -38,7 +38,8 @@ class Video extends PureComponent {
       autoplay: false,
       loop: false,
       volume: 1, // 0 ~ 1
-      skip: 3 // seconds
+      skip: 3, // seconds
+      menu: true
     };
     // get custom options
     this.playerOptions(this.props.options);
@@ -329,6 +330,7 @@ class Video extends PureComponent {
 
   // Right click Window menu event
   _menuControl = (e) => {
+    if (!this.defaultOptions.menu) return;
     if (!this.inside) return this.clearMenu();
     //inside player
     e.preventDefault();
