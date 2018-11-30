@@ -12,7 +12,8 @@ import Spinner from './animates/spinner';
 class Video extends PureComponent {
   constructor (props) {
     super(props);
-    this.mpdUrl = this.props.mpdUrl; // media manifest URL
+    this.mpdUrl = this.props.mpdUrl; // DASH manifest URL
+    this.hlsUrl = this.props.hlsUrl; // HLS
     this.selectors = null; // all the selectors within player
     this.isFocused = true; // is player focused
     this.inside = false; // is mouse inside player
@@ -125,7 +126,7 @@ class Video extends PureComponent {
     document.removeEventListener('contextmenu', this._menuControl, false);
   }
 
-  initPlayer = () => {
+  initPlayer = async () => {
     // Create a Player instance.
     this.player = new shaka.Player(this.selectors.video);
   
@@ -137,11 +138,24 @@ class Video extends PureComponent {
     
     // Try to load a manifest.
     // This is an asynchronous process.
-    this.player.load(this.mpdUrl).then(() => {
+    try {
+      await this.player.load(this.mpdUrl);
       // This runs if the asynchronous load is successful.
       console.log('The video has now been loaded!');
       this.onStartPlayer();
-    }).catch(this.onError);  // onError is executed if the asynchronous load fails.
+    }catch(e) {
+      this.onError(e);
+      try {
+        await this.player.load(this.hlsUrl);
+        console.log('The video has now been loaded!');
+      }catch(e) {
+        this.onError(e);
+      }
+    }
+    // this.player.load(this.mpdUrl).then(() => {
+      
+    //   this.onStartPlayer();
+    // }).catch(this.onError);  // onError is executed if the asynchronous load fails.
 
     this.player.addEventListener('unloading', () => {
       console.log('unloading...');

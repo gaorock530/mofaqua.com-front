@@ -26,10 +26,14 @@ import {
   TOGGLE_CHANNEL_SEARCH,
   SET_CHANNEL_TAB,
   TOGGLE_MINI_NAV,
-  ADD_UPLOAD_FILE,
+  //
+  READY_FOR_UPLOAD,
   FILE_UPLOADING,
+  FILE_CONVERTING,
+  FILE_MAKING_MANIFEST,
   FILE_UPLOADED,
   FILE_DESTROY,
+  //
   SET_REDIRECT_PATH,
   SET_LAZYLOAD_DATA,
   SET_LAZYLOAD_STATE,
@@ -160,9 +164,10 @@ export const set_channel_tab = (value = 'home') => dispatch => {
 export const toggle_mini_nav = () => dispatch => {
   dispatch({ type: TOGGLE_MINI_NAV });
 }
-export const uploading_pic = (id, file, type) => async dispatch => {
+export const uploading_pic = (file, Filetype) => async dispatch => {
   if (!WS.connected) return console.warn('no connection');
-  dispatch({ type: ADD_UPLOAD_FILE, id, url: file.url });
+  dispatch({ type: READY_FOR_UPLOAD, url: file.url });
+  dispatch({ type: FILE_UPLOADING, percent: 0});
   let res = await UploadEncoder(file.blob, 'readAsDataURL');
   let tiemr;
   const limit = 1024*1024;
@@ -184,10 +189,10 @@ export const uploading_pic = (id, file, type) => async dispatch => {
         const bit = res.slice(bitcounter, bitcounter + chunk);
         if (bitcounter < size) {
           console.log('sending segment:', index);
-          WS.send({t: 'up-pic', v: bit, i: index++, n: name, c: type});
+          WS.send({t: 'up-pic', v: bit, i: index++, n: name, c: Filetype});
         }else {
           console.log('sending finished.');
-          WS.send({t: 'up-pic', i: -1, n: name, c: type});
+          WS.send({t: 'up-pic', i: -1, n: name, c: Filetype});
         }
       } else {
         console.log('buffer is full.');
@@ -199,25 +204,24 @@ export const uploading_pic = (id, file, type) => async dispatch => {
       WS.on('up-pic', (e) => {
         clearTimeout(tiemr);
         if (!e.err && !e.l) {
-          dispatch({ type: FILE_UPLOADING, id, percent: Math.floor((bitcounter/size)*100)});
+          dispatch({ type: FILE_UPLOADING, percent: Math.floor((bitcounter/size)*100)});
           sendChunk();
         }else if (e.err) {
-          dispatch({ type: FILE_UPLOADED, id });
-          dispatch({ type: FILE_DESTROY, id});
+          dispatch({ type: FILE_DESTROY});
           reject(false)
         }else{
-          dispatch({ type: FILE_UPLOADED, id });
-          dispatch({ type: FILE_UPLOADING, id, percent: 100});
-          if (type === 'tn') {
+          dispatch({ type: FILE_UPLOADING, percent: 100});
+          dispatch({ type: FILE_DESTROY});
+          if (Filetype === 'tn') {
             dispatch({ type: SET_USER, user: {pic: e.l} });
-          } else if (type === 'ch-cover') {
+          } else if (Filetype === 'ch-cover') {
             dispatch({ type: SET_CHANNEL, channel: {cover: e.l} });
           }
           resolve(true);
         } 
       }, true);
       tiemr = setTimeout(() => {
-        dispatch({ type: FILE_UPLOADED, id });
+        dispatch({ type: FILE_DESTROY});
         reject(false)
       }, 10000);
       
@@ -226,11 +230,37 @@ export const uploading_pic = (id, file, type) => async dispatch => {
     sendChunk();
   })
 }
-export const destroy_file = (id) => dispatch => {
-  dispatch({ type: FILE_DESTROY, id});
-}
+
 export const redirect = (path = null) => dispatch => {
   dispatch({ type: SET_REDIRECT_PATH, path });
+}
+
+/* Upload video */
+export const generate_permit = () => async dispatch => {
+  try {
+    const res = await wsSend('g-p');
+    dispatch({ type: READY_FOR_UPLOAD, p: res.p});
+    console.log(res);
+  }catch(e) {
+    console.log(e);
+  }
+}
+export const change_upload_state = (state) => dispatch => {
+  switch (state) {
+    case 0:
+      return dispatch({ type: FILE_UPLOADED});
+    case 1:
+      return dispatch({ type: FILE_UPLOADING});
+    case 2:
+      return dispatch({ type: FILE_CONVERTING});
+    case 3:
+      return dispatch({ type: FILE_MAKING_MANIFEST});
+    default: 
+      dispatch({ type: FILE_DESTROY});
+  }
+}
+export const destroy_file = () => dispatch => {
+  dispatch({ type: FILE_DESTROY});
 }
 
 /* Lazy Loading */

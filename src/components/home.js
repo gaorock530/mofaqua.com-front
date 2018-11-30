@@ -54,7 +54,10 @@ class Home extends PureComponent {
             </div>
           </div>
           <div className="cover"></div>
-          <video src="/video/chasingcoral.mp4" preload="true" autoPlay loop poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg"></video>
+          <video preload="auto" autoPlay={true} loop={true} muted="muted" poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg">
+            <source type="video/mp4" src="/video/chasingcoral.mp4"></source>
+            <source type="video/webm" src="/video/chasingcoral.webm"></source>
+          </video>
         </section>
         <Section cover="0.7" url="/pic/reef-3.jpg" className="section-s1">
           

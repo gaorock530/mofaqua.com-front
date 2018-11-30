@@ -33,4 +33,7 @@ export default {
   updPass: '密码已更新',
   updEmail: '邮箱地址已更新',
   updPhone: '手机号码已更新',
+  //
+  video1: '视频文件不能超过200Mb',
+  video2: '视频长度不能超过10分钟'
 }

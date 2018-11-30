@@ -17,7 +17,6 @@ export default function (state = {
   channelSearch: false,       // track Chennel Search action, search/input
   channelTab: 'home',         // set Channel page Nav tabs
   mininav: false,             // detect Channel page Mini Nav open/close
-  uploadFiles: {},            // tracking all uploading files
   redirect: null,             // set redirect path '/tankview/123'
   lazyLoad: {},               // store lazyloading data
   edit: null,                 // record edit channel page id
@@ -121,39 +120,6 @@ export default function (state = {
       return {
         ...state,
         mininav: !state.mininav
-      }
-    case 'ADD_UPLOAD_FILE':
-      if (state.uploadFiles[action.id]) {
-        state.uploadFiles[action.id].url = action.url;
-      } else {
-        state.uploadFiles[action.id] = {};
-        state.uploadFiles[action.id].url = action.url;
-        state.uploadFiles[action.id].percentage = 0;
-        // state.uploadFiles[action.id].file.push(action.file);
-      }
-      state.uploadFiles[action.id].isUploading = true;
-      return {
-        ...state,
-        uploadFiles: state.uploadFiles
-      }
-    case 'FILE_UPLOADING':
-      state.uploadFiles[action.id].percentage = action.percent;
-      return {
-        ...state,
-        uploadFiles: state.uploadFiles
-      }
-
-    case 'FILE_UPLOADED':
-      state.uploadFiles[action.id].isUploading = false;
-      return {
-        ...state,
-        uploadFiles: state.uploadFiles
-      }
-    case 'FILE_DESTROY':
-      delete state.uploadFiles[action.id];
-      return {
-        ...state,
-        uploadFiles: state.uploadFiles
       }
     case 'SET_REDIRECT_PATH':
       return {

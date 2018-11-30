@@ -3,15 +3,16 @@ import Spinner from './animates/spinner';
 import { connect } from 'react-redux';
 import cuid from 'cuid';
 import * as actions from '../redux/actions';
-import { hex_md5 } from '../helper/md5';
-import counterDown from '../helper/formatCountDown';
-import Bytes from '../helper/formatBytes';
+// import { hex_md5 } from '../helper/md5';
+// import counterDown from '../helper/formatCountDown';
+// import Bytes from '../helper/formatBytes';
+import errmsg from '../helper/errorText';
 import Video from '../components/video';
 import axios from 'axios';
 
 const reqURL = process.env.NODE_ENV === 'development'? 
-'https://localhost:5000/': 
-'https://websocket.mofaqua.com/';
+'https://localhost:5000/videoupload': 
+'https://websocket.mofaqua.com/videoupload';
 
 
  
@@ -44,14 +45,16 @@ class Upload extends PureComponent {
     this.hash = null; // store video hash
     this.uid = this.props.uid;
     this.isUploading = false;
+    this.status = ['上传中', '转码中', '封装中'];
   }
   componentDidMount () {
     this.container = this.refs.display;
     this.process = this.refs.upload;
+    this.props.generate_permit();
   }
 
   componentWillUnmount () {
-    this.props.destroy_file(this.id);
+    this.props.destroy_file();
   }
 
   accept = ['video/mp4', 'video/mpeg', 'video/quicktime'];
@@ -64,7 +67,7 @@ class Upload extends PureComponent {
     if (file.size > 200 * 1024 * 1024) {
       this.isUploading = false;
       this.forceUpdate();
-      return this.props.notification_in('视频文件不能超过200Mb');
+      return this.props.notification_in(errmsg.video1);
     }
     this.video = document.createElement('video');
     this.video.src = window.URL.createObjectURL(file);
@@ -74,7 +77,7 @@ class Upload extends PureComponent {
       if (Math.floor(this.video.duration) > 600) {
         this.isUploading = false;
         this.forceUpdate();
-        return this.props.notification_in('视频长度不能超过10分钟');
+        return this.props.notification_in(errmsg.video2);
       }
       await this.onUpload(file);
     }, {once: true})
@@ -88,94 +91,38 @@ class Upload extends PureComponent {
     const form = new FormData();
     form.append('file', file);
     form.append('uid', this.uid);
+    form.append('process', 1);
+    form.append('permit', this.props.fileUpload.permit);
     try {
-      const res = await axios.post(reqURL, form);
-      if (res.data.err) this.props.notification_in(res.data.err);
+      // step 1: upload file 
+      this.props.change_upload_state(1);
+      const uploaded = await axios.post(reqURL, form);
+      if (uploaded.data.err) {
+        this.props.change_upload_state(0);
+        return this.props.notification_in(uploaded.data.err);
+      }
+      console.log(uploaded.data)
+      this.props.change_upload_state(2);
+      const converted = await axios.post(reqURL, {process: 2, uid: this.uid, permit: this.props.fileUpload.permit});
+      if (converted.data.err) {
+        this.props.change_upload_state(0);
+        return this.props.notification_in(converted.data.err);
+      }
+      console.log(converted.data);
+      this.props.change_upload_state(3);
+      const manifest = await axios.post(reqURL, {process: 3, uid: this.uid, permit: this.props.fileUpload.permit});
+      if (manifest.data.err) {
+        this.props.notification_in(converted.data.err);
+      }
+      this.props.change_upload_state(0);
+      console.log(manifest.data);
       this.isUploading = false;
-      this.uploaded = res.data.url;
-      console.log(res.data)
+      this.uploaded = manifest.data.url;
+      
     }catch(e) {
-
+      return this.props.notification_in(e);
     }
     this.forceUpdate()
-    
-    // console.log(e.target.files[0]);
-    // if (e.target.files[0] === this.video || !e.target.files[0] || e.target.files[0].size < 1024) return;
-    // const file = e.target.files[0];
-    // const size = file.size;
-    // // const type = file.type.split('/')[1];
-    // const extension = file.name.split('.')[1];
-    // const chunk = 1024*512;
-    // let counter = 0; // tracking transfer index
-    // this.dataLeft = size;
-
-    
-    // // console.log(file);
-    // this.timer = setInterval(() => {
-    //   this.dataLeft -= this.transferred;
-    //   this.timeLeft = Math.round(this.dataLeft / this.transferred);
-    //   this.rateRefresh++;
-    //   if (this.rateRefresh === 3) {
-    //     this.transferRate = this.transferred;
-    //     this.rateRefresh = 0;
-    //   }
-    //   this.transferred = 0;
-    // }, 1000);
-
-
-    // const read = () => {
-    //   this.process.innerHTML = Math.floor((counter*chunk) / size * 100) + '%  剩余：' + counterDown(this.timeLeft) + ' rate:' + Bytes(this.transferRate) + '/s';
-    //   let reader = new FileReader();
-    //   reader.addEventListener('load', async (e) => {
-    //     if (!this.hash) this.hash = hex_md5(e.target.result);
-    //     const data = e.target.result.slice(22);
-    //     // record bytes has been treansfered
-    //     this.transferred += chunk;
-    //     // console.log(chunk, this.transferRate);
-    //     // counter++
-    //     await this.props.upload_video(
-    //       data,  // strip base64 metadata
-    //       counter++,
-    //       this.hash,
-    //       extension
-    //     )
-    //     // loop to transfer data
-    //     if (counter*chunk < size) read();
-    //     // transfer finished
-    //     else { 
-    //       // send last bit of data, index = -1
-    //       const result = await this.props.upload_video(data, -1);
-    //       console.log(result);
-    //       // stop counter
-    //       clearInterval(this.timer);
-    //       // initialize arguments
-    //       this.transferRate = 0;  // transfer rate over 3 seconds
-    //       this.transferred = 0; // record bytes transferred in one second
-    //       this.timeLeft = 0; // record time to upload
-    //       this.dataLeft = 0; // record data lefted to transfer
-    //       this.rateRefresh = 0; // a counter for refresh transfer rate [every 3 sec]
-    //       // change display 
-    //       this.process.innerHTML = '已上传';
-    //       // add video preview
-    //       this.uploaded = result.server;
-    //       this.forceUpdate();
-    //       // if (!this.video) {
-    //       //   this.video = document.createElement('video');
-    //       //   this.container.appendChild(this.video);
-    //       // }
-    //       // this.video.src = window.URL.createObjectURL(file);
-    //       // this.video.preload = true;
-    //       // this.video.controls = true;
-    //     }
-    //     // clear memory
-    //     reader = undefined;
-    //   }, {once: true});
-
-    //   const buffer = this.slice.call(file, counter*chunk, counter*chunk + chunk, file.type);
-    //   reader.readAsDataURL(buffer);
-    // }
-
-    // read();
 
   }
 
@@ -186,27 +133,17 @@ class Upload extends PureComponent {
       id, 
       children = '上传文件'
     } = this.props;
-    // const uploading = this.props.page.uploadFiles[this.id] && this.props.page.uploadFiles[this.id].isUploading;
-    // const uploaded = this.props.page.uploadFiles[this.id] && !this.props.page.uploadFiles[this.id].isUploading;
     return (
       <div className={"uploadWapper " + className}>
-        {this.isUploading?'':<input type="file" id={id} accept="video/*" onChange={this.checkVideo} className="fileInput" />}
-        
-        <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>{this.isUploading? <Spinner single={false} size="12px" padding="12px"/>:children}</label>
-        {this.uploaded?<Video mpdUrl={this.uploaded}/>:''}
-        {/* <Video mpdUrl="https://localhost:5000/videos/ChasingCoral.1080/out.mpd"/> */}
-        {/* {uploading? <Spinner position="mid" single={true} size="12px"/>:''}
-        {uploaded? <div className="addon-video-info">
-          <li><span>文件名：</span><span>{this.video.name}</span></li>
-          <li><span>视频时长：</span><span>{this.video.duration.fen + '分' + this.video.duration.miao + '秒'}</span></li>
-          <li><span>视频大小：</span><span>{this.video.mb + 'MB'}</span></li>
-          <li><span>MD5：</span><span>{this.video.md5}</span></li>
-          <li><span>是否通过：</span><span><i className={`fa fa-${(this.video.duration.fen>5 || this.video.mb > 10)?'times red':'check green'}`}></i></span></li>
-        </div>:''} */}
-        <div className='video-preview' ref="display"></div>
+        {this.props.fileUpload.inProcess?'':<input type="file" id={id} accept="video/*" onChange={this.checkVideo} className="fileInput" />}
+        <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>
+          {this.props.fileUpload.inProcess? <Spinner single={true}>{this.status[this.props.fileUpload.process-1]}</Spinner>:children}
+        </label>
+        {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} />:''}
+        {/* <Video mpdUrl="https://localhost:5000/videos/cjon0c9d20002xnfyp5de3vh8.cjp39fddf0003q6fyih43tvnu.dash/720p/out.mpd"/> */}
       </div>
     )
   }
 }
 
-export default connect(null, actions)(Upload);
+export default connect(({fileUpload}) => ({fileUpload}), actions)(Upload);

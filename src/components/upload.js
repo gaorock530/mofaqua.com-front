@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import Spinner from './animates/spinner';
 import { connect } from 'react-redux';
-import cuid from 'cuid';
 import * as actions from '../redux/actions';
 import processPhoto from '../helper/processPhoto';
 // require('jimp');
@@ -22,7 +21,6 @@ import processPhoto from '../helper/processPhoto';
 
 class Upload extends PureComponent {
   componentWillMount () {
-    this.id = cuid();
     this.type = this.props.type;
   }
 
@@ -48,7 +46,7 @@ class Upload extends PureComponent {
     try {
       // process image
       const newPhoto = await processPhoto(this.image, this.props.crop || false, this.props.opt || false, this.props.width, this.props.height);
-      const res = await this.props.uploading_pic(this.id, newPhoto, this.type); 
+      const res = await this.props.uploading_pic(newPhoto, this.type); 
       if (!res) return this.props.notification_in('图片上传失败,请重试');
       this.refs.upload.style.backgroundImage = `url('${newPhoto.url}')`;
       this.props.notification_in('图片上传成功', newPhoto.url);
@@ -71,21 +69,19 @@ class Upload extends PureComponent {
       color = null,
       image = null
     } = this.props;
-    const uploading = this.props.page.uploadFiles[this.id] && this.props.page.uploadFiles[this.id].isUploading;
-    const percent = this.props.page.uploadFiles[this.id]?this.props.page.uploadFiles[this.id].percentage+'%':0;
     return (
       <div className={"uploadWapper " + className}>
         <input type="file" id={id} accept="image/gif, image/jpeg, image/png" onChange={this.onUpload} className="fileInput" />
         <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', backgroundImage: image?`url(${image})`:'none'}}>
             <span>
-              {uploading?percent: children}
+              {this.props.fileUpload.inProcess?this.props.fileUpload.percentage: children}
             </span>
             
         </label>
-        {uploading? <Spinner position="mid" single={true} size="32px"/>:''}
+        {this.props.fileUpload.inProcess? <Spinner position="mid" single={true} size="32px"/>:''}
       </div>
     )
   }
 }
 
-export default connect(({page}) => ({page}), actions)(Upload);
+export default connect(({fileUpload}) => ({fileUpload}), actions)(Upload);
