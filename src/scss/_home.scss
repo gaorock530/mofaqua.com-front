@@ -138,9 +138,12 @@
       i {
         color: orangered;
         font-size: 100px;
-        &:hover {
-          color: red;
-        }
+        // &:hover {
+          
+        // }
+      }
+      &:hover .fa-play-circle{
+        color: red;
       }
     }
     

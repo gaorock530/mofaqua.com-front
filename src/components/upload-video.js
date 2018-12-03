@@ -9,6 +9,7 @@ import * as actions from '../redux/actions';
 import errmsg from '../helper/errorText';
 import Video from '../components/video';
 import axios from 'axios';
+// import HLS from './hls-player';
 
 const reqURL = process.env.NODE_ENV === 'development'? 
 'https://localhost:5000/videoupload': 
@@ -126,8 +127,11 @@ class Upload extends PureComponent {
 
   }
 
+  
+
 
   render () {
+    const url = 'https://localhost:8000/aed40d2f342f4f598f9f0e42b4f0f02b/manifest/index.m3u8';
     const {
       className = '',
       id, 
@@ -139,11 +143,26 @@ class Upload extends PureComponent {
         <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>
           {this.props.fileUpload.inProcess? <Spinner single={true}>{this.status[this.props.fileUpload.process-1]}</Spinner>:children}
         </label>
-        {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} options={{autoplay: true, menu: false}} />:''}
-        {/* <Video mpdUrl="https://websocket.mofaqua.com/videos/cjotxcdsl0016i5fjyrug0pbc.cjp3uh35n001tvjfjym3srm0u.dash/720p/out.mpd"  options={{autoplay: true, menu: false}}/> */}
+        {/* {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} options={{autoplay: true, menu: false}} />:''} */}
+        {/* <Video mpdUrl="https://websocket.mofaqua.com/videos/cjotxcdsl0016i5fjyrug0pbc.cjp3uh35n001tvjfjym3srm0u.dash/720p/out.mpd"  options={{autoplay: true, menu: false, loop: true}}/> */}
+        {/* <Video mpdUrl={url}  options={{autoplay: true, menu: false, loop: true}}/> */}
+        <Video hlsUrl={url}/>
+        {/* <Video options={{
+          autoplay: true,
+          controls: false,
+          sources: [{
+            // src: 'https://localhost:8000/video/Chasing.Coral-720.mp4',
+            // type: 'video/mp4'
+            src: url,
+            type: "application/x-mpegURL"
+          }]
+        }}/> */}
+        {/* <HLS /> */}
       </div>
     )
   }
 }
 
 export default connect(({fileUpload}) => ({fileUpload}), actions)(Upload);
+
+// https://obs-b704.obs.cn-north-1.myhwclouds.com:443/obs-manifest/e8e3c5b264a84cf685b15e8d9c266c05/index.mpd?AccessKeyId=VET3LSB76974U2TJR8XB&Expires=1543745682&Signature=srPJZDmqjWJRcDn1dhGr9nNimYQ%3D&x-obs-security-token=gQpjbi1ub3J0aC0xiCe3Wh0j7-Ftb_Rf5RhH2jdrJo0tCSpNwVD6P__30bzxgo1EcHHR2W3E6NvSt3TDyipt7npAeBKG-xFHadCQfRAH1SQmC1MT0A-Sl40JgO9FypgRmN9GS9ix4WNK_7g-TqF_eJ0WdeVbBaEika4mft8nda0a-_8mDt99zJPUiB74yVq_zfIrGDCxrfzC7QsXmGMq4IiIhYixcwh5zROAowr635NpVE4RKYz1aEvZZRzC2V-k6G27UmQ9AoyDqXEK3AXFFKtUPm8qw2bmlRW2lDDfA3OZjzdaBAypLi63J6kq_wSVoyCqtlI4aDHtUwtGs9WwfNhAhQGSHjBVuVFBOwfCpDJWK1h75EaOowjIFLq3rJjICufqIhPMLDriUfXUkyTOR5TZkQMkGLUDuGlhJWatMQX1QMyy99yF1aMswjfcHf5KDe0sa1haoDl_XpYWHyNWwAVgmnQ3judeJJphiv1MO93AUrX9uhznar5KV7s190Qfp30SfcPG8J8cjoc331p8hREPDWaJ4NdMc4REFUn9cXtbipaNm8Yui_JFK2AodzSr2-ueZ-r407I5YKCr3ioAT-R_5C9kLZdnIbKgVAhHuzBU7v_WvkA1YhqdUJ89MMsJ_29v06-ZluRniIC0DVbAkl-LDfzQ8hkvBLzCTY1ySzSb7ckGrFskIZFT8mTqh9uNhRi0MJsFHyKDnSWl_bjb9auRL8kOoyJw6luX5XM%3D

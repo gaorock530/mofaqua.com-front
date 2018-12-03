@@ -3,6 +3,7 @@ import shaka from 'shaka-player';
 import Spinner from './animates/spinner';
 // import { connect } from 'react-redux';
 // import * as actions from '../redux/actions';
+import HLS from 'hls.js';
 
 /**
  * @param {String} mpdUrl media manifest URL
@@ -14,7 +15,7 @@ class Video extends PureComponent {
     super(props);
     this.mpdUrl = this.props.mpdUrl; // DASH manifest URL
     this.hlsUrl = this.props.hlsUrl; // HLS
-    this.selectors = null; // all the selectors within player
+    this.selectors = {}; // all the selectors within player
     this.isFocused = true; // is player focused
     this.inside = false; // is mouse inside player
     this.timer = null; // player control bar fade-out timer
@@ -61,9 +62,10 @@ class Video extends PureComponent {
   componentDidMount () {
     // create player DOM and assign selectors
     this.selectors = {
+      ...this.selectors,
       wrapper: this.refs.wapper,
       cover: this.refs.cover,
-      video: this.refs.video,
+      // video: null,
       control: this.refs.control,
       progress: {
         bar: this.refs.bar,
@@ -86,35 +88,9 @@ class Video extends PureComponent {
       menu: this.refs.menu
     }
 
-    if (!shaka) throw Error('Shake player not installed!');
-    // Install built-in polyfills to patch browser incompatibilities.
-    shaka.polyfill.installAll();
-    
-    // Check to see if the browser supports the basic APIs Shaka needs.
-    if (shaka.Player.isBrowserSupported()) {
-      console.log('player supported!');
-      // setup player menu props
-      this.menuProp = {
-        width: this.selectors.menu.offsetWidth,
-        height: this.selectors.menu.offsetHeight
-      }
-      // hide menu 
-      this.selectors.menu.classList.add('none');
-      // volume
-      this.v.maxVolPosition = this.selectors.volume.volBase.offsetWidth-this.selectors.volume.volPoint.offsetWidth
+    this.initPlayer()
+    this.addEventListener()
 
-      // Everything looks good!
-      this.initPlayer();
-
-      // add Event
-      this.addEventListener();
-      
-    } else {
-      // This browser does not have the minimum set of APIs we need.
-      console.error('Browser not supported!');
-      // this.video.src=hlsUrl;
-      // this.video.play();
-    }
   }
 
   componentWillUnmount () {
@@ -127,81 +103,37 @@ class Video extends PureComponent {
     document.removeEventListener('contextmenu', this._menuControl, false);
   }
 
-  initPlayer = async () => {
-    // Create a Player instance.
-    this.player = new shaka.Player(this.selectors.video);
-  
-    // Attach player to the window to make it easy to access in the JS console.
-    window.player = this.player;
-
-    // Listen for error events.
-    this.player.addEventListener('error', this.onErrorEvent);
-    
-    // Try to load a manifest.
-    // This is an asynchronous process.
-    try {
-      await this.player.load(this.mpdUrl);
-      // This runs if the asynchronous load is successful.
-      console.log('The video has now been loaded!');
-      this.onStartPlayer();
-    }catch(e) {
-      this.onError(e);
-      try {
-        await this.player.load(this.hlsUrl);
-        console.log('The video has now been loaded!');
-      }catch(e) {
-        this.onError(e);
-      }
+  initPlayer = () => {
+    window.video = this.selectors.video;
+    // instantiate Video.js
+    if(HLS.isSupported()) {
+      var hls = new HLS();
+      hls.loadSource(this.hlsUrl);
+      hls.attachMedia(this.selectors.video);
+      hls.on(HLS.Events.MANIFEST_PARSED,function() {
+        this.selectors.video.play();
+      });
     }
-    // this.player.load(this.mpdUrl).then(() => {
-      
-    //   this.onStartPlayer();
-    // }).catch(this.onError);  // onError is executed if the asynchronous load fails.
-
-    this.player.addEventListener('unloading', () => {
-      console.log('unloading...');
-      this.setState({loading: true});
-    })
-
-    this.player.addEventListener('loading', () => {
-      console.log('loading...');
-      this.setState({loading: true});
-    })
-
-    this.player.addEventListener('buffering', (e) => {
-      console.log('buffering',e);
-      this.setState({loading: e.buffering});
-    })
-
-    this.player.addEventListener('adaptation', (e) => {
-      console.log('adaptation', e);
-    })
-
-    this.player.reset = () => {
-      this.selectors.progress.bar_line.style.width = 0;
-      this.selectors.progress.bar_point.style.left = 0;
-      this.selectors.play.classList.remove('fa-pause');
-      this.selectors.play.classList.add('fa-play');
+    // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+    // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+    // This is using the built-in support of the plain video element, without using hls.js.
+    // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+    // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+    else if (this.selectors.video.canPlayType('application/vnd.apple.mpegurl')) {
+      this.selectors.video.src = this.hlsUrl;
+      this.selectors.video.addEventListener('loadedmetadata',function() {
+        this.selectors.video.play();
+      });
     }
-    
-  }
-  onErrorEvent = (event) => {
-    // Extract the shaka.util.Error object from the event.
-    this.onError(event.detail);
-  }
-
-  onError = (error) => {
-    // Log the error.
-    console.error('Error code', error.code, 'object', error);
   }
 
   onStartPlayer = () => {
     // set volume from Localstorage or DefaultOptions
     this.changeVol(localStorage.getItem('volume') || this.defaultOptions.volume);
     // set autoplay
-    this.selectors.video.autoplay = this.defaultOptions.autoplay;
+    // this.selectors.video.autoplay = this.defaultOptions.autoplay;
     // set loops
-    this.selectors.video.loop = this.defaultOptions.loop;
+    // this.selectors.video.loop = this.defaultOptions.loop;
     // set control bar show first
     this.showControl();
   }
@@ -227,7 +159,7 @@ class Video extends PureComponent {
     //   console.log(this.player.getBufferedInfo());
     // });
     this.selectors.video.addEventListener('timeupdate', () => {
-      console.log(this.player.getBufferedInfo());
+      // console.log(this.player.getBufferedInfo());
     });
 
     // play/pause EVENT
@@ -447,6 +379,7 @@ class Video extends PureComponent {
 
   // handle Volume
   changeVol = (vol) => {
+    console.log(this.selectors.video)
     if (vol > 1 || vol <0) vol = Math.round(vol);
     let pos = this.v.maxVolPosition * vol;
     this.selectors.volume.volPoint.style.left=pos+'px';
@@ -610,7 +543,7 @@ class Video extends PureComponent {
     return (
       <div ref="wapper" className="body-main-display-wrapper">
         <div className="vid">
-          <video ref="video"></video>
+          <video ref={node => this.selectors.video = node}></video>
         </div>
 
         <div ref="controlWapper" className="video-control-wapper">
