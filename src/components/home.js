@@ -17,6 +17,9 @@ class Home extends PureComponent {
   // // ws = this.props.ws.connection;
   componentDidMount () {
     enableInlineVideo(this.refs.chasingcoral);
+    this.refs.chasingcoral.addEventListener('loadedmetadata', () => {
+      this.refs.chasingcoral.volume = 0;
+    }, {once: true})
   }
 
   render () {
@@ -57,7 +60,7 @@ class Home extends PureComponent {
             </div>
           </div>
           <div className="cover"></div>
-          <video ref='chasingcoral' preload="auto" playsInline autoPlay={true} loop={true} muted="muted" poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg">
+          <video ref='chasingcoral' preload="auto" playsInline autoPlay={true} loop={true} muted poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg">
             <source type="video/mp4" src="/video/chasingcoral.mp4"></source>
             <source type="video/webm" src="/video/chasingcoral.webm"></source>
           </video>
