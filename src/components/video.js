@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import shaka from 'shaka-player';
+// import shaka from 'shaka-player';
 import Spinner from './animates/spinner';
 // import { connect } from 'react-redux';
 // import * as actions from '../redux/actions';

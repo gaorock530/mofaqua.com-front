@@ -131,7 +131,7 @@ class Upload extends PureComponent {
 
 
   render () {
-    const url = 'https://localhost:8000/aed40d2f342f4f598f9f0e42b4f0f02b/manifest/index.m3u8';
+    const url = 'https://media.mofaqua.com:8000/aed40d2f342f4f598f9f0e42b4f0f02b/manifest/index.m3u8';
     const {
       className = '',
       id, 
