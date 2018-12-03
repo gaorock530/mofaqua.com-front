@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react';
 // import { connect } from 'react-redux';
 
 import Section from './section';
+import enableInlineVideo from 'iphone-inline-video';
 // import * as actions from '../redux/actions';
 
 
@@ -14,7 +15,9 @@ class Home extends PureComponent {
   //   return false;
   // }
   // // ws = this.props.ws.connection;
-  
+  componentDidMount () {
+    enableInlineVideo(this.refs.chasingcoral);
+  }
 
   render () {
     return (
@@ -54,7 +57,7 @@ class Home extends PureComponent {
             </div>
           </div>
           <div className="cover"></div>
-          <video preload="auto" autoPlay={true} loop={true} muted="muted" poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg">
+          <video ref='chasingcoral' preload="auto" playsInline autoPlay={true} loop={true} muted="muted" poster="/pic/chasingcoral/chasingcoralherobanner-736x414.jpg">
             <source type="video/mp4" src="/video/chasingcoral.mp4"></source>
             <source type="video/webm" src="/video/chasingcoral.webm"></source>
           </video>

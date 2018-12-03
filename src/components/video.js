@@ -4,6 +4,7 @@ import Spinner from './animates/spinner';
 // import { connect } from 'react-redux';
 // import * as actions from '../redux/actions';
 import HLS from 'hls.js';
+import enableInlineVideo from 'iphone-inline-video';
 
 /**
  * @param {String} mpdUrl media manifest URL
@@ -90,6 +91,7 @@ class Video extends PureComponent {
 
     this.initPlayer()
     this.addEventListener()
+    enableInlineVideo(this.selectors.video);
 
   }
 
@@ -543,7 +545,7 @@ class Video extends PureComponent {
     return (
       <div ref="wapper" className="body-main-display-wrapper">
         <div className="vid">
-          <video ref={node => this.selectors.video = node}></video>
+          <video ref={node => this.selectors.video = node} playsInline></video>
         </div>
 
         <div ref="controlWapper" className="video-control-wapper">
