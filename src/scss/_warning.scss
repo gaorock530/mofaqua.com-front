@@ -1,0 +1,50 @@
+.great-warning-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(#000, 0.7);
+  z-index: 999;
+
+  .warning-box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    height: 160px;
+    background: #fff;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,.1);
+
+    .warning-message, .warning-button-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .warning-message {
+      flex: 2;
+      color: #333;
+      font-weight: bold;
+    }
+    .warning-button-group {
+      flex: 1;
+      button {
+        appearance: none;
+        outline: none;
+        padding: 8px 15px;
+        margin: 0 20px;
+        cursor: pointer;
+        .fa {
+          padding-right: 3px;
+        }
+      }
+    }
+  }
+
+}

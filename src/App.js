@@ -22,6 +22,7 @@ import Sidebar from './components/sidebar';
 import Cover from './components/cover';
 import Home from './components/home';
 import Notification from './components/notification';
+import Warning from './components/wanring';
 import Top from './components/top';
 // import Edit from './components/edit';
 // router
@@ -134,7 +135,7 @@ class App extends PureComponent {
             <Header/>
             {this.props.page.sidebar ? <Sidebar /> : ''}
             <Cover />
-            {/* {this.props.page.edit ? <Edit /> : ''} */}
+            <Warning />
             {this.props.page.showTop ? <Top /> : ''}
             <Switch>
               <Route exact path='/' component={Home} />

@@ -26,6 +26,7 @@ export const FILE_CONVERTING = 'FILE_CONVERTING';
 export const FILE_MAKING_MANIFEST = 'FILE_MAKING_MANIFEST';
 export const FILE_UPLOADED = 'FILE_UPLOADED';
 export const FILE_DESTROY = 'FILE_DESTROY';
+export const SET_VIDEO_PUBLISH_HASH = 'SET_VIDEO_PUBLISH_HASH';
 //
 export const SET_REDIRECT_PATH = 'SET_REDIRECT_PATH';
 //
@@ -52,6 +53,10 @@ export const SET_SUBMITTING_STATE = 'SET_SUBMITTING_STATE';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
 //
 export const SET_LANGUAGE = 'SET_LANGUAGE';
+export const SET_AGENT = 'SET_AGENT';
+// get all un-published video from user database
+export const SET_UNFINISHED_VIDEOS = 'SET_UNFINISHED_VIDEOS';
+export const DEL_UNFINISHED_VIDEO = 'DEL_UNFINISHED_VIDEO';
 
 
 // change small window event
@@ -75,3 +80,7 @@ export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const GET_MESSAGE = 'GET_MESSAGE';
 export const DEL_MESSAGE = 'DEL_MESSAGE';
 export const GET_MORE_MESSAGE = 'GET_MORE_MESSAGE';
+
+// Warnings
+export const INIT_WARNING = 'INIT_WARNING';
+export const RESET_WARNING = 'RESET_WARNING';

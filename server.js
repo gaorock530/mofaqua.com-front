@@ -5,7 +5,8 @@ const app = express();
 
 const PORT = 5001;
 
-app.disable('etag').disable('x-powered-by');
+app.disable('etag');
+app.disable('x-powered-by');
 
 let file = 0;
 

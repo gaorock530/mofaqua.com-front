@@ -1,3 +1,5 @@
+import { stat } from "fs";
+
 export default function (state = {
   isLogin: false,
   loggingAction: false,
@@ -10,7 +12,9 @@ export default function (state = {
   channel: null,
   loading: false,
   submitting: false,
-  language: 'zh'                // set language
+  language: 'zh',                // set language
+  agent: null,
+  unfinishedVideos: []
 }, action) { 
   switch (action.type) {
     case 'USER_LOGIN':
@@ -99,6 +103,23 @@ export default function (state = {
       return {
         ...state,
         language: action.language || 'zh'
+      }
+    case 'SET_AGENT':
+      return {
+        ...state,
+        agent: action.agent
+      }
+
+    case 'SET_UNFINISHED_VIDEOS':
+      return {
+        ...state,
+        unfinishedVideos: action.videos
+      }
+    case 'DEL_UNFINISHED_VIDEO':
+      const videos = state.unfinishedVideos.filter(video => video.hash !== action.hash);
+      return {
+        ...state,
+        unfinishedVideos: videos
       }
     default:
       return state;

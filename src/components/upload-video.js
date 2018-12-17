@@ -9,11 +9,12 @@ import * as actions from '../redux/actions';
 import errmsg from '../helper/errorText';
 import Video from '../components/video';
 import axios from 'axios';
+import FileUploadProgress  from 'react-fileupload-progress';
 // import HLS from './hls-player';
 
 const reqURL = process.env.NODE_ENV === 'development'? 
-'https://localhost:5000/videoupload': 
-'https://websocket.mofaqua.com/videoupload';
+'https://localhost:8000/videoupload': 
+'https://media.mofaqua.com:8000/videoupload';
 
 
  
@@ -45,8 +46,6 @@ class Upload extends PureComponent {
     this.rateRefresh = 0; // a counter for refresh transfer rate [every 3 sec]
     this.hash = null; // store video hash
     this.uid = this.props.uid;
-    this.isUploading = false;
-    this.status = ['上传中', '转码中', '封装中'];
   }
   componentDidMount () {
     this.container = this.refs.display;
@@ -54,19 +53,12 @@ class Upload extends PureComponent {
     this.props.generate_permit();
   }
 
-  componentWillUnmount () {
-    this.props.destroy_file();
-  }
-
   accept = ['video/mp4', 'video/mpeg', 'video/quicktime'];
 
   checkVideo = async (e) => {
-    this.uploaded = null;
-    this.isUploading = true;
-    this.forceUpdate();
+    this.uploaded = false;
     const file = e.target.files[0];
     if (file.size > 200 * 1024 * 1024) {
-      this.isUploading = false;
       this.forceUpdate();
       return this.props.notification_in(errmsg.video1);
     }
@@ -76,8 +68,6 @@ class Upload extends PureComponent {
     this.video.addEventListener('loadedmetadata', async (e) => {
       console.log(this.video.duration);
       if (Math.floor(this.video.duration) > 600) {
-        this.isUploading = false;
-        this.forceUpdate();
         return this.props.notification_in(errmsg.video2);
       }
       await this.onUpload(file);
@@ -92,36 +82,31 @@ class Upload extends PureComponent {
     const form = new FormData();
     form.append('file', file);
     form.append('uid', this.uid);
-    form.append('process', 1);
+    form.append('stage', 1);
     form.append('permit', this.props.fileUpload.permit);
     try {
       // step 1: upload file 
       this.props.change_upload_state(1);
-      const uploaded = await axios.post(reqURL, form);
+      const uploaded = await axios.post(reqURL, form, {onUploadProgress: (e) => {console.log(e.loaded/e.total)}});//Math.floor(e.loaded/e.total/100)
+      
+      console.log(uploaded);
       if (uploaded.data.err) {
         this.props.change_upload_state(0);
         return this.props.notification_in(uploaded.data.err);
       }
-      console.log(uploaded.data)
+      // step 2: converting
       this.props.change_upload_state(2);
-      const converted = await axios.post(reqURL, {process: 2, uid: this.uid, permit: this.props.fileUpload.permit});
+      const converted = await axios.post(reqURL, {stage: 2, uid: this.uid, permit: this.props.fileUpload.permit, hash: uploaded.data.hash});
       if (converted.data.err) {
         this.props.change_upload_state(0);
         return this.props.notification_in(converted.data.err);
       }
-      console.log(converted.data);
-      this.props.change_upload_state(3);
-      const manifest = await axios.post(reqURL, {process: 3, uid: this.uid, permit: this.props.fileUpload.permit});
-      if (manifest.data.err) {
-        this.props.notification_in(converted.data.err);
-      }
-      this.props.change_upload_state(0);
-      console.log(manifest.data);
-      this.isUploading = false;
-      this.uploaded = manifest.data.url;
-      
+      this.props.change_upload_state(3, converted.data);  // stage 3 - obs making manifest
+      this.uploaded = true;
     }catch(e) {
-      return this.props.notification_in(e);
+      this.props.change_upload_state(0);
+      // console.log(e);
+      return this.props.notification_in('Hacking Action Warning!');
     }
     this.forceUpdate()
 
@@ -131,7 +116,6 @@ class Upload extends PureComponent {
 
 
   render () {
-    const url = 'https://media.mofaqua.com:8000/aed40d2f342f4f598f9f0e42b4f0f02b/manifest/index.m3u8';
     const {
       className = '',
       id, 
@@ -139,30 +123,19 @@ class Upload extends PureComponent {
     } = this.props;
     return (
       <div className={"uploadWapper " + className}>
-        {this.props.fileUpload.inProcess?'':<input type="file" id={id} accept="video/*" onChange={this.checkVideo} className="fileInput" />}
+        {this.props.fileUpload.inProcess?
+        ''
+          :<input type="file" id={id} accept="video/*" onChange={this.checkVideo} className="fileInput" />}
         <label ref="upload" htmlFor={id} className='videobutton' style={{color: this.color}}>
-          {this.props.fileUpload.inProcess? <Spinner single={true}>{this.status[this.props.fileUpload.process-1]}</Spinner>:children}
+          {this.props.fileUpload.inProcess? <Spinner single={false} padding='40px'>上传中</Spinner>:this.uploaded?'视频已上传':children}
         </label>
-        {/* {this.uploaded?<Video mpdUrl={this.uploaded.dash[0]} hlsUrl={this.uploaded.hls[0]} options={{autoplay: true, menu: false}} />:''} */}
-        {/* <Video mpdUrl="https://websocket.mofaqua.com/videos/cjotxcdsl0016i5fjyrug0pbc.cjp3uh35n001tvjfjym3srm0u.dash/720p/out.mpd"  options={{autoplay: true, menu: false, loop: true}}/> */}
-        {/* <Video mpdUrl={url}  options={{autoplay: true, menu: false, loop: true}}/> */}
-        <Video hlsUrl={url}/>
-        {/* <Video options={{
-          autoplay: true,
-          controls: false,
-          sources: [{
-            // src: 'https://localhost:8000/video/Chasing.Coral-720.mp4',
-            // type: 'video/mp4'
-            src: url,
-            type: "application/x-mpegURL"
-          }]
-        }}/> */}
-        {/* <HLS /> */}
+      
+        {/* <Video hlsUrl={'https://localhost:8000/manifest/480p/19dc570d120cc868ab872f8137820ebc/index.m3u8'} /> */}
+        {/* <Video hlsUrl={'https://fenxiang2.meiju2018.com/20181013/ZFrpr6x7/index.m3u8'} /> */}
+        
       </div>
     )
   }
 }
 
 export default connect(({fileUpload}) => ({fileUpload}), actions)(Upload);
-
-// https://obs-b704.obs.cn-north-1.myhwclouds.com:443/obs-manifest/e8e3c5b264a84cf685b15e8d9c266c05/index.mpd?AccessKeyId=VET3LSB76974U2TJR8XB&Expires=1543745682&Signature=srPJZDmqjWJRcDn1dhGr9nNimYQ%3D&x-obs-security-token=gQpjbi1ub3J0aC0xiCe3Wh0j7-Ftb_Rf5RhH2jdrJo0tCSpNwVD6P__30bzxgo1EcHHR2W3E6NvSt3TDyipt7npAeBKG-xFHadCQfRAH1SQmC1MT0A-Sl40JgO9FypgRmN9GS9ix4WNK_7g-TqF_eJ0WdeVbBaEika4mft8nda0a-_8mDt99zJPUiB74yVq_zfIrGDCxrfzC7QsXmGMq4IiIhYixcwh5zROAowr635NpVE4RKYz1aEvZZRzC2V-k6G27UmQ9AoyDqXEK3AXFFKtUPm8qw2bmlRW2lDDfA3OZjzdaBAypLi63J6kq_wSVoyCqtlI4aDHtUwtGs9WwfNhAhQGSHjBVuVFBOwfCpDJWK1h75EaOowjIFLq3rJjICufqIhPMLDriUfXUkyTOR5TZkQMkGLUDuGlhJWatMQX1QMyy99yF1aMswjfcHf5KDe0sa1haoDl_XpYWHyNWwAVgmnQ3judeJJphiv1MO93AUrX9uhznar5KV7s190Qfp30SfcPG8J8cjoc331p8hREPDWaJ4NdMc4REFUn9cXtbipaNm8Yui_JFK2AodzSr2-ueZ-r407I5YKCr3ioAT-R_5C9kLZdnIbKgVAhHuzBU7v_WvkA1YhqdUJ89MMsJ_29v06-ZluRniIC0DVbAkl-LDfzQ8hkvBLzCTY1ySzSb7ckGrFskIZFT8mTqh9uNhRi0MJsFHyKDnSWl_bjb9auRL8kOoyJw6luX5XM%3D

@@ -33,6 +33,7 @@ import {
   FILE_MAKING_MANIFEST,
   FILE_UPLOADED,
   FILE_DESTROY,
+  SET_VIDEO_PUBLISH_HASH,
   //
   SET_REDIRECT_PATH,
   SET_LAZYLOAD_DATA,
@@ -55,7 +56,10 @@ import {
   SET_LOADING_STATE,
   SET_SUBMITTING_STATE,
   SET_LANGUAGE,
+  SET_AGENT,
   UPDATE_ADDRESS,
+  SET_UNFINISHED_VIDEOS,
+  DEL_UNFINISHED_VIDEO,
   // notification
   NOTIFICATION_IN,
   NOTIFICATION_OUT,
@@ -71,7 +75,10 @@ import {
   ADD_MESSAGE,
   GET_MESSAGE,
   DEL_MESSAGE,
-  GET_MORE_MESSAGE
+  GET_MORE_MESSAGE,
+  // warning
+  INIT_WARNING,
+  RESET_WARNING
 } from './types';
 // import { rejects } from 'assert';
 
@@ -240,12 +247,11 @@ export const generate_permit = () => async dispatch => {
   try {
     const res = await wsSend('g-p');
     dispatch({ type: READY_FOR_UPLOAD, p: res.p});
-    console.log(res);
   }catch(e) {
     console.log(e);
   }
 }
-export const change_upload_state = (state) => dispatch => {
+export const change_upload_state = (state, file) => dispatch => {
   switch (state) {
     case 0:
       return dispatch({ type: FILE_UPLOADED});
@@ -254,14 +260,38 @@ export const change_upload_state = (state) => dispatch => {
     case 2:
       return dispatch({ type: FILE_CONVERTING});
     case 3:
-      return dispatch({ type: FILE_MAKING_MANIFEST});
+      console.log('3: file', file);
+      return dispatch({ type: FILE_MAKING_MANIFEST, file});
     default: 
       dispatch({ type: FILE_DESTROY});
   }
 }
-export const destroy_file = () => dispatch => {
-  dispatch({ type: FILE_DESTROY});
+
+// publish video blog
+export const publish_video = (v) => async dispatch => {
+  try {
+    const res = await wsSend('pub-vod', v);
+    return res;
+  }catch(e) {
+    throw (e);
+  }
 }
+export const del_video = (hash) => async dispatch => {
+  try {
+    const res = await wsSend('del-vod', {hash});
+    dispatch({ type: RESET_WARNING });
+    dispatch({ type: DEL_UNFINISHED_VIDEO, hash});
+    dispatch({ type: SET_VIDEO_PUBLISH_HASH});
+    return res;
+  }catch(e) {
+    console.log(e);
+    return false;
+  }
+}
+export const set_publish_video_hash = (hash) => dispatch => {
+  dispatch({ type: SET_VIDEO_PUBLISH_HASH, hash});
+}
+
 
 /* Lazy Loading */
 /**
@@ -341,10 +371,12 @@ export const user_verify = () =>  dispatch => {
       dispatch({ type: LOAD_WEBSOCKET, ws: true});
       // clearTimeout(connection);
       if (e.v === 1) {
+        dispatch({type: SET_AGENT, agent: e.a});
         dispatch({type: SET_USER, user: e.u});
         dispatch({type: USER_LOGIN});
         resolve(true);
       } else if (e.v === 0) {
+        dispatch({type: SET_AGENT, agent: e.a});
         dispatch({ type: USER_LOGOUT });
         resolve(true);
       } else {
@@ -604,20 +636,29 @@ export const get_channel = (uid) => async dispatch => {
   }
 }
 
-export const upload_video = (data, index, hash, extension) => async dispatch => {
+export const get_unfinished_videos = () => async dispatch => {
   try {
-    const res = await wsSend('up-vod', {d: data, i: index, h: hash, e: extension}, {
-      timeout: 0
-    });
-    // finish uploading
-    if (res.l) {
-      return res.l;
-    }
+    const res = await wsSend('uv-get');
+    dispatch({ type: SET_UNFINISHED_VIDEOS, videos: res});
   }catch(e) {
-    console.log(e);
     throw e;
   }
 }
+
+// export const upload_video = (data, index, hash, extension) => async dispatch => {
+//   try {
+//     const res = await wsSend('up-vod', {d: data, i: index, h: hash, e: extension}, {
+//       timeout: 0
+//     });
+//     // finish uploading
+//     if (res.l) {
+//       return res.l;
+//     }
+//   }catch(e) {
+//     console.log(e);
+//     throw e;
+//   }
+// }
 
 
 
@@ -703,4 +744,16 @@ export const update_msg = (id) => dispatch => {
 
 export const save_msg = (uid, ids) => async dispatch => {
   await wsSend('msg-u', {uid, ids});
+}
+
+
+/**
+ * @description SET global warnings
+ */
+export const init_warning = (text, fn) => dispatch => {
+  dispatch({ type: INIT_WARNING, text, fn });
+}
+
+export const reset_warning = () => dispatch => {
+  dispatch({ type: RESET_WARNING });
 }

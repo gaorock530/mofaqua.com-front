@@ -1,11 +1,4 @@
-// #body-main-display-outter-wrapper {
-//   position: relative;
-//   margin: 0 auto;
-//   // max-width: calc(100vh + 20rem);
-//   max-width: 1067px;
-//   padding: 20px 0;
-//   vertical-align: baseline;
-// }
+
 
 /* 2222222222222222222222222222222222222222222222 */
 video::-webkit-media-controls,
@@ -21,15 +14,18 @@ video::-webkit-media-controls-current-time-display
 
 .body-main-display-wrapper {
   position: relative !important;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   vertical-align: baseline;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  width: 100%; /* You can set this width to whatever suits your needs */
+  margin: 0 auto;
   background-color: #000;
 
   &:fullscreen {
     max-height: 100%;
     height: 100%;
+    z-index: 2147483647 !important;
   }
 }
 
@@ -44,26 +40,27 @@ video::-webkit-media-controls-current-time-display
 
 
 .vid {
-  position: relative !important;
-  width: 100%;
-  height: 100%;
-  z-index: 0 !important;
-  text-align: center;
-
-  & > video {
-    position: relative;
-    vertical-align: middle;
-    width: 100% !important;
-    // width: auto !important; 
-    height: 100% !important;
-    // min-width: 100%; 
-    // min-height: 100%;
-    // width: auto; 
-    // height: auto; 
-    // background-size: cover;
-    object-fit: cover;
+  video{
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    // z-index: -100;
   }
+  .normal {
+    width: 100%;
+  }
+  .vertical {
+    height: 100%;
+  }
+
 }
+
+
 
 .video-control-wapper {
   position: absolute;
@@ -74,9 +71,9 @@ video::-webkit-media-controls-current-time-display
   user-select: none;
   vertical-align: baseline;
 }
-.video-full {
-  z-index: 2147483647 !important;
-}
+// .video-full {
+//   z-index: 2147483647 !important;
+// }
 
 
 .video-control{

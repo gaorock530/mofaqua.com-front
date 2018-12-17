@@ -17,15 +17,12 @@ import processPhoto from '../helper/processPhoto';
  * @param {Boolean} opt (required)  whether optimize pic
  * @param {Number} width (optional) if resize, the new width
  * @param {Number} height (optional) if resize, the new height, defalut 16:9
+ * @param {String} type (required) type of image used for signaling backend, like 'tn' or 'ch-cover'
 */
 
 class Upload extends PureComponent {
   componentWillMount () {
     this.type = this.props.type;
-  }
-
-  componentWillUnmount () {
-    this.props.destroy_file(this.id);
   }
 
   accept = ['image/gif', 'image/jpeg', 'image/png'];
@@ -72,7 +69,7 @@ class Upload extends PureComponent {
     return (
       <div className={"uploadWapper " + className}>
         <input type="file" id={id} accept="image/gif, image/jpeg, image/png" onChange={this.onUpload} className="fileInput" />
-        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', backgroundImage: image?`url(${image})`:'none'}}>
+        <label ref="upload" htmlFor={id} className={round?"fileCover round": "fileCover"} style={{borderColor: color?color:'#666699', backgroundImage: image?`url(${image})`:null}}>
             <span>
               {this.props.fileUpload.inProcess?this.props.fileUpload.percentage: children}
             </span>

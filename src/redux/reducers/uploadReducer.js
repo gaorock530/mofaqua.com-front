@@ -4,8 +4,10 @@ export default function (state = {
   percentage: 0,              
   process: 0,                 // 0 - no work, 1 - uploading, 2 - converting, 3 - making manifest
   inProcess: false,
-  allDone: false,
-  url: null
+  allDone: true,
+  url: null,
+  file: null,                // temporaryly store uploaded file
+  toPublish: null
 }, action) {
   switch (action.type) {
     case 'READY_FOR_UPLOAD':
@@ -20,6 +22,7 @@ export default function (state = {
         ...state,
         process: 1,
         inProcess: true,
+        allDone: false,
         percentage: action.percent || 0
       }
 
@@ -30,17 +33,20 @@ export default function (state = {
         percentage: action.percent || 0
       }
     case 'FILE_MAKING_MANIFEST':
+      console.log('action.file:', action.file)
       return {
         ...state,
         process: 3,
-        percentage: action.percent || 0
+        inProcess: false,
+        file: action.file
       }
     case 'FILE_UPLOADED':
       return {
         ...state,
         process: 0,
         inProcess: false,
-        allDone: true
+        allDone: true,
+        file: null
       }
     case 'FILE_DESTROY':
       return {
@@ -48,8 +54,14 @@ export default function (state = {
         percentage: 0,              
         process: 0,                 // 0 - no work, 1 - uploading, 2 - converting, 3 - making manifest
         inProcess: false,
-        allDone: false,
-        url: null
+        allDone: true,
+        url: null,
+        file: null
+      }
+    case 'SET_VIDEO_PUBLISH_HASH':
+      return {
+        ...state,
+        toPublish: action.hash || null
       }
     default: 
       return state;

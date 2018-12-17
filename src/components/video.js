@@ -28,6 +28,7 @@ class Video extends PureComponent {
     this.isMute = false; // is player muted
     this.menuProp = null; // stores menu Height/Width
     this.player = null; // stores Player
+    this.status = 0; // 0 - loading, 1 - ready, 2 - broken
     // volume bar
     this.v = {
       move: false,
@@ -45,9 +46,6 @@ class Video extends PureComponent {
     };
     // get custom options
     this.playerOptions(this.props.options);
-    this.state = {
-      loading: false
-    }
   }
 
   // enable Options
@@ -88,9 +86,9 @@ class Video extends PureComponent {
       fullScreen: this.refs.fullScreen,
       menu: this.refs.menu
     }
-
-    this.initPlayer()
-    this.addEventListener()
+    this.onStartPlayer();
+    this.initPlayer();
+    this.addEventListener();
     enableInlineVideo(this.selectors.video);
 
   }
@@ -110,10 +108,43 @@ class Video extends PureComponent {
     // instantiate Video.js
     if(HLS.isSupported()) {
       var hls = new HLS();
-      hls.loadSource(this.hlsUrl);
+      
+      // prepare and get ready to play
       hls.attachMedia(this.selectors.video);
-      hls.on(HLS.Events.MANIFEST_PARSED,function() {
-        this.selectors.video.play();
+      hls.on(HLS.Events.MEDIA_ATTACHED, (e) => {
+        hls.loadSource(this.hlsUrl);
+        hls.on(HLS.Events.MANIFEST_PARSED, (e, data) => {
+          console.log(this.selectors.video.networkState)
+          if (data.levels[0].height>data.levels[0].width) {
+            this.selectors.video.classList.remove('normal');
+            this.selectors.video.classList.add('vertical');
+          }
+          console.log("manifest loaded, found " + data.levels.length + " quality level");
+          // this.selectors.video.play();
+          this.status = 1;
+          this.forceUpdate();
+        });
+      })
+
+      // hls player error handle
+      hls.on(HLS.Events.ERROR, function (event, data) {
+        if (data.fatal) {
+          switch(data.type) {
+          case HLS.ErrorTypes.NETWORK_ERROR:
+          // try to recover network error
+            console.log("fatal network error encountered, try to recover");
+            hls.startLoad();
+            break;
+          case HLS.ErrorTypes.MEDIA_ERROR:
+            console.log("fatal media error encountered, try to recover");
+            hls.recoverMediaError();
+            break;
+          default:
+          // cannot recover
+            hls.destroy();
+            break;
+          }
+        }
       });
     }
     // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
@@ -125,7 +156,7 @@ class Video extends PureComponent {
       this.selectors.video.src = this.hlsUrl;
       this.selectors.video.addEventListener('loadedmetadata',function() {
         this.selectors.video.play();
-      });
+      }, {once: true});
     }
   }
 
@@ -133,22 +164,40 @@ class Video extends PureComponent {
     // set volume from Localstorage or DefaultOptions
     this.changeVol(localStorage.getItem('volume') || this.defaultOptions.volume);
     // set autoplay
-    // this.selectors.video.autoplay = this.defaultOptions.autoplay;
+    this.selectors.video.autoplay = this.defaultOptions.autoplay;
     // set loops
-    // this.selectors.video.loop = this.defaultOptions.loop;
+    this.selectors.video.loop = this.defaultOptions.loop;
     // set control bar show first
     this.showControl();
   }
 
   addEventListener = () => {
-    //player state change
+    // detect mouse is inside player as [FOCUSed]
     document.addEventListener('click', this._detectFocus, false);
 
     // player event
-    // this.selectors.video.addEventListener('canplay', () => {
-    //   console.log('video canplay');
-    //   this.setState({loading: false});
-    // });
+    this.selectors.video.addEventListener('canplay', () => {
+      console.log('video canplay');
+      console.log(this.selectors.video.duration);
+      this.status = 1;
+      this.forceUpdate();
+    });
+    
+    this.selectors.video.addEventListener('waiting', (e) => {
+      console.log('waiting')
+      this.status = 0;
+      this.forceUpdate();
+    })
+    // this.selectors.video.addEventListener('stalled', () => {
+    //   console.log('stalled')
+    // })
+    // this.selectors.video.addEventListener('emptied', () => {
+    //   console.log('emptied')
+    // })
+
+    // this.selectors.video.addEventListener('timeupdate', () => {
+    //   console.log(this.selectors.video.buffered);
+    // })
 
     // this.selectors.video.addEventListener('play', () => {
     //   console.log('video play');
@@ -160,9 +209,9 @@ class Video extends PureComponent {
       
     //   console.log(this.player.getBufferedInfo());
     // });
-    this.selectors.video.addEventListener('timeupdate', () => {
-      // console.log(this.player.getBufferedInfo());
-    });
+    // this.selectors.video.addEventListener('timeupdate', () => {
+    //   // console.log(this.player.getBufferedInfo());
+    // });
 
     // play/pause EVENT
     document.addEventListener('keydown', this._keyControl, false);
@@ -218,7 +267,7 @@ class Video extends PureComponent {
     this.selectors.video.addEventListener('timeupdate', this._timeUpdate, false);
 
     // custom menu
-    document.addEventListener('contextmenu', this._menuControl, false);
+    // document.addEventListener('contextmenu', this._menuControl, false);
 
     // Video maximize
     this.selectors.maxWindow.addEventListener('click', (e) => {
@@ -545,7 +594,7 @@ class Video extends PureComponent {
     return (
       <div ref="wapper" className="body-main-display-wrapper">
         <div className="vid">
-          <video ref={node => this.selectors.video = node} playsInline></video>
+          <video className="normal" ref={node => this.selectors.video = node} playsInline></video>
         </div>
 
         <div ref="controlWapper" className="video-control-wapper">
@@ -576,7 +625,7 @@ class Video extends PureComponent {
               </div>
             </div>
           </div>
-          {this.state.loading === true?<Spinner size="50px">加载中</Spinner>:''}
+          {this.status === 0?<Spinner size="50px">加载中</Spinner>:''}
           <div ref="cover" className="video-cover-layer"></div>
           <div ref="menu" className="player-menu">
             <li>Magic PLayer</li>

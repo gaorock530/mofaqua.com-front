@@ -7,6 +7,7 @@ import noticeReducer from './noticeReducer';
 import formReducer from './formReducer';
 import msgReducer from './msgReducer';
 import uploadReducer from './uploadReducer';
+import warningReducer from './warningReducer';
 
 
 export default combineReducers({
@@ -16,5 +17,6 @@ export default combineReducers({
   notification: noticeReducer,
   form: formReducer,
   message: msgReducer,
-  fileUpload: uploadReducer
+  fileUpload: uploadReducer,
+  warning: warningReducer
 });

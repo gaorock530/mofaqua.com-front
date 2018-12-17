@@ -18,7 +18,7 @@ export default (props) => {
   } = props;
 
   return (
-    <div className={'spinnner-wapper ' + position} style={{'position': single?'absolute':'relative', 'padding': padding?padding:0}}>
+    <div className={'spinnner-wapper ' + position} style={{'position': single?'absolute':'relative', 'padding': padding?padding:null}}>
       <div className={"spinner " + Stype} style={{width: size, height: size}}>
         {props.children}
       </div>
